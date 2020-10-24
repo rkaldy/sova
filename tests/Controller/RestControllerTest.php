@@ -1,0 +1,132 @@
+<?php
+namespace Sova\Controller;
+
+use Sova\TestBase;
+use Sova\DB;
+use Mockery;
+
+class RestControllerTest extends TestBase {
+
+	function setUp(): void {
+		parent::setUp();
+		$_SESSION["user_id"] = 1;
+	}
+
+	function tearDown(): void {
+		$this->db->execute("DELETE FROM point");
+		parent::tearDown();
+	}
+
+	function rest(string $method, string $res, array $in = array()): array {
+		$status = null;
+		$out = null;
+		$req = Mockery::mock("Psr\Http\Message\RequestInterface");
+		$req->shouldReceive("getMethod")->andReturn($method);
+		$req->shouldReceive("getParsedBody")->andReturn($in);
+		$resp = Mockery::mock("Psr\Http\Message\ResponseInterface");
+		$resp->shouldReceive("withHeader->withStatus")->with(Mockery::capture($status));
+		$resp->shouldReceive("getBody->write")->with(Mockery::capture($out));
+		
+		$controller = new RestController();
+		$controller($req, $resp, array("resource" => $res));
+		return array($status, json_decode($out, true));
+	}
+
+
+	function testUnknownTable() {
+		list($status, $data) = $this->rest("GET", "bad", array());
+		$this->assertEquals(400, $status);
+	}
+
+	function testUnauthenticated() {
+		unset($_SESSION["user_id"]);
+		list($status, $data) = $this->rest("GET", "loc", array());
+		$this->assertEquals(401, $status);
+	}
+
+	function testUnauthorized() {
+		$_SESSION["user_id"] = 2;
+		list($status, $data) = $this->rest("PUT", "game", array());
+		$this->assertEquals(403, $status);
+	}
+
+	function testInvalidMethod() {
+		list($status, $data) = $this->rest("POST", "graph", array());
+		$this->assertEquals(405, $status);
+	}
+
+	function testGeneralError() {
+		list($status, $data) = $this->rest("POST", "user", array("login" => "user", "pswd" => ""));
+		$this->assertEquals(422, $status);
+		$this->assertFalse(isset($data["code"]));
+	}
+
+	function testGeneralDatabaseError() {
+		list($status, $data) = $this->rest("POST", "game", array("name" => "game3", "owner_id" => 99, "start_time" => "2020-01-01", "end_time" => "bad"));
+		$this->assertEquals(422, $status);
+	}
+
+	function testGET() {
+		list($status, $data) = $this->rest("GET", "user");
+		$this->assertEquals(200, $status);
+		$this->assertEquals(array(
+			array("user_id" => 1, "login" => "admin"),
+			array("user_id" => 2, "login" => "user")
+		), $data);
+	}
+
+	function testPUT() {
+		list($status, $data) = $this->rest("PUT", "user", array("user_id" => 2, "login" => "bigbrother"));
+		$this->assertEquals(200, $status);
+		$this->assertEquals(array("user_id" => 2, "login" => "bigbrother"), $data);
+		list($status, $data) = $this->rest("GET", "user");
+		$this->assertEquals(array(
+			array("user_id" => 1, "login" => "admin"),
+			array("user_id" => 2, "login" => "bigbrother")
+		), $data);
+	}
+
+	function testPOST() {
+		list($status, $data) = $this->rest("POST", "user", array("login" => "bigbrother", "pswd" => "bigpass"));
+		$this->assertEquals(200, $status);
+		$this->assertEquals("bigbrother", $data["login"]);
+		$newUserId = $data["user_id"];
+		list($status, $data) = $this->rest("GET", "user");
+		$this->assertEquals(array(
+			array("user_id" => 1, "login" => "admin"),
+			array("user_id" => $newUserId, "login" => "bigbrother"),
+			array("user_id" => 2, "login" => "user")
+		), $data);
+	}
+
+	function testDELETE() {
+		list($status, $data) = $this->rest("DELETE", "user", array("user_id" => 1, "login" => "admin"));
+		$this->assertEquals(200, $status);
+		$this->assertEquals(array("user_id" => 1, "login" => "admin"), $data);
+		list($status, $data) = $this->rest("GET", "user");
+		$this->assertEquals(array(
+			array("user_id" => 2, "login" => "user")
+		), $data);
+	}
+
+	function testFKViolation() {
+		list($status, $data) = $this->rest("POST", "game", array("name" => "game3", "owner_id" => 99, "start_time" => "2020-01-01", "end_time" => "2020-02-01"));
+		$this->assertEquals(422, $status);
+		$this->assertEquals(1452, $data["code"]);
+	}
+
+	function testPKViolation() {
+		$_SESSION["user_id"] = 2;
+		$_SESSION["game_id"] = 1;
+		list($status, $data) = $this->rest("POST", "loc", array("name" => "Černá hora", "code" => "HOUBA"));
+		$this->assertEquals(200, $status);
+		list($status, $data) = $this->rest("POST", "cipher", array("name" => "S2", "code" => "HOUBA"));
+		$this->assertEquals(422, $status);
+		$this->assertEquals(1062, $data["code"]);
+		
+		$_SESSION["game_id"] = 2;
+		list($status, $data) = $this->rest("POST", "loc", array("name" => "S2", "code" => "HOUBA"));
+		$this->assertEquals(200, $status);
+	}
+
+}

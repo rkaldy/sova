@@ -1,0 +1,18 @@
+#!/usr/bin/php
+<?php
+$test = count($_SERVER["argv"]) >= 2 && $_SERVER["argv"][1] == "-t";
+$db = $test ? "sova_test" : "sova";
+
+$pdo = new PDO("mysql:host=localhost", "root", "taliyota");
+$pdo->exec("DROP DATABASE IF EXISTS $db");
+$pdo->exec("CREATE DATABASE $db");
+$pdo->exec("USE $db");
+$pdo->exec(file_get_contents(__DIR__."/db.create.sql"));
+
+$pdo->exec("LOAD DATA INFILE '".__DIR__."/wordlist.txt' INTO TABLE wordlist");
+
+if (!$test) {
+	$pdo->exec("INSERT INTO user VALUES (1, 'admin', '".password_hash("nimda", PASSWORD_BCRYPT)."')");
+	$pdo->exec("INSERT INTO user VALUES (2, 'bubak', '".password_hash("bubu", PASSWORD_BCRYPT)."')");
+	$pdo->exec("INSERT INTO game VALUES (1, 2, 'game1', '2020-01-01', '2020-01-02')");
+}

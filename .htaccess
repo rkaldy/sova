@@ -1,0 +1,5 @@
+RewriteEngine On
+
+RewriteCond %{REQUEST_FILENAME} "!/css/."
+RewriteCond %{REQUEST_FILENAME} "!/js/."
+RewriteRule ^ index.php [QSA,L]

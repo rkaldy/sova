@@ -1,0 +1,126 @@
+/* General */
+
+body {
+	font-family: sans-serif;
+	font-weight: lighter;
+	font-size: 11pt;
+	color: #808080;
+}
+
+b {
+	font-weight: bold;
+}
+
+.clear {
+	clear: both;
+	height: 0pt;
+}
+
+
+/* Header */
+
+header {
+	border: solid 1px #203060;
+	background-color: #203060;
+	color: white;
+	border-radius: 0ex 0ex 1.5ex 1.5ex;
+}
+
+h1 {
+	font-size: 16pt;
+	font-weight: lighter;
+	margin: 0.1ex;
+}
+
+#logo {
+	float: left;
+	padding: 0.3ex 2ex;
+}
+
+#title {
+	float: left;
+	margin: 0.5ex 1ex
+}
+
+#time {
+	float: right;
+	font-size: 14pt;
+	margin: 0.6ex 2ex;
+}
+
+#time small {
+	font-size: 9pt;
+}
+
+#user {
+	font-size: 14pt;
+	font-weight: lighter;
+	margin: 0.1ex;
+}
+
+#user small {
+	font-size: 12pt;
+}
+
+#version {
+	color: #e0e0ff;
+}
+
+
+/* Navigation */
+
+nav {
+	background-color: #306080;
+	border-radius: 1ex;
+	color: white;
+	padding: 1ex 2ex;
+	margin: 2ex 0ex;
+}
+
+nav a {
+	color: white;
+	text-decoration: none;
+	text-transform: uppercase;
+	font-size: 10pt;
+	font-weight: bold;
+	padding: 1ex 2ex;
+}
+
+
+/* Contents */
+
+h2 {
+	font-size: 18pt;
+	font-weight: lighter;
+}
+
+#contents {
+	margin: 1ex 2ex;
+}
+
+#flash {
+	color: #a07070;
+}
+
+form th {
+	text-align: right;
+}
+
+label {
+	margin-right: 1ex;
+}
+
+input {
+	border: solid 1px #808080;
+	padding: 3px 5px;
+	font-size: 11pt;
+	font-weight: normal;
+	color: black;
+}
+
+input[type="submit"] {
+	padding: 0.6ex;
+	border-radius: 0.6ex;
+	font-weight: normal;
+	color: black;
+}

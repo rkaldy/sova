@@ -1,0 +1,99 @@
+/* Header */
+
+#user {
+	float: right;
+	margin: 0.5ex 2ex;
+	font-size: 10pt;
+}
+
+
+/* Navigation */
+
+nav a {
+	border-radius: 0.5ex;
+}
+
+nav a.selected {
+	background-color: #a040a0;
+}
+
+
+/* Contents */
+
+h3 {
+	font-size: 15pt;
+	font-weight: lighter;
+	margin: 1.5ex 0ex 0.5ex 0ex;
+}
+
+#contents {
+	margin: 1ex 2ex;
+}
+
+#legend th {
+	text-align: right;
+	padding-right: 2ex;
+}
+
+
+/* Table */
+
+.jsgrid {
+	border: solid 1px #c0c0c0;
+	padding: 0.5ex;
+	border-radius: 1ex;
+	overflow: visible;
+}
+
+.jsgrid-cell {
+	padding: 0.3em 0.5em;
+}
+
+select, .jsgrid-edit-row select {
+	font-size: 11pt;
+	padding: 0ex;
+	color: black;
+}
+
+.jsgrid textarea, .jsgrid input {
+	border: solid 1px rgb(0, 0, 0, 0.15);
+	border-radius: 4px;
+	font-family: sans-serif;
+	font-size: 11pt;
+	font-weight: lighter;
+}
+
+.jsgrid-grid-header, .jsgrid-grid-body {
+	overflow: visible;
+}
+
+
+/* Multi-select */
+
+.select-pure__select {
+	font-size: 11pt;
+	padding: 2px 7px;
+	min-height: 30px;
+}
+
+.select-pure__selected-label {
+	margin: 2px 5px 2px 0px;
+}
+
+.times:before {
+	content: "×";
+}
+
+.times {
+	font-weight: 900;
+}
+
+
+/* Misc */
+
+.graph-legend {
+	border: solid 1px black;
+	margin-left: 1em;
+	margin-right: 0.5ex;
+	padding-right: 1em;
+}
