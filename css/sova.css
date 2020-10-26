@@ -11,6 +11,10 @@ b {
 	font-weight: bold;
 }
 
+a {
+	color: #306080;
+}
+
 .clear {
 	clear: both;
 	height: 0pt;
@@ -110,12 +114,13 @@ label {
 	margin-right: 1ex;
 }
 
-input {
-	border: solid 1px #808080;
-	padding: 3px 5px;
+input, textarea {
+	border: solid 1px rgb(0, 0, 0, 0.15);
+	border-radius: 4px;
+	font-family: sans-serif;
 	font-size: 11pt;
-	font-weight: normal;
-	color: black;
+	font-weight: lighter;
+	padding: 0.3em 0.5em;
 }
 
 input[type="submit"] {

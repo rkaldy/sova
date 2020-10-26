@@ -7,6 +7,8 @@ use Sova\View;
 use Sova\Redirect;
 use Sova\Model\User;
 use Sova\Model\Game;
+use Sova\Model\TeamRepo;
+use Sova\Model\MessageRepo;
 
 class AdminController {
 
@@ -84,4 +86,15 @@ class AdminController {
 	public function hints($args)  { return new View("admin/hints"); }
 	public function teams($args)  { return new View("admin/teams"); }
 	public function graph($args)  { return new View("admin/graph"); }
+	public function messages($args)  { return new View("admin/messages"); }
+
+	public function broadcast($args) {
+		$teams = (new TeamRepo())->list();
+		return new View("admin/broadcast", array("teams" => $teams));
+	}
+
+	public function broadcast_send($args) {
+		(new MessageRepo())->broadcast($args["team"], $args["message"]);
+		return new Redirect("messages");
+	}
 }

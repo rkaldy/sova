@@ -1,27 +1,30 @@
 <?php
 namespace Sova\Model;
 
-use Sova\DB;
+use Sova\RestException;
 
-class MessageRepo {
+class MessageRepo extends CRUD {
 
 	public const FROM_TEAM = 1;
 	public const TO_TEAM = 2;
 
-	protected $db;
 
-	public function __construct() {
-		$this->db = DB::get();
-	}
-
-	public function list($offset, $limit) {
+	public function list($page, $pageSize) {
 		return $this->db->aquery("
-			SELECT time, team.name, direction, text
+			SELECT time, CONCAT(team.name, IF(direction = ".self::FROM_TEAM.", ' →', ' ←')) AS name, direction, text
 			FROM message NATURAL JOIN team
-			WHERE team.game_id = ?
+			WHERE team.game_id = ? AND time <= NOW()
 			ORDER BY time DESC
 			LIMIT ?, ?
-		", Game::current(), $offset, $limit);
+		", Game::current(), ($page - 1) * $pageSize, $pageSize);
+	}
+
+	public function count() {
+		return $this->db->equery("
+			SELECT COUNT(*) FROM message 
+			NATURAL JOIN team
+			WHERE team.game_id = ? AND time <= NOW()
+		", Game::current());
 	}
 
 	public function sendToSova(string $message) {

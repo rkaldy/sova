@@ -45,9 +45,13 @@ function setGrid(cfg) {
 		deleteConfirm: "Opravdu?",
 		controller: {
 			loadData: function(filter) {
+				var url = "../api/" + cfg.table;
+				if ("pageIndex" in filter && "pageSize" in filter) {
+					url += "/" + filter.pageIndex + "/" + filter.pageSize;
+				}
 				return $.ajax({
 					type: "GET",
-					url: "../api/" + cfg.table,
+					url: url,
 					error: ajaxErrorHandler
 				});
 			},

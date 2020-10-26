@@ -6,6 +6,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Sova\DBException;
 use Sova\RestException;
 use Sova\Model\User;
+use Sova\Model\MessageRepo;
 
 class RestController {
 
@@ -29,7 +30,7 @@ class RestController {
 				if ($req->getMethod() != "GET") {
 					throw new RestException(405);
 				}
-				$ret = $this->$resource();
+				$ret = $this->$resource($args);
 			} else if (class_exists($repoName)) {
 				$repo = new $repoName();
 				$ret = $repo->restCRUD($req->getMethod(), $req->getParsedBody());
@@ -59,8 +60,16 @@ class RestController {
 		return $resp->withHeader("Content-Type", "application/json; charset=UTF-8")->withStatus($status);
 	}
 
-	function graph() {
+	function graph($args) {
 		list($vertices, $edges) = \Sova\Model\Graph::sortAndGet();
 		return array("vertices" => $vertices, "edges" => $edges);
+	}
+
+	function messages($args) {
+		$repo = new MessageRepo();
+		return array(
+			"data" => $repo->list($args["page"], $args["pageSize"]),
+			"itemsCount" => $repo->count()
+		);
 	}
 }

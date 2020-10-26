@@ -27,7 +27,7 @@ $app->add(new TrailingSlashMiddleware());
 
 $app->map(["GET", "POST"], "/admin/{action}",  AdminController::class);
 $app->get("/admin/", AdminController::class);
-$app->map(["GET", "POST", "PUT", "DELETE"], "/api/{resource}", RestController::class);
+$app->map(["GET", "POST", "PUT", "DELETE"], "/api/{resource}[/{page}[/{pageSize}]]", RestController::class);
 $app->map(["GET", "POST"], "/{action}", MainController::class);
 $app->get("/", MainController::class);
 
