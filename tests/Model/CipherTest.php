@@ -9,13 +9,11 @@ class CipherTest extends GameTestBase {
 
 	protected $cipher;
 	protected $cipherRepo;
-	protected $progressRepo;
 
 	function setUp(): void {
 		parent::setUp();
 		$this->cipher = new Cipher();
 		$this->cipherRepo = new CipherRepo();
-		$this->progressRepo = new ProgressRepo();
 	}
 
 	function tearDown(): void {
@@ -23,18 +21,18 @@ class CipherTest extends GameTestBase {
 		parent::tearDown();
 	}
 
-	function testCheckPreviousLoc() {
-		$t1 = $this->cipherRepo->get(14);
-		$this->assertFalse($this->cipher->checkPreviousCiphersSolved($t1));
-		$this->progressRepo->create(1, 3, 1);
-		$this->assertTrue($this->cipher->checkPreviousCiphersSolved($t1));
+	function testCheckPreviousCipher() {
+		$cipher = $this->cipherRepo->get(14);
+		$this->assertFalse($this->cipher->checkPreviousCiphersSolved($cipher));
+		$this->progressRepo->create(1, 13, 1);
+		$this->assertTrue($this->cipher->checkPreviousCiphersSolved($cipher));
 	}
 
-	function testCheckPreviousCiphers() {
-		$t1 = $this->cipherRepo->get(14);
+	function testCheckPreviousMultipleCiphers() {
+		$cipher = $this->cipherRepo->get(13);
+		$this->progressRepo->create(1, 11, 1);
+		$this->assertFalse($this->cipher->checkPreviousCiphersSolved($cipher));
 		$this->progressRepo->create(1, 12, 1);
-		$this->assertFalse($this->cipher->checkPreviousCiphersSolved($t1));
-		$this->progressRepo->create(1, 13, 1);
-		$this->assertTrue($this->cipher->checkPreviousCiphersSolved($t1));
+		$this->assertTrue($this->cipher->checkPreviousCiphersSolved($cipher));
 	}
 }

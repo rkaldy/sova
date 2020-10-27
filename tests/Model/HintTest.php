@@ -11,6 +11,7 @@ class HintTest extends GameTestBase {
 	function setUp(): void {
 		parent::setUp();
 		$this->db->execute("INSERT INTO team_hint (team_id, hint_id, cipher_id) VALUES (1, 1, 11)");
+		$this->progressRepo->create(1, 1, 1);
 		$this->hint = new Hint();
 	}
 
@@ -41,14 +42,26 @@ class HintTest extends GameTestBase {
 
 	function testApply() {
 		$this->db->execute("INSERT INTO team_hint (team_id, hint_id, cipher_id) VALUES (1, 2, NULL)");
-		$resp = $this->hint->apply("S3");
-		$this->assertEquals(new Text("hint.apply.success", "S3", "Zkus ji luštit poslepu"), $resp);
+		$resp = $this->hint->apply("S1b");
+		$this->assertEquals(new Text("hint.apply.success", "S1b", "Zkus ji luštit poslepu"), $resp);
+	}
+
+	function testApplyAlready() {
+		$this->db->execute("INSERT INTO team_hint (team_id, hint_id, cipher_id) VALUES (1, 2, NULL)");
+		$resp = $this->hint->apply("S1a");
+		$this->assertEquals(new Text("hint.apply.already", "S1a"), $resp);
 	}
 
 	function testApplyNoPrevious() {
 		$this->db->execute("INSERT INTO team_hint (team_id, hint_id, cipher_id) VALUES (1, 2, NULL)");
+		$resp = $this->hint->apply("S3");
+		$this->assertEquals(new Text("cipher.no-previous", "S3"), $resp);
+	}
+
+	function testApplyNoPreviousMulti() {
+		$this->db->execute("INSERT INTO team_hint (team_id, hint_id, cipher_id) VALUES (1, 2, NULL)");
 		$resp = $this->hint->apply("S2");
-		$this->assertEquals(new Text("cipher.no-previous", "S2"), $resp);
+		$this->assertEquals(new Text("cipher.no-previous.multi", "S2", 2), $resp);
 	}
 
 	function testApplyUnknownCipher() {
@@ -56,15 +69,8 @@ class HintTest extends GameTestBase {
 		$resp = $this->hint->apply("S4");
 		$this->assertEquals(new Text("cipher.unknown", "S4"), $resp);
 	}
-
-	function testApplyAlready() {
-		$this->db->execute("INSERT INTO team_hint (team_id, hint_id, cipher_id) VALUES (1, 2, NULL)");
-		$resp = $this->hint->apply("S1");
-		$this->assertEquals(new Text("hint.apply.already", "S1"), $resp);
-	}
-
 	function testApplyNoHint() {
-		$resp = $this->hint->apply("S3");
+		$resp = $this->hint->apply("S1b");
 		$this->assertEquals(new Text("hint.apply.no-hint"), $resp);
 	}
 }

@@ -15,13 +15,4 @@ class ProgressRepo extends RepoBase {
 			WHERE team_id = ? AND loc.point_id = ?
 		", $teamId, $locId) != 0;
 	}
-
-	public function previousLocVisited(int $teamId, int $cipherId) {
-		return $this->db->equery("
-			SELECT COUNT(*) FROM cipher
-			JOIN step ON cipher.point_id = step.to_point_id
-			JOIN progress ON progress.point_id = step.from_point_id
-			WHERE team_id = ? AND cipher.point_id = ?
-		", $teamId, $cipherId) != 0;
-	}
 }

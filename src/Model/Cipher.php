@@ -11,19 +11,16 @@ class Cipher extends ModelBase {
 	}
 
 	public function checkPreviousCiphersSolved(array $cipher) {
-		$progressRepo = new ProgressRepo();
-		$teamId = Team::current();
-		print_r($cipher);
-		if ($progressRepo->previousLocVisited($teamId, $cipher["point_id"])) {
-			return true;
-		} else {
-			foreach ($cipher["prev"] as $prevLoc) {
-				echo "prevLoc=$prevLoc\n";
-				if (!$progressRepo->previousCipherSolved($teamId, $prevLoc)) {
-					return false;
-				}
-			}
+		if (!$this->repo->hasPreviousCiphers($cipher["point_id"])) {
 			return true;
 		}
+		$progressRepo = new ProgressRepo();
+		$teamId = Team::current();
+		foreach ($cipher["prev"] as $prevLoc) {
+			if (!$progressRepo->previousCipherSolved($teamId, $prevLoc)) {
+				return false;
+			}
+		}
+		return true;
 	}
 }

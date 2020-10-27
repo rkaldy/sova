@@ -89,4 +89,14 @@ class CipherRepo extends PointRepo {
 	function delete(array $cipher) {
 		$this->db->execute("DELETE FROM point WHERE point_id = :point_id", $cipher, true);
 	}
+
+
+	public function hasPreviousCiphers(int $cipherId) {
+		return $this->db->equery("
+			SELECT COUNT(*) 
+			FROM step AS prev
+			JOIN step AS prev2 ON prev2.to_point_id = prev.from_point_id
+			WHERE prev.to_point_id = ?
+		", $cipherId) != 0;
+	}
 }
