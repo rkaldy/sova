@@ -8,6 +8,6 @@ class RepoBase {
 	protected $db;
 
 	public function __construct() {
-		$this->db = &DB::get();
+		$this->db = DB::get();
 	}
 }

@@ -6,7 +6,7 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Sova\View;
 use Sova\Model\Team;
 use Sova\Model\Code;
-use Sova\Model\MessageRepo;
+use Sova\Model\Hint;
 
 class MainController {
 
@@ -49,10 +49,20 @@ class MainController {
 
 	public function code($args) {
 		if (isset($args["code"])) {
-			$response = (new CodeController())->process($args["code"]);
+			$response = CodeController::process($args["code"]);
 		} else {
 			$response = null;
 		}
 		return new View("main/code", array("response" => $response));
 	}	
+
+	public function applyhint($args) {
+		$hint = new Hint();
+		if (isset($args["cipher"])) {
+			$response = $hint->apply($args["cipher"]);
+		} else {
+			$response = null;
+		}
+		$hintCount = $hint->unusedHintCount();
+	}
 }

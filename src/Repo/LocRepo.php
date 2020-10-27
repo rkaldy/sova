@@ -6,7 +6,18 @@ use Sova\DBException;
 class LocRepo extends RepoBase {
 
 	public function get(int $id) {
-		return $this->db->squery("SELECT loc.point_id, name, description, end_time, min_ciphers_solved FROM loc NATURAL JOIN point WHERE loc.point_id = ?", $id);
+		$loc = $this->db->squery("
+			SELECT loc.point_id, name, description, end_time, min_ciphers_solved 
+			  GROUP_CONCAT(DISTINCT prev.from_point_id ORDER BY prev.from_point_id SEPARATOR ',') AS prev,
+			  GROUP_CONCAT(DISTINCT next.to_point_id ORDER BY next.to_point_id SEPARATOR ',') AS next,
+			FROM loc 
+			NATURAL JOIN point 
+			LEFT JOIN step AS prev ON prev.to_point_id = loc.point_id
+			LEFT JOIN step AS next ON next.from_point_id = loc.point_id
+			WHERE loc.point_id = ?
+		", $id);
+		$this->flattenPrevNext($loc);
+		return $loc;
 	}
 
 	public function list($gameId) {

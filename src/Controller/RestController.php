@@ -8,7 +8,7 @@ use Sova\RestException;
 use Sova\Model\User;
 use Sova\Model\Game;
 use Sova\Model\Graph;
-use Sova\Repo\MessageRepo;
+use Sova\Model\Message;
 
 class RestController {
 
@@ -89,11 +89,7 @@ class RestController {
 	}
 
 	function messages(array $args): array {
-		$repo = new MessageRepo();
-		$messages = $repo->list(Game::current(), ($args["page"] - 1) * $args["pageSize"], $args["pageSize"]);
-		foreach ($messages as &$msg) {
-			$msg["name"] .= $msg["direction"] == MessageRepo::FROM_TEAM ? " →" : " ←";
-		}
-		return array("data" => $messages, "itemsCount" => $repo->count(Game::current()));
+		$message = new Message();
+		return array("data" => $message->list($args["page"], $args["pageSize"]), "itemsCount" => $message->count());
 	}
 }

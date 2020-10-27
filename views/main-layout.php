@@ -37,6 +37,7 @@ echo $now->format('j.n.Y H:i:s');
     <nav>
 <?php   if (isset($team)) { ?>
       <a href="code">Zadej kód</a>
+      <a href="applyhint">Použít nápovědu</a>
       <a href="messages">Seznam zpráv</a>
       <a href="rank">Pořadí</a>
       <a href="logout">Logout</a>
@@ -49,5 +50,12 @@ echo $now->format('j.n.Y H:i:s');
     <div id="contents">
 <?php echo $contents; ?>
     </div>
+
+    <script type="text/javascript">
+	  elems = document.getElementsByClassName("focused");
+	  if (elems.length != 0) {
+		  elems[0].focus();
+	  }
+    </script>
   </body>
 </html>

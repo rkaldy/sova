@@ -8,6 +8,8 @@ class Loc extends ModelBase {
 		(new Code())->prepare($loc["code"]);
 	}
 
-	public function checkPreviousCiphersSolved($loc) {
+	public function checkPreviousCipherSolved($loc) {
+		
+		
 	}
 }

@@ -19,6 +19,15 @@ class MessageRepo extends RepoBase {
 		", $gameId, $limit, $offset);
 	}
 
+	public function listForTeam(int $teamId) {
+		return $this->db->aquery("
+			SELECT time, direction, text
+			FROM message
+			WHERE team_id = ? AND time <= NOW()
+			ORDER BY time DESC, direction DESC 
+		", $teamId);
+	}
+
 	public function count(int $gameId) {
 		return $this->db->equery("
 			SELECT COUNT(*) FROM message 

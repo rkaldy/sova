@@ -10,7 +10,7 @@ if (isset($flash)) echo "<p id=\"flash\">$flash</p>";
   <table>
     <tr>
       <th><label for="team_id">číslo týmu</label></th>
-      <td><input type="text" id="team_id" name="team_id" maxlength="50"></td>
+      <td><input type="text" name="team_id" class="focused" maxlength="50"></td>
     </tr>
     <tr>
       <th><label for="pswd">heslo</label></th>
@@ -22,9 +22,3 @@ if (isset($flash)) echo "<p id=\"flash\">$flash</p>";
     </tr>
   </table>
 </form>
-
-<script> 
-$(function() {
-	$('#team_id').focus();
-});
-</script>

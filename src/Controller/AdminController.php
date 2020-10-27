@@ -7,8 +7,9 @@ use Sova\View;
 use Sova\Redirect;
 use Sova\Model\User;
 use Sova\Model\Game;
-use Sova\Model\TeamRepo;
-use Sova\Model\MessageRepo;
+use Sova\Model\Team;
+use Sova\Model\Message;
+
 
 class AdminController {
 
@@ -81,22 +82,22 @@ class AdminController {
 		return new View("admin/login");
 	}
 
-	public function users($args) { return new View("admin/users"); }
-	public function games($args) { return new View("admin/games"); }
-	public function locs($args)  { return new View("admin/locs"); }
-	public function ciphers($args)  { return new View("admin/ciphers"); }
-	public function hints($args)  { return new View("admin/hints"); }
-	public function teams($args)  { return new View("admin/teams"); }
-	public function graph($args)  { return new View("admin/graph"); }
-	public function messages($args)  { return new View("admin/messages"); }
+	public function users($args) 	{ return new View("admin/users"); }
+	public function games($args) 	{ return new View("admin/games"); }
+	public function locs($args)		{ return new View("admin/locs"); }
+	public function ciphers($args)	{ return new View("admin/ciphers"); }
+	public function hints($args)	{ return new View("admin/hints"); }
+	public function teams($args)	{ return new View("admin/teams"); }
+	public function graph($args)	{ return new View("admin/graph"); }
+	public function messages($args)	{ return new View("admin/messages"); }
 
 	public function broadcast($args) {
-		$teams = (new TeamRepo())->list(Game::current());
+		$teams = (new Team())->list();
 		return new View("admin/broadcast", array("teams" => $teams));
 	}
 
 	public function broadcast_send($args) {
-		(new MessageRepo())->broadcast($args["team"], $args["message"]);
+		(new Message())->broadcast($args["team"], $args["message"]);
 		return new Redirect("messages");
 	}
 }

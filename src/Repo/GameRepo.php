@@ -20,11 +20,11 @@ class GameRepo extends RepoBase {
 		$game["game_id"] = $this->db->lastInsertId();
 	}
 
-	public function update(array &$game) {
+	public function update(array $game) {
 		$this->db->execute("UPDATE game SET owner_id = :owner_id, name = :name, start_time = :start_time, end_time = :end_time WHERE game_id = :game_id", $game);
 	}
 
-	public function delete(array &$game) {
+	public function delete(array $game) {
 		$this->db->execute("DELETE FROM game WHERE game_id = :game_id", $game, true);
 	}
 }

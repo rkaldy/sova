@@ -3,11 +3,33 @@ namespace Sova\Repo;
 
 use Sova\DBException;
 
-class CipherRepo extends RepoBase {
+class CipherRepo extends PointRepo {
 
-	public function get($id) {
-		return $this->db->squery("SELECT cipher.point_id, name, name_int, hint, hint_timeout, solution_timeout FROM cipher NATURAL JOIN point WHERE cipher.point_id = ?", $id);
+	protected const SQL = "
+		    SELECT cipher.point_id, name, hint, hint_timeout, solution_timeout,
+			  GROUP_CONCAT(DISTINCT prev.from_point_id ORDER BY prev.from_point_id SEPARATOR ',') AS prev,
+			  GROUP_CONCAT(DISTINCT next.to_point_id ORDER BY next.to_point_id SEPARATOR ',') AS next
+			FROM cipher 
+			NATURAL JOIN point 
+			LEFT JOIN step AS prev ON prev.to_point_id = cipher.point_id
+			LEFT JOIN step AS next ON next.from_point_id = cipher.point_id";
+
+	public function get(int $id) {
+		$cipher = $this->db->squery(self::SQL." WHERE cipher.point_id = ?", $id);
+		$this->flattenPrevNext($cipher);
+		return $cipher;
 	}
+
+	public function getByName(string $name, int $gameId) {
+		$cipher = $this->db->squery(self::SQL." WHERE name = ? and point.game_id = ?", $name, $gameId);
+		if (isset($cipher["point_id"])) {
+			$this->flattenPrevNext($cipher);
+			return $cipher;
+		} else {		
+			return null;
+		}
+	}
+
 
 	function list(int $gameId) {
 		$ciphers = $this->db->aquery("
@@ -24,13 +46,13 @@ class CipherRepo extends RepoBase {
 			ORDER BY sort_id, name
 		", $gameId);
 		foreach ($ciphers as &$cipher) {
-			$cipher["prev"] = empty($cipher["prev"]) ? array() : explode(",", $cipher["prev"]);
-			$cipher["next"] = empty($cipher["next"]) ? array() : explode(",", $cipher["next"]);
+			self::flattenPrevNext($cipher);
 		}
 		return $ciphers;
 	}
 
-	private function addPrevNextLocs($cipher) {
+
+	protected function addPrevNextLocs($cipher) {
 		if (isset($cipher["prev"])) {
 			foreach ($cipher["prev"] as $prev) {
 				$this->db->execute("INSERT INTO step (from_point_id, to_point_id) VALUES (?, ?)", array($prev, $cipher["point_id"]), true);
@@ -56,7 +78,7 @@ class CipherRepo extends RepoBase {
 		}
 	}
 
-	function update(array $cipher) {
+	function update(array &$cipher) {
 		$this->db->execute("UPDATE point SET sort_id = :sort_id, name = :name WHERE point_id = :point_id", $cipher);
 		$this->db->execute("UPDATE cipher SET name_int = :name_int, solution_timeout = :solution_timeout, hint = :hint, hint_timeout = :hint_timeout WHERE point_id = :point_id", $cipher);
 		$this->db->execute("UPDATE code SET code = :code WHERE point_id = :point_id", $cipher);

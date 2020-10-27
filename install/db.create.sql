@@ -84,7 +84,7 @@ CREATE TABLE hint (
   PRIMARY KEY (hint_id),
   KEY game_id (game_id),
   CONSTRAINT hint_ibfk_1 FOREIGN KEY (game_id) REFERENCES game (game_id)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -114,14 +114,14 @@ CREATE TABLE message (
   team_id int(11) NOT NULL,
   cipher_id int(11) DEFAULT NULL,
   direction tinyint(1) NOT NULL,
-  `time` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `time` datetime NOT NULL DEFAULT current_timestamp(),
   `text` varchar(500) COLLATE utf8_czech_ci NOT NULL,
   PRIMARY KEY (message_id),
-  KEY sort_idx (team_id,`time`) USING BTREE,
   KEY cipher_id (cipher_id),
+  KEY sort_idx (team_id,`time`,direction) USING BTREE,
   CONSTRAINT message_ibfk_1 FOREIGN KEY (team_id) REFERENCES team (team_id),
   CONSTRAINT message_ibfk_2 FOREIGN KEY (cipher_id) REFERENCES cipher (point_id)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=84 DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -138,6 +138,24 @@ CREATE TABLE `point` (
   PRIMARY KEY (point_id),
   UNIQUE KEY `name` (game_id,`name`),
   KEY sort_idx (game_id,sort_id)
+) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `progress`
+--
+
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE progress (
+  team_id int(11) NOT NULL,
+  point_id int(11) NOT NULL,
+  `time` datetime NOT NULL DEFAULT current_timestamp(),
+  `type` int(11) NOT NULL DEFAULT 1,
+  PRIMARY KEY (team_id,point_id),
+  KEY point_id (point_id),
+  CONSTRAINT progress_ibfk_1 FOREIGN KEY (team_id) REFERENCES team (team_id),
+  CONSTRAINT progress_ibfk_2 FOREIGN KEY (point_id) REFERENCES point (point_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -172,7 +190,7 @@ CREATE TABLE team (
   PRIMARY KEY (team_id),
   UNIQUE KEY game_id (game_id,`name`),
   CONSTRAINT team_ibfk_1 FOREIGN KEY (game_id) REFERENCES game (game_id)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -224,4 +242,4 @@ CREATE TABLE wordlist (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-10-24  7:40:24
+-- Dump completed on 2020-10-27 16:44:05
