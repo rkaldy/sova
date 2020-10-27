@@ -1,9 +1,9 @@
 <?php
-namespace Sova\Model;
+namespace Sova\Repo;
 
-class UserRepo extends CRUD {
+class UserRepo extends RepoBase {
 	
-	public function get($login) {
+	public function get(string $login) {
 		return $this->db->squery("SELECT * FROM user WHERE login = ?", $login);
 	}
 
@@ -11,31 +11,28 @@ class UserRepo extends CRUD {
 		return $this->db->aquery("SELECT user_id, login FROM user ORDER BY login");
 	}
 	
-	public function create($user) {
+	public function create(array &$user) {
 		if (empty($user["pswd"])) {
 			throw new \Exception("Heslo nesmí být prázdné");
 		}
-		$user["pswd"] = password_hash($user["pswd"], PASSWORD_BCRYPT);
 		$this->db->execute("INSERT INTO user (login, pswd) VALUES (:login, :pswd)", $user, true);
 		$user["user_id"] = $this->db->lastInsertId();
 		unset($user["pswd"]);
-		return $user;
 	}
 
-	public function update($user) {
-		if (empty($user["pswd"])) {
-			unset($user["pswd"]);
-			$this->db->execute("UPDATE user SET login = :login WHERE user_id = :user_id", $user);
-		} else {
-			$user["pswd"] = password_hash($user["pswd"], PASSWORD_BCRYPT);
+	public function update(array &$user) {
+		if (isset($user["pswd"])) {
 			$this->db->execute("UPDATE user SET login = :login, pswd = :pswd WHERE user_id = :user_id", $user);
 			unset($user["pswd"]);
+		} else {
+			$this->db->execute("UPDATE user SET login = :login WHERE user_id = :user_id", $user);
 		}
-		return $user;
 	}
 
-	public function delete($user) {
+	public function delete(array $user) {
+		if ($user["user_id"] == 1) {
+			throw new \Exception("Superuživatele nelze smazat");
+		}
 		$this->db->execute("DELETE FROM user WHERE user_id = :user_id", $user, true);
-		return $user;
 	}
 }

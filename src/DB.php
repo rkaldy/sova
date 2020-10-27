@@ -18,7 +18,7 @@ class DB extends PDO {
 		}
 	}
 
-	public static function get() {
+	public static function &get() {
 		if (!isset(self::$instance)) {
 			self::$instance = new DB("mysql:host=".DB_HOST.";dbname=".DB_NAME, DB_USER, DB_PASS);
 		}
@@ -93,10 +93,7 @@ class DB extends PDO {
 	public function equery($sql, ...$params) {
 		$stmt = self::execute($sql, $params);
 		$ret = $stmt->fetch(PDO::FETCH_NUM);
-		if (!$ret) {
-			throw new DBException("No entry found");
-		}
-		return $ret[0];
+		return $ret ? $ret[0] : null;
 	}
 	
 	public function aquery($sql, ...$params) {

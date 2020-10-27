@@ -1,18 +1,14 @@
 <?php
-namespace Sova\Model;
+namespace Sova\CRUD;
 
-use Sova\TestBase;
 use Sova\DBException;
 
-class HintRepoTest extends TestBase {
-
-	protected $repo;
+class HintCrudTest extends CrudTestBase {
 
 	function setUp(): void {
 		parent::setUp();
 		$this->db->execute("INSERT INTO hint (game_id, hint_id) VALUES (1, 1)");
 		$this->db->execute("INSERT INTO code (game_id, hint_id, code) VALUES (1, 1, 'BUBEN')");
-		$this->repo = new HintRepo();
 	}
 
 	function tearDown(): void {
@@ -21,41 +17,41 @@ class HintRepoTest extends TestBase {
 	}
 
 	function testCreate() {
-		$hint = $this->repo->create(array("code" => "divizna"));
+		$hint = $this->create(array("code" => "divizna"));
 		$this->assertEquals(array(
-			array("game_id" => 1, "hint_id" => 1, "code" => "BUBEN"),
-			array("game_id" => 1, "hint_id" => $hint["hint_id"], "code" => "DIVIZNA")
-		), $this->repo->list());
+			array("hint_id" => 1, "code" => "BUBEN"),
+			array("hint_id" => $hint["hint_id"], "code" => "DIVIZNA")
+		), $this->list());
 	}
 
 	function testcreateDuplicateCode() {
 		try {
-			$hint = $this->repo->create(array("code" => "buben"));
+			$this->create(array("code" => "buben"));
 			$this->fail("Should throw DBException");
 		} catch (DBException $ex) {
 			$this->assertEquals(1062, $ex->getCode());
 		}
 		$this->assertEquals(array(
-			array("game_id" => 1, "hint_id" => 1, "code" => "BUBEN")
-		), $this->repo->list());
+			array("hint_id" => 1, "code" => "BUBEN")
+		), $this->list());
 	}
 
 	function testCreateGeneratedCode() {
-		$hint = $this->repo->create(array());
+		$hint = $this->create(array("code" => ""));
 		$this->assertEquals(1, preg_match("/[A-Z]+/", $hint["code"]));
 	}
 
 	function testUpdate() {
-		$hint = $this->repo->list()[0];
+		$hint = $this->list()[0];
 		$hint["code"] = "divizna ";
-		$this->repo->update($hint);
+		$this->update($hint);
 		$this->assertEquals(array(
-			array("game_id" => 1, "hint_id" => 1, "code" => "DIVIZNA")
-		), $this->repo->list());
+			array("hint_id" => 1, "code" => "DIVIZNA")
+		), $this->list());
 	}
 
 	function testDelete() {
-		$this->repo->delete($this->repo->list()[0]);
-		$this->assertCount(0, $this->repo->list());
+		$this->delete($this->list()[0]);
+		$this->assertCount(0, $this->list());
 	}
 }

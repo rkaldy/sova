@@ -1,29 +1,29 @@
 <?php
 
-namespace Sova\Model;
+namespace Sova\Repo;
 
-class TeamRepo extends CRUD {
+class TeamRepo extends RepoBase {
 
-	function get($team_id, $pswd) {
+	function get(int $team_id, string $pswd) {
 		return $this->db->squery("
-			SELECT team.*, code AS pswd, game.name AS game_name FROM team
+			SELECT team.*, code AS pswd, game.name AS game_name 
+			FROM team
 			JOIN game ON game.game_id = team.game_id 
 			JOIN code ON code.team_id = team.team_id 
 			WHERE team.team_id = ? AND code = ?
 		", $team_id, $pswd);
 	}
 
-	function list() {
+	function list(int $gameId) {
 		return $this->db->aquery("
-			SELECT team.*, code AS pswd FROM team 
+			SELECT team.team_id, name, phone, email, code AS pswd 
+			FROM team 
 			JOIN code ON team.team_id = code.team_id
-			WHERE team.game_id = ? ORDER BY name", 
-		Game::current());
+			WHERE team.game_id = ? ORDER BY name
+		", $gameId);
 	}
 
-	function create($team) {
-		$team["game_id"] = Game::current();
-		Code::prepare($team["pswd"]);
+	function create(array &$team) {
 		try {
 			$this->db->execute("INSERT INTO team (game_id, name, phone, email) VALUES (:game_id, :name, phone, :email)", $team, true);
 			$team["team_id"] = $this->db->lastInsertId();
@@ -32,18 +32,14 @@ class TeamRepo extends CRUD {
 			$this->db->execute("DELETE FROM team WHERE team_id = :team_id", $team);
 			throw $ex;
 		}
-		return $team;
 	}
 
 	public function update($team) {
-		Code::prepare($team["pswd"]);
 		$this->db->execute("UPDATE team SET name = :name, phone = :phone, email = :email WHERE team_id = :team_id", $team);
 		$this->db->execute("UPDATE code SET code = :pswd WHERE team_id = :team_id", $team);
-		return $team;
 	}
 
 	public function delete($team) {
 		$this->db->execute("DELETE FROM team WHERE team_id = :team_id", $team, true);
-		return $team;
 	}
 }

@@ -5,7 +5,7 @@ use Sova\DB;
 
 class Code {
 
-	public static function prepare(&$code) {
+	public function prepare(?string &$code) {
 		if (empty($code)) {
 			$code = Code::generate();
 		} else {
@@ -13,7 +13,7 @@ class Code {
 		}
 	}
 	
-	public static function generate() {
+	public function generate() {
 		$db = DB::get();
 		do {
 			$word = $db->equery("SELECT word FROM wordlist ORDER BY rand() LIMIT 1");
@@ -23,19 +23,36 @@ class Code {
 	}
 
 	public static function getForCode($code) {
-		$ret = DB::get()->squery("SELECT * FROM code WHERE code = ?", strtoupper(trim($code)));
+		$ret = DB::get()->squery("SELECT * FROM code WHERE code = ?", $code);
 		if ($ret == null) {
-			return null;
+			return array(null, null);
 		} else if (isset($ret["point_id"])) {
 			$loc = (new LocRepo())->get($ret["point_id"]);
 			if (isset($loc)) {
-				return $loc;
+				return array("loc", $loc);
 			} else {
-				return (new CipherRepo())->get($ret["point_id"]);
+				return array("cipher", (new CipherRepo())->get($ret["point_id"]));
 			}
 		} else if (isset($ret["hint_id"])) {
-			return (new HintRepo())->get($ret["hint_id"]);
+			return array("hint", (new HintRepo())->get($ret["hint_id"]));
 		}
-		return null;
+		return array(null, null);
+	}
+
+	public static function process($code) {
+		self::prepare($code);
+		$msgRepo = new MessageRepo();
+		$msgRepo->sendToSova($code);
+
+		$response = "";
+		list($type, $entity) = self::getForCode($code);
+		if ($type == null) {
+			$response = "Neznámý kód: $code";
+		} else if ($type == "hint") {
+			$response = Hint::add($entity);
+		}
+		
+		$msgRepo->sendToTeam($response);
+		return $response;
 	}
 }

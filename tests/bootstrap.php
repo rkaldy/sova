@@ -20,11 +20,10 @@ if (CREATE_DB) {
 } else {
 	echo "Preparing database...";
 	$pdo->exec("USE ".DB_NAME);
-	$pdo->exec("DELETE FROM point");
-	$pdo->exec("DELETE FROM hint");
-	$pdo->exec("DELETE FROM message");
-	$pdo->exec("DELETE FROM team");
-	$pdo->exec("DELETE FROM game");
-	$pdo->exec("DELETE FROM user");
+	foreach ($pdo->query("SHOW TABLES") as $table) {
+		if ($table[0] != 'wordlist') {
+			$pdo->exec("DELETE FROM {$table[0]}");
+		}
+	}
 	echo "done\n";
 }

@@ -1,14 +1,15 @@
 <?php
 namespace Sova\Model;
 
-class Game {
+use Sova\Repo\GameRepo;
 
-	public static function setOwnedGame($gameId = null) {
-		$repo = new GameRepo();
+class Game extends ModelBase {
+
+	public function setOwnedGame($gameId = null) {
 		if (isset($gameId)) {
-			$games = $repo->get($gameId, User::current());
+			$games = $this->repo->get($gameId, User::current());
 		} else {
-			$games = $repo->getOwned(User::current());
+			$games = $this->repo->getOwned(User::current());
 		}
 		if (count($games) == 0) {
 			return 0;
@@ -21,7 +22,7 @@ class Game {
 		}
 	}
 
-	public static function selected() { return isset($_SESSION["game_id"]); }
-	public static function current() { return $_SESSION["game_id"]; }
+	public static function selected() 	 { return isset($_SESSION["game_id"]); }
+	public static function current() 	 { return $_SESSION["game_id"]; }
 	public static function currentName() { return $_SESSION["game_name"]; }
 }

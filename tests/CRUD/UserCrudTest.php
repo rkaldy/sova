@@ -1,10 +1,10 @@
 <?php
-namespace Sova\Model;
+namespace Sova\CRUD;
 
-use Sova\TestBase;
+use Sova\Repo\UserRepo;
 use Sova\DBException;
 
-class UserRepoTest extends TestBase {
+class UserCrudTest extends CrudTestBase {
 
 	protected $repo;
 
@@ -14,16 +14,16 @@ class UserRepoTest extends TestBase {
 	}
 
 	function testCreate() {
-		$this->repo->create(array("login" => "bigbrother", "pswd" => "bigpass"));
-		$users = $this->repo->list();
-		$this->assertCount(3, $this->repo->list());
+		$this->create(array("login" => "bigbrother", "pswd" => "bigpass"));
+		$this->assertCount(3, $this->list());
 		$user = $this->repo->get("bigbrother");
+		$this->assertStringStartsWith("$2y$", $user["pswd"]);
 		$this->assertTrue(password_verify("bigpass", $user["pswd"]));
 	}
 
 	function testCreateEmptyPassword() {
 		try {
-			$this->repo->create(array("login" => "bigbrother", "pswd" => ""));
+			$this->create(array("login" => "bigbrother", "pswd" => ""));
 			$this->fail("Should throw Exception");
 		} catch (\Exception $ex) {
 			$this->assertTrue(true);
@@ -31,38 +31,49 @@ class UserRepoTest extends TestBase {
 	}
 
 	function testUpdate() {
-		$user = $this->repo->list()[0];
+		$user = $this->list()[0];
 		$user["login"] = "bigbrother";
 		$user["pswd"] = "bigpass";
-		$this->repo->update($user);
+		$this->update($user);
 		$this->assertEquals(array(
 			array("user_id" => "1", "login" => "bigbrother"),
 			array("user_id" => "2", "login" => "user")
-		), $this->repo->list());
+		), $this->list());
 		$user = $this->repo->get("bigbrother");
+		$this->assertStringStartsWith("$2y$", $user["pswd"]);
 		$this->assertTrue(password_verify("bigpass", $user["pswd"]));
 	}
 
 	function testUpdateEmptyPassword() {
-		$user = $this->repo->list()[0];
+		$user = $this->list()[0];
 		$user["login"] = "bigbrother";
 		$user["pswd"] = "";
-		$this->repo->update($user);
+		$this->update($user);
 		$user = $this->repo->get("bigbrother");
 		$this->assertTrue(password_verify("nimda", $user["pswd"]));
 	}
 
 	function testDelete() {
-		$users = $this->repo->list();
-		$this->repo->delete($users[0]);
+		$this->db->execute("INSERT INTO user VALUES (3, 'bigbrother', 'bigpass')");
+		$this->delete(array("user_id" => 3));
 		$this->assertEquals(array(
+			array("user_id" => "1", "login" => "admin"),
 			array("user_id" => "2", "login" => "user")
-		), $this->repo->list());
+		), $this->list());
+	}
+
+	function testDeleteGameOwner() {
+		try {
+			$this->delete(array("user_id" => 2));
+			$this->fail("Should throw Exception");
+		} catch (DBException $e) {
+			$this->assertEquals(1451, $e->getCode());
+		}
 	}
 
 	function testDeleteSuperuser() {
 		try {
-			$this->repo->delete(array("user_id" => 1, "login" => "admin"));
+			$this->delete(array("user_id" => 1));
 			$this->fail("Should throw Exception");
 		} catch (\Exception $e) {
 			$this->assertTrue(true);

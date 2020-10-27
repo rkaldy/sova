@@ -100,12 +100,12 @@ class RestControllerTest extends TestBase {
 	}
 
 	function testDELETE() {
-		list($status, $data) = $this->rest("DELETE", "user", array("user_id" => 1, "login" => "admin"));
+		list($status, $data) = $this->rest("DELETE", "game", array("game_id" => 1, "owner_id" => 2, "name" => "game1"));
 		$this->assertEquals(200, $status);
-		$this->assertEquals(array("user_id" => 1, "login" => "admin"), $data);
-		list($status, $data) = $this->rest("GET", "user");
+		$this->assertEquals(array("game_id" => 1, "owner_id" => 2, "name" => "game1"), $data);
+		list($status, $data) = $this->rest("GET", "game");
 		$this->assertEquals(array(
-			array("user_id" => 2, "login" => "user")
+			array("game_id" => 2, "owner_id" => 2, "name" => "game2", "start_time" => "2020-02-01 00:00:00", "end_time" => "2020-02-02 00:00:00")
 		), $data);
 	}
 

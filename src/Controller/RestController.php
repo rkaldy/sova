@@ -6,7 +6,9 @@ use Psr\Http\Message\ResponseInterface as Response;
 use Sova\DBException;
 use Sova\RestException;
 use Sova\Model\User;
-use Sova\Model\MessageRepo;
+use Sova\Model\Game;
+use Sova\Model\Graph;
+use Sova\Repo\MessageRepo;
 
 class RestController {
 
@@ -25,17 +27,13 @@ class RestController {
 				throw new RestException(403);
 			}
 
-			$repoName = "\\Sova\\Model\\".ucfirst($resource)."Repo";
 			if (method_exists($this, $resource)) {
 				if ($req->getMethod() != "GET") {
 					throw new RestException(405);
 				}
 				$ret = $this->$resource($args);
-			} else if (class_exists($repoName)) {
-				$repo = new $repoName();
-				$ret = $repo->restCRUD($req->getMethod(), $req->getParsedBody());
 			} else {
-				throw new RestException(400, "Unknown resource: '$resource'");
+				$ret = $this->crud($resource, $req->getMethod(), $req->getParsedBody());
 			}
 			$status = 200;
 		} 
@@ -60,16 +58,42 @@ class RestController {
 		return $resp->withHeader("Content-Type", "application/json; charset=UTF-8")->withStatus($status);
 	}
 
-	function graph($args) {
-		list($vertices, $edges) = \Sova\Model\Graph::sortAndGet();
+	
+	public function crud(string $resource, string $method, array $obj): array {
+		$modelClass = "\\Sova\\Model\\".ucfirst($resource);
+		if (!class_exists($modelClass)) {
+			throw new RestException(400, "Unknown resource: '$resource'");
+		}
+		$model = new $modelClass();
+		$repo = $model->repo();
+
+		switch ($method) {
+			case "GET": 	return $repo->list(Game::current());
+			case "POST":	$model->prepare($obj);
+							$repo->create($obj);
+							break;
+			case "PUT":		$model->prepare($obj);
+							$repo->update($obj);
+							break;
+			case "DELETE":	$repo->delete($obj);
+							break;
+			default:		throw new RestException(405);
+		}
+		return $obj;
+	}
+
+
+	function graph(array $args): array {
+		list($vertices, $edges) = (new Graph())->sortAndGet();
 		return array("vertices" => $vertices, "edges" => $edges);
 	}
 
-	function messages($args) {
+	function messages(array $args): array {
 		$repo = new MessageRepo();
-		return array(
-			"data" => $repo->list($args["page"], $args["pageSize"]),
-			"itemsCount" => $repo->count()
-		);
+		$messages = $repo->list(Game::current(), ($args["page"] - 1) * $args["pageSize"], $args["pageSize"]);
+		foreach ($messages as &$msg) {
+			$msg["name"] .= $msg["direction"] == MessageRepo::FROM_TEAM ? " →" : " ←";
+		}
+		return array("data" => $messages, "itemsCount" => $repo->count(Game::current()));
 	}
 }

@@ -2,16 +2,17 @@
 namespace Sova\Model;
 
 use Sova\TestBase;
+use Sova\Repo\LocRepo;
+use Sova\Repo\CipherRepo;
+
 
 class GraphTest extends TestBase {
 
-	protected $cipherRepo;
-	protected $locRep;
+	protected $graph;
 
 	function setUp(): void {
 		parent::setUp();
-		$this->locRepo = new LocRepo();
-		$this->cipherRepo = new CipherRepo();
+		$this->graph = new Graph();
 	}
 
 	function tearDown(): void {
@@ -20,8 +21,15 @@ class GraphTest extends TestBase {
 	}
 
 	function build(array $locs, array $ciphers) {
+		$locModel = new Loc();
+		$locRepo = new LocRepo();
+		$cipherModel = new Cipher();
+		$cipherRepo = new CipherRepo();
+
 		foreach ($locs as $locName) {
-			$this->locRepo->create(array("name" => $locName));
+			$loc = array("name" => $locName);
+			$locModel->prepare($loc);
+			$locRepo->create($loc);
 		}
 		$nameToId = $this->db->dquery("SELECT name, point_id FROM point");
 		foreach ($ciphers as $name => $steps) {
@@ -33,7 +41,9 @@ class GraphTest extends TestBase {
 					$step = $nameToId[$step];
 				}
 			}
-			$this->cipherRepo->create(array("name" => $name, "name_int" => $nameInt, "prev" => $steps[0], "next" => $steps[1]));
+			$cipher = array("name" => $name, "name_int" => $nameInt, "prev" => $steps[0], "next" => $steps[1]);
+			$cipherModel->prepare($cipher);
+			$cipherRepo->create($cipher);
 		}
 	}
 
@@ -50,7 +60,7 @@ class GraphTest extends TestBase {
 			array("Start", "Bílá hora", "Cíl"),
 			array("1" => array("Morseovka", "Start", "Bílá hora"), 2 => array("Braille", "Bílá hora", "Cíl"))
 		);
-		list($vertices, $edges) = self::stripPointIds(Graph::get());
+		list($vertices, $edges) = self::stripPointIds($this->graph->get());
 		$this->assertEquals(array(
 			array("type" => "loc_cipher", "name" => "1/Morseovka: Start"),
 			array("type" => "loc_cipher", "name" => "2/Braille: Bílá hora"),
@@ -70,7 +80,7 @@ class GraphTest extends TestBase {
 			 	"3"  => array("Osmisměrka", "Dvoračky", "Cíl")
 			)
 		);
-		list($vertices, $edges) = self::stripPointIds(Graph::get());
+		list($vertices, $edges) = self::stripPointIds($this->graph->get());
 		$this->assertEquals(array(
 			array("type" => "loc", "name" => "Start"),
 			array("type" => "loc_cipher", "name" => "2a/Semafor: Bílá hora"),
@@ -84,7 +94,7 @@ class GraphTest extends TestBase {
 	}
 
 	function testTopoSort() {
-		$sorted = Graph::topoSort(
+		$sorted = $this->graph->topoSort(
 			array(1=>0, 2=>0, 3=>0, 4=>0, 5=>0, 6=>0),
 			array(1=>array(2=>0, 3=>0), 2=>array(4=>0), 3=>array(5=>0), 4=>array(6=>0), 5=>array(6=>0, 2=>0), 6=>array()),
 			array(1=>array(), 2=>array(1=>0, 5=>0), 3=>array(1=>0), 4=>array(2=>0), 5=>array(3=>0), 6=>array(4=>0, 5=>0))
@@ -104,9 +114,7 @@ class GraphTest extends TestBase {
 				"1a" => array("Morseovka", "Start", "Bílá hora"), 
 			)
 		);
-		$this->assertFalse(Graph::isSorted());
-		list($vertices, $edges) = self::stripPointIds(Graph::sortAndGet());
-		$this->assertTrue(Graph::isSorted());
+		list($vertices, $edges) = self::stripPointIds($this->graph->sortAndGet());
 		$this->assertEquals(array(
 			array("type" => "loc", "name" => "Start"),
 			array("type" => "cipher", "name" => "1a/Morseovka"),
@@ -130,7 +138,7 @@ class GraphTest extends TestBase {
 				"4" => array("Šifra 4", "Dvoračky", "Cíl")
 			)
 		);
-		list($vertices, $edges) = self::stripPointIds(Graph::sortAndGet());
+		list($vertices, $edges) = self::stripPointIds($this->graph->sortAndGet());
 		$this->assertEquals(array(
 			array("type" => "loc_cipher", "name" => "1/Šifra 1: Start"),
 			array("type" => "loc", "name" => "Bílá hora"),

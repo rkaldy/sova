@@ -46,12 +46,14 @@ class AdminController {
 	}
 
 	public function login($args) {
+		$user = new User();
+		$game = new Game();
 		if (isset($args["login"])) {
-			if (User::login($args["login"], $args["pswd"])) {
+			if ($user->login($args["login"], $args["pswd"])) {
 				if (User::super()) {
 					return new Redirect("games");
 				}
-				$ret = Game::setOwnedGame();
+				$ret = $game->setOwnedGame();
 				if ($ret == 0) {
 					return new View("admin/login", array("flash" => "Tento uživatel nemá nastavenou žádnou hru"));
 				} else if ($ret == 1) {
@@ -63,7 +65,7 @@ class AdminController {
 				return new View("admin/login", array("flash" => "Špatný login nebo heslo"));
 			}
 		} else if (isset($args["game_id"])) {
-			$ret = Game::setOwnedGame($args["game_id"]);
+			$ret = $game->setOwnedGame($args["game_id"]);
 			if ($ret == 1) {
 				return new Redirect("locs");
 			} else {
@@ -89,7 +91,7 @@ class AdminController {
 	public function messages($args)  { return new View("admin/messages"); }
 
 	public function broadcast($args) {
-		$teams = (new TeamRepo())->list();
+		$teams = (new TeamRepo())->list(Game::current());
 		return new View("admin/broadcast", array("teams" => $teams));
 	}
 
