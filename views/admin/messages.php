@@ -4,7 +4,7 @@
 $(function() {
 	setGrid({
 		table: "messages", 
-		width: "50%",
+		width: "70%",
 		inserting: false,
 		editing: false,
 		paging: true,
@@ -15,8 +15,8 @@ $(function() {
 		fields: 
 		[
 			{ name: "time", title: "Čas", type: "text", width: 10 },
-			{ name: "name", title: "Tým", type: "text", width: 20  },
-			{ name: "text", title: "Zpráva", type: "text", width: 40 },
+			{ name: "name", title: "Tým", type: "text", width: 15  },
+			{ name: "text", title: "Zpráva", type: "text", width: 50 },
 		]
 	});
 });

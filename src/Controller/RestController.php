@@ -59,7 +59,7 @@ class RestController {
 	}
 
 	
-	public function crud(string $resource, string $method, array $obj): array {
+	public function crud(string $resource, string $method, $obj): array {
 		$modelClass = "\\Sova\\Model\\".ucfirst($resource);
 		if (!class_exists($modelClass)) {
 			throw new RestException(400, "Unknown resource: '$resource'");

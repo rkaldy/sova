@@ -7,6 +7,7 @@ use Sova\View;
 use Sova\Model\Team;
 use Sova\Model\Code;
 use Sova\Model\Hint;
+use Sova\Model\Message;
 
 class MainController {
 
@@ -33,7 +34,7 @@ class MainController {
 
 	public function login($args) {
 		if (isset($args["team_id"])) {
-			if (Team::login($args["team_id"], $args["pswd"])) {
+			if ((new Team())->login($args["team_id"], $args["pswd"])) {
 				return new View("main/code");
 			} else {
 				return new View("main/login", array("flash" => "Špatné číslo týmu nebo heslo"));
@@ -59,10 +60,14 @@ class MainController {
 	public function applyhint($args) {
 		$hint = new Hint();
 		if (isset($args["cipher"])) {
-			$response = $hint->apply($args["cipher"]);
+			$cipherName = Code::polish($args["cipher"]);
+			$message = new Message();
+			$message->sendToSova((new Text("hint.request", $cipherName))->format());
+			$response = $hint->apply($cipherName)->format();
+			$message->sendToTeam($response);
 		} else {
 			$response = null;
 		}
-		$hintCount = $hint->unusedHintCount();
+		return new View("main/applyhint", array("response" => $response, "hintCount" => $hint->unusedHintCount()));
 	}
 }

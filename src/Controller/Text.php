@@ -10,9 +10,10 @@ class Text {
 		"cipher.no-previous"		=> "Na šifru %s jste se ještě nemohli dostat, protože jste nevyluštili předchozí šifru.",
 		"cipher.no-previous.multi"	=> "Na šifru %s jste se ještě nemohli dostat, protože jste nevyluštili všech %d předchozích šifer.",
 
+		"hint.request"				=> "(Žádost o nápovědu na %s)",
 		"hint.add.already" 			=> "Tento kód nápovědy jste již zadali.",
 		"hint.add.success" 			=> "Získali jste univerzální nápovědu. Aktuálně máte %d nevyužitých nápověd.",
-		"hint.apply.already"		=> "Pro šifru %s jste již dostali nápovědu.",
+		"hint.apply.already"		=> "Pro šifru %s jste již dostali nápovědu. Podívejte se do zpráv.",
 		"hint.apply.no-hint"		=> "Všechny získané univerzální nápovědy jste již použili.",
 		"hint.apply.success"		=> "Nápověda pro šifru %s: %s",
 	);
