@@ -20,8 +20,8 @@ class RestControllerTest extends TestBase {
 	}
 
 	function rest(string $method, string $res, array $in = array()): array {
-		$req = new Request($method, [$res], [], $in);
-		$resp = (new RestController())->process($req);
+		$req = new Request($method, "/", [], $in);
+		$resp = (new RestController())->process($req, [$res]);
 		return array($resp->status, json_decode($resp->data, true));
 	}
 

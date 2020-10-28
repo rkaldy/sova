@@ -16,9 +16,9 @@ class RestController {
 	const RES_SU_WRITE = array("game", "user");
 
 	
-	public function process(Request $req): Response {
+	public function process(Request $req, array $path): Response {
 		try {
-			$resource = $req->routePath[0];
+			$resource = $path[0];
 			if (!User::logged()) {
 				throw new HttpException(401);
 			} else if ($req->method == "GET" && in_array($resource, self::RES_SU_READ) && !User::super()) {

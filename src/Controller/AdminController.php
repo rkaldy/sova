@@ -15,8 +15,8 @@ class AdminController {
 
 	const ACTIONS_SU = array("game", "user");
 
-	public function process(Request $req): Response {
-		$action = empty($req->routePath) ? "login" : $req->routePath[0];
+	public function process(Request $req, array $path): Response {
+		$action = empty($path) ? "login" : $path[0];
 
 		if (!method_exists($this, $action)) {
 			$view = new View("error", array("error" => "Neznámá akce: '$action'"));

@@ -4,6 +4,7 @@ namespace Sova\App;
 use PHPUnit\Framework\TestCase;
 use Mockery;
 use Sova\Application;
+use Sova\Request;
 use Sova\HttpException;
 
 
@@ -19,126 +20,32 @@ class ApplicationTest extends TestCase {
 		$this->assertEquals([], Application::parseUrl(""));
 	}
 
-	function testMethod() {
+	function testBuildRequest() {
 		$app = new Application();
-		$app->addRoute("/", "Test");
-		[$controller, $req] = $app->buildRequest([], ["REQUEST_METHOD" => "PUT", "REQUEST_URI" => "/", "CONTENT_TYPE" => "application/json"]);
-		$this->assertEquals("PUT", $req->method);
+		$req = $app->buildRequest([], ["REQUEST_METHOD" => "DELETE", "REQUEST_URI" => "/", "CONTENT_TYPE" => "application/json"]);
+		$this->assertEquals(new Request("DELETE", "/", [], null), $req);
 	}
 
-	function testRouting() {
-		$app = new Application();
-		$app->addRoute("/admin", "AdminController")
-			->addRoute("/api/v2", "RestController");
-		
-		[$controller, $req] = $app->buildRequest([], ["REQUEST_METHOD" => "GET", "REQUEST_URI" => "/admin"]);
-		$this->assertEquals("AdminController", $controller);
-		$this->assertEquals([], $req->routePath);
-			
-		[$controller, $req] = $app->buildRequest([], ["REQUEST_METHOD" => "GET", "REQUEST_URI" => "/admin/"]);
-		$this->assertEquals("AdminController", $controller);
-		$this->assertEquals([], $req->routePath);
-		
-		[$controller, $req] = $app->buildRequest([], ["REQUEST_METHOD" => "GET", "REQUEST_URI" => "/admin/login"]);
-		$this->assertEquals("AdminController", $controller);
-		$this->assertEquals(["login"], $req->routePath);
-		
-		[$controller, $req] = $app->buildRequest([], ["REQUEST_METHOD" => "GET", "REQUEST_URI" => "/api/v2"]);
-		$this->assertEquals("RestController", $controller);
-		$this->assertEquals([], $req->routePath);
-		
-		[$controller, $req] = $app->buildRequest([], ["REQUEST_METHOD" => "GET", "REQUEST_URI" => "/api/v2/messages/1/100/"]);
-		$this->assertEquals("RestController", $controller);
-		$this->assertEquals(["messages", 1, 100], $req->routePath);
-		
-		try {
-			$app->buildRequest([], ["REQUEST_METHOD" => "GET", "REQUEST_URI" => "/"]);
-			$this->fail("Should throw HttpException");
-		} catch (HttpException $e) {
-			$this->assertEquals(404, $e->getCode());
-		}
-		
-		try {
-			$app->buildRequest([], ["REQUEST_METHOD" => "GET", "REQUEST_URI" => "/api"]);
-			$this->fail("Should throw HttpException");
-		} catch (HttpException $e) {
-			$this->assertEquals(404, $e->getCode());
-		}
-	}
-
-	function testRoutingWithEmptyRoute() {
-		$app = new Application();
-		$app->addRoute("/admin", "AdminController")
-			->addRoute("/", "MainController");
-		
-		[$controller, $req] = $app->buildRequest([], ["REQUEST_METHOD" => "GET", "REQUEST_URI" => "/admin"]);
-		$this->assertEquals("AdminController", $controller);
-		$this->assertEquals([], $req->routePath);
-			
-		[$controller, $req] = $app->buildRequest([], ["REQUEST_METHOD" => "GET", "REQUEST_URI" => "/admin/login"]);
-		$this->assertEquals("AdminController", $controller);
-		$this->assertEquals(["login"], $req->routePath);
-		
-		[$controller, $req] = $app->buildRequest([], ["REQUEST_METHOD" => "GET", "REQUEST_URI" => "/"]);
-		$this->assertEquals("MainController", $controller);
-		$this->assertEquals([], $req->routePath);
-		
-		[$controller, $req] = $app->buildRequest([], ["REQUEST_METHOD" => "GET", "REQUEST_URI" => "/login"]);
-		$this->assertEquals("MainController", $controller);
-		$this->assertEquals(["login"], $req->routePath);
-	}
-
-	function testBaseUrl() {
-		$app = new Application();
-		$app->setBaseUrl("sova/")
-			->addRoute("/admin", "AdminController")
-			->addRoute("/", "MainController");
-		
-		[$controller, $req] = $app->buildRequest([], ["REQUEST_METHOD" => "GET", "REQUEST_URI" => "/sova"]);
-		$this->assertEquals("MainController", $controller);
-		$this->assertEquals([], $req->routePath);
-
-		[$controller, $req] = $app->buildRequest([], ["REQUEST_METHOD" => "GET", "REQUEST_URI" => "/sova/login"]);
-		$this->assertEquals("MainController", $controller);
-		$this->assertEquals(["login"], $req->routePath);
-
-		[$controller, $req] = $app->buildRequest([], ["REQUEST_METHOD" => "GET", "REQUEST_URI" => "/sova/admin/login"]);
-		$this->assertEquals("AdminController", $controller);
-		$this->assertEquals(["login"], $req->routePath);
-
-		try {
-			$app->buildRequest([], ["REQUEST_METHOD" => "GET", "REQUEST_URI" => "/login"]);
-			$this->fail("Should throw HttpException");
-		} catch (HttpException $e) {
-			$this->assertEquals(404, $e->getCode());
-		}
-	}
-
-	function testDataUrlencoded() {
+	function testBuildRequestDataUrlencoded() {
 		$app = Mockery::mock("\\Sova\\Application")->makePartial();
-		$app->addRoute("/", "Test");
 		$app->shouldReceive("getRequestData")->andReturn("a=1&b=2");
 		
-		[$controller, $req] = $app->buildRequest([], ["REQUEST_METHOD" => "GET", "REQUEST_URI" => "/"]);
-		$this->assertEquals([], $req->data);
-
-		[$controller, $req] = $app->buildRequest([], ["REQUEST_METHOD" => "POST", "REQUEST_URI" => "/", "CONTENT_TYPE" => "application/x-www-form-urlencoded"]);
-		$this->assertEquals(["a" => 1, "b" => 2], $req->data);
+		$req = $app->buildRequest([], ["REQUEST_METHOD" => "POST", "REQUEST_URI" => "/", "CONTENT_TYPE" => "application/x-www-form-urlencoded"]);
+		$this->assertEquals(new Request("POST", "/", [], ["a" => 1, "b" => 2]), $req);
 		
 		try {
-			[$controller, $req] = $app->buildRequest([], ["REQUEST_METHOD" => "POST", "REQUEST_URI" => "/", "CONTENT_TYPE" => "text/xml"]);
+			$app->buildRequest([], ["REQUEST_METHOD" => "POST", "REQUEST_URI" => "/", "CONTENT_TYPE" => "text/xml"]);
 			$this->fail("Should throw HttpException");
 		} catch (HttpException $e) {
 			$this->assertEquals(400, $e->getCode());
 		}
 	}
 
-	function testDataJson() {
+	function testBuildRequestDataJson() {
 		$app = Mockery::mock("\\Sova\\Application")->makePartial();
-		$app->addRoute("/", "Test");
 		$app->shouldReceive("getRequestData")->andReturn('{"c": 3, "d": 4}');
 		
-		[$controller, $req] = $app->buildRequest([], ["REQUEST_METHOD" => "PUT", "REQUEST_URI" => "/", "CONTENT_TYPE" => "application/json"]);
-		$this->assertEquals(["c" => 3, "d" => 4], $req->data);
+		$req = $app->buildRequest([], ["REQUEST_METHOD" => "PUT", "REQUEST_URI" => "/", "CONTENT_TYPE" => "application/json"]);
+		$this->assertEquals(new Request("PUT", "/", [], ["c" => 3, "d" => 4]), $req);
 	}
 }

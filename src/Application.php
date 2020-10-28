@@ -28,13 +28,15 @@ class Application {
 
 
 	public function run() {
-		set_error_handler(function($errno, $errstr, $errfile, $errline, $errcontext) {
-			throw new PHPException($errstr, $errno, $errfile, $errline, $errcontext);
-		});
+		if (DEVELOPMENT) {
+			set_error_handler(function($errno, $errstr, $errfile, $errline, $errcontext) {
+				throw new PHPException($errstr, $errno, $errfile, $errline, $errcontext);
+			});
+		}
 		
 		try {
-			list($controllerClass, $request) = $this->buildRequest($_GET, $_SERVER);
-			$response = (new $controllerClass())->process($request);
+			$request = $this->buildRequest($_GET, $_SERVER);
+			$response = $this->route($request);
 		} 
 		catch (HttpException $e) {
 			$response = new Response($e->getCode(), $e->getMessage());
@@ -59,11 +61,8 @@ class Application {
 	}
 
 
-	public function buildRequest(array $getVars, array $serverVars) {
-		$url = self::parseUrl($serverVars["REQUEST_URI"]);
+	public function buildRequest($getVars, $serverVars) {
 		$method = $serverVars["REQUEST_METHOD"];
-		$queryParams = $getVars;
-	
 		if ($method == "GET") {
 			$data = [];
 		} else if (substr($serverVars["CONTENT_TYPE"], 0, 33) == "application/x-www-form-urlencoded") {
@@ -73,25 +72,49 @@ class Application {
 		} else {
 			throw new HttpException(400, "Unsupported content type: ".$serverVars["CONTENT_TYPE"]);
 		}
+		return new Request($method, $serverVars["REQUEST_URI"], $getVars, $data);
+	}
 
+
+	public function getRequestData() {
+		return file_get_contents("php://input");
+	}
+
+	
+	public function route($request) {
+		$url = self::parseUrl($request->url);
 		$baseUrl = self::parseUrl($this->baseUrl);
+		
 		$basePart = array_slice($url, 0, count($baseUrl));
 		if ($basePart != $baseUrl) {
 			throw new HttpException(404, "The requested URL doesn't match the base {$this->baseUrl}");
 		}
 
 		$routePart = array_slice($url, count($baseUrl));
-		foreach ($this->routes as list($route, $controller)) {
+		foreach ($this->routes as list($route, $controllerClass)) {
 			$routeLen = count($route);
 			if ($route == array_slice($routePart, 0, $routeLen)) {
-				return [$controller, new Request($method, array_slice($routePart, $routeLen), $queryParams, $data)];
+				if (count($routePart) == $routeLen) {
+					if (substr($request->url, -1, 1) != "/") {
+						return (new Redirect($request->url."/"))->buildResponse();
+					}
+					$path = [];
+				} else {
+					if (substr($request->url, -1, 1) == "/") {
+						return (new Redirect(substr($request->url, 0, -1)))->buildResponse();
+					}
+					$path = array_slice($routePart, $routeLen);
+				}
+				return $this->runController($controllerClass, $request, $path);
 			}
 		}
-		throw new HttpException(404, "No route for url: ".$serverVars["REQUEST_URI"]);
+		throw new HttpException(404, "No route for url: ".$request->url);
 	}
 
-	public function getRequestData() {
-		return file_get_contents("php://input");
+
+	public function runController($controllerClass, $request, $path) {
+		$controller = new $controllerClass();
+		return $controller->process($request, $path);
 	}
 
 

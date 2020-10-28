@@ -4,14 +4,14 @@ namespace Sova;
 class Request {
 
 	public $method;
-	public $routePath;
-	public $queryParams;
+	public $url;
+	public $params;
 	public $data;
 
-	public function __construct($method, $routePath, $queryParams, $data) {
+	public function __construct($method, $url, $params, $data) {
 		$this->method = $method;
-		$this->routePath = $routePath;
-		$this->queryParams = $queryParams;
+		$this->url = $url;
+		$this->params = $params;
 		$this->data = $data;
 	}
 }

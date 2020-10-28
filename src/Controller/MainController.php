@@ -13,11 +13,11 @@ class MainController {
 
 	const ACTIONS_PUBLIC = array("login");
 
-	public function process(Request $req): Response {
-		if (empty($req->routePath)) {
-			$action = Team::logged ? "code" : "login";
+	public function process(Request $req, array $path): Response {
+		if (empty($path)) {
+			$action = Team::logged() ? "code" : "login";
 		} else {
-			$action = $req->routePath[0];
+			$action = $path[0];
 		}
 		
 		if (!method_exists($this, $action)) {
