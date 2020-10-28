@@ -59,16 +59,22 @@ else {
 		include("form.php");
 	} else {
 		try {
-			$pdo = new PDO("mysql:host=".DB_HOST, $_POST["db_root_login"], $_POST["db_root_pswd"]);
-			$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+			$pdo = new PDO(
+				"mysql:host=".DB_HOST, $_POST["db_root_login"], $_POST["db_root_pswd"],
+				array(
+					PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, 
+					PDO::MYSQL_ATTR_LOCAL_INFILE => true
+				)
+			);
 			progress("Vytvářím databázi...");
 			$pdo->exec("CREATE DATABASE IF NOT EXISTS ".DB_NAME);
 			$pdo->exec("USE ".DB_NAME);
 			progress("Vytvářím tabulky...");
 			$pdo->exec(file_get_contents(__DIR__."/db.create.sql"));
-			progress("Vytvářím superuživatele...");
+			progress("Naplňuji tabulky...");
 			$stmt = $pdo->prepare("INSERT INTO user (user_id, login, pswd) VALUES (?, ?, ?)");
 			$stmt->execute(array(1, $_POST["su_login"], password_hash($_POST["su_pswd"], PASSWORD_BCRYPT)));
+			$pdo->exec("LOAD DATA LOCAL INFILE '".__DIR__."/wordlist.txt' INTO TABLE wordlist");
 ?>
 	<p>Hotovo. Přejděte na <a href="..">hlavní stránku</a> nebo do <a href="../admin">administrace</a>.</p>
 <?php
