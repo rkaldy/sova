@@ -49,7 +49,7 @@ if ($superuser) {
         </div>
       </a>
       <div id="title">
-        <h1>SOVA <span id="version">2.0</span> admin</h1>
+        <h1>SOVA <span id="version">2.0</span> <span id="section">admin</span></h1>
       </div>
       <div id="user">
         <?php echo isset($user) ? "uživatel: <b>$user</b>" : "nepřihlášený" ?><br>
