@@ -9,7 +9,7 @@ class Redirect {
 		$this->uri = $uri;
 	}
 
-	public function buildResponse($resp) {
-		return $resp->withHeader("Location", $this->uri)->withStatus(301);
+	public function buildResponse() {
+		return (new Response(301, null))->addHeader("Location", $this->uri);
 	}
 }

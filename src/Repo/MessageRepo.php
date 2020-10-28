@@ -1,8 +1,6 @@
 <?php
 namespace Sova\Repo;
 
-use Sova\RestException;
-
 class MessageRepo extends RepoBase {
 
 	public const FROM_TEAM = 1;

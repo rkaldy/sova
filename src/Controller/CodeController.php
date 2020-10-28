@@ -23,6 +23,8 @@ class CodeController {
 		else if (isset($entity["hint_id"])) {
 			$hint = new Hint();
 			$response = $hint->add($entity["hint_id"]);
+		} else {
+			$response = new Text("code.unknown", $code);
 		}
 		
 		$response = $response->format();

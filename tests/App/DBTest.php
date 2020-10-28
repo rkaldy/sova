@@ -1,7 +1,8 @@
 <?php
-namespace Sova;
+namespace Sova\App;
 
 use PHPUnit\Framework\TestCase;
+use Sova\DB;
 
 class DBTest extends TestCase {
 

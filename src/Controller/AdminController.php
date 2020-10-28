@@ -1,8 +1,8 @@
 <?php
 namespace Sova\Controller;
 
-use Psr\Http\Message\RequestInterface as Request;
-use Psr\Http\Message\ResponseInterface as Response;
+use Sova\Request;
+use Sova\Response;
 use Sova\View;
 use Sova\Redirect;
 use Sova\Model\User;
@@ -15,9 +15,9 @@ class AdminController {
 
 	const ACTIONS_SU = array("game", "user");
 
+	public function process(Request $req): Response {
+		$action = empty($req->routePath) ? "login" : $req->routePath[0];
 
-	public function __invoke(Request $req, Response $resp, array $args) {
-		$action = isset($args["action"]) ? $args["action"] : "login";
 		if (!method_exists($this, $action)) {
 			$view = new View("error", array("error" => "Neznámá akce: '$action'"));
 		} else if ($action != 'login' && !User::logged()) {
@@ -27,9 +27,9 @@ class AdminController {
 		} else if (in_array($action, self::ACTIONS_SU) && !User::super()) {
 			$view = new View("error", "Nedostatečná práva k akci '$action'");
 		} else {
-			$view = $this->$action($req->getParsedBody());
+			$view = $this->$action($req->data);
 			if ($view instanceof Redirect) {
-				return $view->buildResponse($resp);
+				return $view->buildResponse();
 			}
 		}
 	
@@ -42,8 +42,7 @@ class AdminController {
 			$view->addField("game", Game::currentName());
 		}
 		$output = $view->render("admin-layout");
-		$resp->getBody()->write($output);
-		return $resp;
+		return new Response(200, $output);
 	}
 
 	public function login($args) {

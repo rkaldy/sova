@@ -1,8 +1,4 @@
 {
-    "require": {
-        "slim/slim": "4.*",
-        "slim/psr7": "^1.2"
-    },
     "require-dev": {
 		"mockery/mockery": "dev-master"
     },

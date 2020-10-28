@@ -47,7 +47,7 @@ function setGrid(cfg) {
 			loadData: function(filter) {
 				var url = "../api/" + cfg.table;
 				if ("pageIndex" in filter && "pageSize" in filter) {
-					url += "/" + filter.pageIndex + "/" + filter.pageSize;
+					url += "?page=" + filter.pageIndex + "&pageSize=" + filter.pageSize;
 				}
 				return $.ajax({
 					type: "GET",

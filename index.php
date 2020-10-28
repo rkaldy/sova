@@ -1,34 +1,21 @@
 <?php
-use Slim\Factory\AppFactory;
-use Sova\TrailingSlashMiddleware;
-use Sova\Controller\MainController;
-use Sova\Controller\AdminController;
-use Sova\Controller\RestController;
-
 require __DIR__ . "/vendor/autoload.php";
-require "config.php";
+require __DIR__ . "/config.php";
+
+use Sova\Application;
 
 if (DEVELOPMENT) {
-	error_reporting(E_ALL);
+	error_reporting(E_ALL | E_STRICT);
 	ini_set('display_errors', 1);
 }
 
 session_start();
 
-$app = AppFactory::create();
-$app->setBasePath(BASE_PATH);
+$app = new Application();
+$app->setBaseUrl(BASE_PATH);
 
-$app->addBodyParsingMiddleware();
-$app->addRoutingMiddleware();
-if (DEVELOPMENT) {
-	$app->addErrorMiddleware(true, true, true);
-}
-$app->add(new TrailingSlashMiddleware());
-
-$app->map(["GET", "POST"], "/admin/{action}",  AdminController::class);
-$app->get("/admin/", AdminController::class);
-$app->map(["GET", "POST", "PUT", "DELETE"], "/api/{resource}[/{page}[/{pageSize}]]", RestController::class);
-$app->map(["GET", "POST"], "/{action}", MainController::class);
-$app->get("/", MainController::class);
+$app->addRoute("/admin", \Sova\Controller\AdminController::class)
+    ->addRoute("/api", \Sova\Controller\RestController::class)
+    ->addRoute("/", \Sova\Controller\MainController::class);
 
 $app->run();

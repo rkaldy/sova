@@ -1,10 +1,10 @@
 <?php
 namespace Sova\Controller;
 
-use Psr\Http\Message\RequestInterface as Request;
-use Psr\Http\Message\ResponseInterface as Response;
+use Sova\Request;
+use Sova\Response;
 use Sova\DBException;
-use Sova\RestException;
+use Sova\HttpException;
 use Sova\Model\User;
 use Sova\Model\Game;
 use Sova\Model\Graph;
@@ -16,24 +16,24 @@ class RestController {
 	const RES_SU_WRITE = array("game", "user");
 
 	
-	public function __invoke(Request $req, Response $resp, array $args) {
+	public function process(Request $req): Response {
 		try {
-			$resource = $args["resource"];
+			$resource = $req->routePath[0];
 			if (!User::logged()) {
-				throw new RestException(401);
-			} else if ($req->getMethod() == "GET" && in_array($resource, self::RES_SU_READ) && !User::super()) {
-				throw new RestException(403);
+				throw new HttpException(401);
+			} else if ($req->method == "GET" && in_array($resource, self::RES_SU_READ) && !User::super()) {
+				throw new HttpException(403);
 			} else if (in_array($resource, self::RES_SU_WRITE) && !User::super()) {
-				throw new RestException(403);
+				throw new HttpException(403);
 			}
 
 			if (method_exists($this, $resource)) {
-				if ($req->getMethod() != "GET") {
-					throw new RestException(405);
+				if ($req->method != "GET") {
+					throw new HttpException(405);
 				}
-				$ret = $this->$resource($args);
+				$ret = $this->$resource($req->queryParams);
 			} else {
-				$ret = $this->crud($resource, $req->getMethod(), $req->getParsedBody());
+				$ret = $this->crud($resource, $req->method, $req->data);
 			}
 			$status = 200;
 		} 
@@ -45,8 +45,8 @@ class RestController {
 				$ret["sql_params"] = $ex->params;
 			}
 		}
-		catch (RestException $ex) {
-			$status = $ex->httpCode;
+		catch (HttpException $ex) {
+			$status = $ex->getCode();
 			$ret = array("error" => $ex->getMessage());
 		}
 		catch (\Exception $ex) {
@@ -54,21 +54,23 @@ class RestController {
 			$ret = array("error" => $ex->getMessage());
 		}
 
-		$resp->getBody()->write(json_encode($ret));
-		return $resp->withHeader("Content-Type", "application/json; charset=UTF-8")->withStatus($status);
+		$resp = new Response($status, json_encode($ret));
+		$resp->addHeader("Content-Type", "application/json; charset=UTF-8");
+		return $resp;
 	}
 
 	
 	public function crud(string $resource, string $method, $obj): array {
 		$modelClass = "\\Sova\\Model\\".ucfirst($resource);
 		if (!class_exists($modelClass)) {
-			throw new RestException(400, "Unknown resource: '$resource'");
+			throw new HttpException(400, "Unknown resource: '$resource'");
 		}
 		$model = new $modelClass();
 		$repo = $model->repo();
 
 		switch ($method) {
-			case "GET": 	return $repo->list(Game::current());
+			case "GET": 	$gameId = Game::selected() ? Game::current() : null;
+							return $repo->list($gameId);
 			case "POST":	$model->prepare($obj);
 							$repo->create($obj);
 							break;
@@ -77,7 +79,7 @@ class RestController {
 							break;
 			case "DELETE":	$repo->delete($obj);
 							break;
-			default:		throw new RestException(405);
+			default:		throw new HttpException(405);
 		}
 		return $obj;
 	}

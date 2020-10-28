@@ -3,6 +3,8 @@ namespace Sova\Controller;
 
 use Sova\TestBase;
 use Sova\DB;
+use Sova\Request;
+use Sova\Response;
 use Mockery;
 
 class RestControllerTest extends TestBase {
@@ -18,18 +20,9 @@ class RestControllerTest extends TestBase {
 	}
 
 	function rest(string $method, string $res, array $in = array()): array {
-		$status = null;
-		$out = null;
-		$req = Mockery::mock("Psr\Http\Message\RequestInterface");
-		$req->shouldReceive("getMethod")->andReturn($method);
-		$req->shouldReceive("getParsedBody")->andReturn($in);
-		$resp = Mockery::mock("Psr\Http\Message\ResponseInterface");
-		$resp->shouldReceive("withHeader->withStatus")->with(Mockery::capture($status));
-		$resp->shouldReceive("getBody->write")->with(Mockery::capture($out));
-		
-		$controller = new RestController();
-		$controller($req, $resp, array("resource" => $res));
-		return array($status, json_decode($out, true));
+		$req = new Request($method, [$res], [], $in);
+		$resp = (new RestController())->process($req);
+		return array($resp->status, json_decode($resp->data, true));
 	}
 
 

@@ -1,8 +1,9 @@
 <?php
-require __DIR__."/../vendor/autoload.php";
-require __DIR__."/config.php";
+require __DIR__ . "/../vendor/autoload.php";
+require __DIR__ . "/config.php";
 
 const DEVELOPMENT = true;
+error_reporting(E_ALL | E_STRICT);
 
 $pdo = new PDO("mysql:host=".DB_HOST, DB_USER, DB_PASS);
 
