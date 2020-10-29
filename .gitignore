@@ -1,6 +1,7 @@
 vendor
 node_modules
 install/dump
+install/db.data.sql
 *.swp
 *.log
 composer.lock

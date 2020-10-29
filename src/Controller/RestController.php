@@ -31,7 +31,7 @@ class RestController {
 				if ($req->method != "GET") {
 					throw new HttpException(405);
 				}
-				$ret = $this->$resource($req->queryParams);
+				$ret = $this->$resource($req->params);
 			} else {
 				$ret = $this->crud($resource, $req->method, $req->data);
 			}

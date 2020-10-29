@@ -20,7 +20,7 @@ class DB extends PDO {
 
 	public static function get() {
 		if (!isset(self::$instance)) {
-			self::$instance = new DB("mysql:host=".DB_HOST.";dbname=".DB_NAME, DB_USER, DB_PASS);
+			self::$instance = new DB("mysql:host=".DB_HOST.";dbname=".DB_NAME.";charset=UTF8", DB_USER, DB_PASS);
 		}
 		return self::$instance;
 	}
