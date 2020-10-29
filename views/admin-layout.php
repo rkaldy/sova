@@ -24,28 +24,45 @@ if ($superuser) {
 <html lang="cs">
   <head>
     <title>Sova 2.0 | admin</title>
-    <link rel="stylesheet" href="../js/datetimepicker/jquery.datetimepicker<?php echo $minify?>.css">
-    <link rel="stylesheet" href="../js/selectpure/selectpure.css">
-    <link rel="stylesheet" href="../js/jsgrid/jsgrid<?php echo $minify?>.css">
-    <link rel="stylesheet" href="../js/jsgrid/jsgrid-theme<?php echo $minify?>.css">
-    <link rel="stylesheet" href="../css/sova.css">
-    <link rel="stylesheet" href="../css/admin.css">
-    <link rel="icon" href="../css/favicon.png" sizes="32x32" type="image/png">
+<?php if (DEVELOPMENT) { ?>
+    <link rel="stylesheet" href="../node_modules/jquery-datetimepicker/jquery.datetimepicker.css">
+    <link rel="stylesheet" href="../node_modules/jsgrid/dist/jsgrid.css">
+    <link rel="stylesheet" href="../node_modules/jsgrid/dist/jsgrid-theme.css">
+<?php } else { ?>
+    <link rel="stylesheet" href="https://unpkg.com/jquery-datetimepicker@2.5.21/build/jquery.datetimepicker.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid-theme.min.css">
+<?php } ?>
+    <link rel="stylesheet" href="../static/selectpure.css">
+    <link rel="stylesheet" href="../static/sova.css">
+    <link rel="stylesheet" href="../static/admin.css">
+    <link rel="icon" href="../static/favicon.png" sizes="32x32" type="image/png">
   </head>
   <body>
-    <script src="../js/jquery-3.5.1<?php echo $minify?>.js"></script>
-    <script src="../js/datetimepicker/jquery.datetimepicker.full<?php echo $minify?>.js"></script>
-	<script src="../js/selectpure/selectpure<?php echo $minify?>.js"></script>
-    <script src="../js/jsgrid/jsgrid<?php echo $minify?>.js"></script>
-    <script src="../js/jsgrid/jsgrid.custom.js"></script>
-<?php if ($action == "graph") { ?>
-	<script src="../js/visjs/vis-network<?php echo $minify ?>.js"></script>
+
+<?php if (DEVELOPMENT) { ?>
+    <script src="../node_modules/jquery/dist/jquery.js"></script>
+    <script src="../node_modules/jquery-datetimepicker/jquery.datetimepicker.js"></script>
+	<script src="../node_modules/select-pure/dist/bundle.min.js"></script>
+    <script src="../node_modules/jsgrid/dist/jsgrid.js"></script>
+  <?php if ($action == "graph") { ?>
+	<script src="../node_modules/vis-network/dist/vis-network.js"></script>
+  <?php } ?>
+<?php } else { ?>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://unpkg.com/jquery-datetimepicker@2.5.21/build/jquery.datetimepicker.full.min.js"></script>
+	<script src="https://unpkg.com/select-pure@0.6.1/dist/bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.js"></script>
+  <?php if ($action == "graph") { ?>
+	<script src="https://unpkg.com/vis-network@8.5.2/dist/vis-network.min.js"></script>
+  <?php } ?>
 <?php } ?>
+    <script src="../static/jsgrid.custom.js"></script>
     
     <header>
       <a href=".">
         <div id="logo">
-          <img src="../css/owl.png" height="30">
+          <img src="../static/owl.png" height="30">
         </div>
       </a>
       <div id="title">

@@ -3,6 +3,6 @@ RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} "/install/"
 RewriteRule ^ install/install.php [QSA,L]
 
-RewriteCond %{REQUEST_FILENAME} "!/css/."
-RewriteCond %{REQUEST_FILENAME} "!/js/."
+RewriteCond %{REQUEST_FILENAME} "!/static/."
+RewriteCond %{REQUEST_FILENAME} "!/node_modules/."
 RewriteRule ^ index.php [QSA,L]

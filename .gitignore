@@ -1,4 +1,9 @@
 vendor
-composer.lock
+node_modules
 install/dump
 *.swp
+*.log
+composer.lock
+package-lock.json
+config.php*
+!config.php.sample

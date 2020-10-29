@@ -2,14 +2,14 @@
 <html lang="cs">
   <head>
     <title>Sova 2.0</title>
-    <link rel="stylesheet" href="css/sova.css">
-    <link rel="icon" href="css/favicon.png" sizes="32x32" type="image/png">
+    <link rel="stylesheet" href="static/sova.css">
+    <link rel="icon" href="static/favicon.png" sizes="32x32" type="image/png">
   </head>
   <body>
 
     <header>
       <div id="logo">
-        <img src="css/owl.png" height="50">
+        <img src="static/owl.png" height="50">
       </div>
       <div id="title">
         <h1>SOVA <span id="version">2.0</span></h1>
