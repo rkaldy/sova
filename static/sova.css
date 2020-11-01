@@ -92,6 +92,11 @@ nav a {
 	font-size: 10pt;
 	font-weight: bold;
 	padding: 1ex 2ex;
+	border-radius: 0.5ex;
+}
+
+nav a.selected {
+	background-color: #a040a0;
 }
 
 
@@ -109,6 +114,9 @@ h2 {
 #flash {
 	color: #a07070;
 }
+
+
+/* Forms */
 
 form th {
 	text-align: right;
@@ -132,4 +140,49 @@ input[type="submit"] {
 	border-radius: 0.6ex;
 	font-weight: normal;
 	color: black;
+}
+
+
+/* Tables */
+
+table {
+	margin-top: 1ex;
+	border-collapse: separate;
+}
+
+thead  {
+    font-weight: bold;
+    background-color: #003d5b;
+	color: white;
+}
+
+tr.alt-row, tr.jsgrid-alt-row {
+	background-color: #e0e0e0;
+}
+
+td {
+    padding: 0.5ex 2ex;
+}
+
+.pgbutton {
+	padding: 0.3ex 1ex;
+	margin: 0.5ex;
+	border: solid 1px #808080;
+	border-radius: 2px;
+	font-size: 90%;
+}
+
+a.pgbutton {
+	color: black;
+	text-decoration: none;
+	background-color: #e0e0e0;
+}
+
+a.pgbutton:hover {
+	background-color: #e8e8e8;
+}
+
+span.pgbutton {
+	background: #808080;
+	color: white;
 }

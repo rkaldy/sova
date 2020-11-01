@@ -1,3 +1,13 @@
+<?php
+$menu = [
+	"code" => "Zadej kód",
+	"applyhint" => "Použít nápovědu",
+	"codes" => "Historie kódů",
+	"messages" => "Historie zpráv",
+	"rank" => "Pořadí",
+	"logout" => "Logout"
+];
+?>
 <!doctype html>
 <html lang="cs">
   <head>
@@ -33,19 +43,19 @@ echo $now->format('j.n.Y H:i:s');
       <div class="clear"></div>
     </header>
 
-<?php if (!isset($error)) { ?>
-    <nav>
-<?php   if (isset($team)) { ?>
-      <a href="code">Zadej kód</a>
-      <a href="applyhint">Použít nápovědu</a>
-      <a href="messages">Seznam zpráv</a>
-      <a href="rank">Pořadí</a>
-      <a href="logout">Logout</a>
-<?php   }  else { ?>
-      <a href="login">Login</a>
-<?php   } ?>
-    </nav>
-<?php } ?>
+<?php
+if (isset($team)) {
+	echo "<nav>";
+	foreach ($menu as $act => $label) {
+		echo "<a";
+		if ($act == $action) {
+			echo ' class="selected"';
+		}
+		echo " href=\"$act\">$label</a>";
+	}
+	echo "</nav>";
+} 
+?>
 
     <div id="contents">
 <?php echo $contents; ?>

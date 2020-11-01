@@ -27,7 +27,6 @@ if ($superuser) {
 <?php if (DEVELOPMENT) { ?>
     <link rel="stylesheet" href="../node_modules/jquery-datetimepicker/jquery.datetimepicker.css">
     <link rel="stylesheet" href="../node_modules/jsgrid/dist/jsgrid.css">
-    <link rel="stylesheet" href="../node_modules/jsgrid/dist/jsgrid-theme.css">
 <?php } else { ?>
     <link rel="stylesheet" href="https://unpkg.com/jquery-datetimepicker@2.5.21/build/jquery.datetimepicker.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.css">

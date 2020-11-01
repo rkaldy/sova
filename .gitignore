@@ -2,9 +2,11 @@ vendor
 node_modules
 install/dump
 install/db.data.sql
+release
 *.swp
 *.log
 composer.lock
 package-lock.json
 config.php*
 !config.php.sample
+deploy
