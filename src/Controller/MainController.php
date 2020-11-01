@@ -25,7 +25,7 @@ class MainController {
 		} else if (!in_array($action, self::ACTIONS_PUBLIC) && !Team::logged()) {
 			$view = new View("main/login", array("flash" => "Platnost přihlášení vypršela. Přihlašte se prosím znovu."));
 		} else {
-			$view = $this->$action($req->data);
+			$view = $this->$action($req->params, $req->data);
 		}
 
 		$view->addField("action", $action);
@@ -37,9 +37,9 @@ class MainController {
 		return new Response(200, $output);
 	}
 
-	public function login($args) {
-		if (isset($args["team_id"])) {
-			if ((new Team())->login((int)$args["team_id"], $args["pswd"])) {
+	function login($params, $data) {
+		if (isset($data["team_id"])) {
+			if ((new Team())->login((int)$data["team_id"], $data["pswd"])) {
 				return new View("main/code");
 			} else {
 				return new View("main/login", array("flash" => "Špatné číslo týmu nebo heslo"));
@@ -48,24 +48,24 @@ class MainController {
 		return new View("main/login");
 	}
 
-	public function logout($args) {
+	function logout($params, $data) {
 		Team::logout();
 		return new View("main/login");
 	}
 
-	public function code($args) {
-		if (isset($args["code"])) {
-			$response = CodeController::process($args["code"]);
+	function code($params, $data) {
+		if (isset($data["code"])) {
+			$response = CodeController::process($data["code"]);
 		} else {
 			$response = null;
 		}
-		return new View("main/code", array("response" => $response));
+		return new View("main/code", ["response" => $response]);
 	}	
 
-	public function applyhint($args) {
+	function applyhint($params, $data) {
 		$hint = new Hint();
-		if (isset($args["cipher"])) {
-			$cipherName = Code::polish($args["cipher"]);
+		if (isset($data["cipher"])) {
+			$cipherName = Code::polish($data["cipher"]);
 			$message = new Message();
 			$message->sendToSova((new Text("hint.request", $cipherName))->format());
 			$response = $hint->apply($cipherName)->format();
@@ -73,6 +73,13 @@ class MainController {
 		} else {
 			$response = null;
 		}
-		return new View("main/applyhint", array("response" => $response, "hintCount" => $hint->unusedHintCount()));
+		return new View("main/applyhint", ["response" => $response, "hintCount" => $hint->unusedHintCount()]);
 	}
+
+	function messages($params, $data) {
+		$page = isset($params["page"]) ? $params["page"] : 1;
+		list($messages, $count) = (new Message())->listForTeam($page, 20);
+		return new View("main/messages", ["messages" => $messages, "totalCount" => $count, "page" => $page]);
+	}
+
 }

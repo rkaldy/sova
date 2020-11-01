@@ -96,7 +96,9 @@ class AdminController {
 	}
 
 	public function broadcast_send($args) {
-		(new Message())->broadcast($args["team"], $args["message"]);
+		if (isset($args["team"])) {
+			(new Message())->broadcast($args["team"], $args["message"]);
+		}
 		return new Redirect("messages");
 	}
 }

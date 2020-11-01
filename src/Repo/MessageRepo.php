@@ -17,13 +17,14 @@ class MessageRepo extends RepoBase {
 		", $gameId, $limit, $offset);
 	}
 
-	public function listForTeam(int $teamId) {
+	public function listForTeam(int $teamId, $limit, $offset) {
 		return $this->db->aquery("
 			SELECT time, direction, text
 			FROM message
 			WHERE team_id = ? AND time <= NOW()
-			ORDER BY time DESC, direction DESC 
-		", $teamId);
+			ORDER BY time DESC, direction DESC
+			LIMIT ?, ?
+		", $teamId, $limit, $offset);
 	}
 
 	public function count(int $gameId) {
@@ -32,6 +33,10 @@ class MessageRepo extends RepoBase {
 			NATURAL JOIN team
 			WHERE team.game_id = ? AND time <= NOW()
 		", $gameId);
+	}
+
+	public function countForTeam($teamId) {
+		return $this->db->equery("SELECT COUNT(*) FROM message WHERE team_id = ? AND time <= NOW()", $teamId);
 	}
 
 	public function create(array $message) {
@@ -45,7 +50,7 @@ class MessageRepo extends RepoBase {
 	public function broadcast(array $teams, string $message) {
 		$stmt = $this->db->prepare("INSERT INTO message (team_id, direction, text) VALUES (?, ?, ?)");
 		foreach ($teams as $team_id) {
-			$stmt->execute(array($team_id, self::TO_TEAM, $message));
+			$stmt->execute([$team_id, self::TO_TEAM, $message]);
 		}
 	}
 }

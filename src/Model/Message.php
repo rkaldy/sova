@@ -12,23 +12,19 @@ class Message extends ModelBase {
 		foreach ($messages as &$msg) {
 			$msg["name"] .= $msg["direction"] == self::FROM_TEAM ? " →" : " ←";
 		}
-		return $messages;
+		return [$messages, $this->repo->count()];
 	}
 
-	public function listForTeam() {
-		return $this->repo->listForTeam(Team::current());
-	}
-
-	public function count() {
-		return $this->repo->count(Game::current());
+	public function listForTeam($page, $pageSize) {
+		return [$this->repo->listForTeam(Team::current(), ($page - 1) * $pageSize, $pageSize), $this->repo->countForTeam(Team::current()) ];
 	}
 
 	public function sendToSova(string $message) {
-		$this->repo->create(array("team_id" => Team::current(), "direction" => self::FROM_TEAM, "text" => $message));
+		$this->repo->create(["team_id" => Team::current(), "direction" => self::FROM_TEAM, "text" => $message]);
 	}
 
 	public function sendToTeam(string $message, int $cipherId = null, int $afterMinutes = null) {
-		$this->repo->create(array("team_id" => Team::current(), "cipher_id" => $cipherId, "direction" => self::TO_TEAM, "time" => $afterMinutes, "text" => $message));
+		$this->repo->create(["team_id" => Team::current(), "cipher_id" => $cipherId, "direction" => self::TO_TEAM, "time" => $afterMinutes, "text" => $message]);
 	}
 
 	public function broadcast(array $teams, string $message) {
