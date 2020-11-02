@@ -42,6 +42,7 @@ if ($superuser) {
 <?php if (DEVELOPMENT) { ?>
     <script src="../node_modules/jquery/dist/jquery.js"></script>
     <script src="../node_modules/jquery-datetimepicker/jquery.datetimepicker.js"></script>
+	<script src="../node_modules/php-date-formatter/js/php-date-formatter.js"></script>
 	<script src="../node_modules/select-pure/dist/bundle.min.js"></script>
     <script src="../node_modules/jsgrid/dist/jsgrid.js"></script>
   <?php if ($action == "graph") { ?>
@@ -49,11 +50,12 @@ if ($superuser) {
   <?php } ?>
 <?php } else { ?>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://unpkg.com/jquery-datetimepicker@2.5.21/build/jquery.datetimepicker.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-datetimepicker/2.5.20/jquery.datetimepicker.full.min.js"></script>
+	<script src="https://unpkg.com/php-date-formatter@1.3.6/js/php-date-formatter.min.js"></script>
 	<script src="https://unpkg.com/select-pure@0.6.1/dist/bundle.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.js"></script>
   <?php if ($action == "graph") { ?>
-	<script src="https://unpkg.com/vis-network@8.5.2/dist/vis-network.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.21.0/vis-network.min.js"></script>
   <?php } ?>
 <?php } ?>
     <script src="../static/jsgrid.custom.js"></script>

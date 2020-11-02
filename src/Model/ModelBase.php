@@ -13,7 +13,7 @@ class ModelBase {
 		$this->repo = new $repoClass();
 	}
 	
-	public function &repo(): RepoBase {
+	public function repo(): RepoBase {
 		return $this->repo;
 	}
 
