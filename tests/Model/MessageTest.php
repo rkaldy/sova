@@ -34,10 +34,11 @@ class MessageTest extends TestBase {
 
 	function testSendToSova() {
 		$this->message->sendToSova("Pomoc!");
-		$messages = $this->message->list(1, 100);
+		list($messages, $count) = $this->message->list();
 		$this->assertEquals(array(
-			array("name" => "Parta Nic →", "direction" => Message::FROM_TEAM, "text" => "Pomoc!")
+			array("name" => "Parta Nic", "direction" => Message::FROM_TEAM, "direction_str" => "in", "text" => "Pomoc!")
 		), self::stripTimes($messages));
+		$this->assertEquals(1, $count);
 		$now = new DateTime();
 		$time = new DateTime($messages[0]["time"], new DateTimeZone("Europe/Prague"));
 		$this->assertLessThanOrEqual($now, $time);
@@ -45,22 +46,26 @@ class MessageTest extends TestBase {
 
 	function testSendToTeamAmended() {
 		$this->message->sendToTeam("Nápověda", null, 30);
-		$this->assertEquals(array(), $this->message->list(1, 100));
+		list($messages, $count) = $this->message->list();
+		$this->assertEquals(array(), $messages);
 	}
 
 	function testBroadcast() {
 		$this->message->broadcast(array(1, 2), "Konec hry");
+		list($messages, $count) = $this->message->list();
 		$this->assertEquals(array(
-			array("name" => "Parta Nic ←", "direction" => Message::TO_TEAM, "text" => "Konec hry"),
-			array("name" => "Redwool ←", "direction" => Message::TO_TEAM, "text" => "Konec hry")
-		), self::stripTimes($this->message->list(1, 100)));
+			array("name" => "Parta Nic", "direction" => Message::TO_TEAM, "direction_str" => "out", "text" => "Konec hry"),
+			array("name" => "Redwool", "direction" => Message::TO_TEAM, "direction_str" => "out", "text" => "Konec hry")
+		), self::stripTimes($messages));
 	}
 
 	function testListForTeam() {
 		$this->message->broadcast(array(1, 2), "Konec hry");
+		list($messages, $count) = $this->message->listForTeam();
 		$this->assertEquals(array(
-			array("direction" => Message::TO_TEAM, "text" => "Konec hry")
-		), self::stripTimes($this->message->listForTeam()));
+			array("direction" => Message::TO_TEAM, "direction_str" => "out", "text" => "Konec hry")
+		), self::stripTimes($messages));
+		$this->assertEquals(1, $count);
 	}
 
 	function testREST() {
@@ -69,8 +74,8 @@ class MessageTest extends TestBase {
 		$resp = (new RestController())->messages(array("page" => 1, "pageSize" => 20));
 		$this->assertEquals(2, $resp["itemsCount"]);
 		$this->assertEquals(array(
-			array("name" => "Parta Nic ←", "direction" => Message::TO_TEAM, "text" => "Nazdar"),
-			array("name" => "Parta Nic →", "direction" => Message::FROM_TEAM, "text" => "Ahoj")
+			array("name" => "Parta Nic", "direction" => Message::TO_TEAM, "direction_str" => "out", "text" => "Nazdar"),
+			array("name" => "Parta Nic", "direction" => Message::FROM_TEAM, "direction_str" => "in", "text" => "Ahoj")
 		), self::stripTimes($resp["data"]));
 	}
 }

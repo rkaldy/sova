@@ -24,7 +24,7 @@ if (!isset($page)) $page = 1;
 <?php foreach($messages as $msg) { ?>
     <tr class="<?php echo $msg["direction"] == Message::FROM_TEAM ? "from-team" : "to-team" ?>">
 	  <td><?php echo $msg["time"] ?></td>
-	  <td><b><?php echo $msg["direction"] == Message::FROM_TEAM ? "in" : "out" ?></b></td>
+	  <td><b><?php echo $msg["direction_str"] ?></b></td>
 	  <td><?php echo $msg["text"] ?></td>
 	</tr>
 <?php } ?>

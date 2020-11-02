@@ -7,17 +7,24 @@ class Message extends ModelBase {
 	public const TO_TEAM = 2;
 
 
-	public function list($page, $pageSize) {
-		$messages = $this->repo->list(Game::current(), ($page - 1) * $pageSize, $pageSize);
+	private function addDirectionStr(array &$messages) {
 		foreach ($messages as &$msg) {
 			$msg["direction_str"] = $msg["direction"] == self::FROM_TEAM ? "in" : "out";
 		}
+	}
+
+	public function list(int $page = 1, int $pageSize = 9999) {
+		$messages = $this->repo->list(Game::current(), ($page - 1) * $pageSize, $pageSize);
+		$this->addDirectionStr($messages);
 		return [$messages, $this->repo->count(Game::current())];
 	}
 
-	public function listForTeam($page, $pageSize) {
-		return [$this->repo->listForTeam(Team::current(), ($page - 1) * $pageSize, $pageSize), $this->repo->countForTeam(Team::current()) ];
+	public function listForTeam(int $page = 1, $pageSize = 9999) {
+		$messages = $this->repo->listForTeam(Team::current(), ($page - 1) * $pageSize, $pageSize);
+		$this->addDirectionStr($messages);
+		return [$messages, $this->repo->countForTeam(Team::current())];
 	}
+
 
 	public function sendToSova(string $message) {
 		$this->repo->create(["team_id" => Team::current(), "direction" => self::FROM_TEAM, "text" => $message]);
