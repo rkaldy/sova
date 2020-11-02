@@ -23,6 +23,19 @@ class CodeController {
 		else if (isset($entity["hint_id"])) {
 			$hint = new Hint();
 			$response = $hint->add($entity["hint_id"]);
+		} 
+		else if (isset($entity["point_id"])) {
+			$locModel = new Loc();
+			$cipherModel = new Cipher();
+			if ($loc = $locModel->repo()->get($entity["point_id"])) {
+				$response = $locModel->visit($loc, $code);
+			}
+			else if ($cipher = $cipherModel->repo()->get($entity["point_id"])) {
+				$response = $cipherModel->visit($cipher, $code);
+			}
+			else {
+				$response = new Text("code.unknown", $code);
+			}
 		} else {
 			$response = new Text("code.unknown", $code);
 		}

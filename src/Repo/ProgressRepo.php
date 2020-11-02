@@ -1,10 +1,20 @@
 <?php
 namespace Sova\Repo;
 
+use Sova\DBException;
+
 class ProgressRepo extends RepoBase {
 
 	public function create(int $teamId, int $pointId, int $type) {
-		$this->db->execute("INSERT INTO progress (team_id, point_id, type) values (?, ?, ?)", array($teamId, $pointId, $type));
+		try {
+			$this->db->execute("INSERT INTO progress (team_id, point_id, type) values (?, ?, ?)", array($teamId, $pointId, $type));
+			return true;
+		} catch (DBException $ex) {
+			if ($ex->getCode() == 1062) {
+				return false;
+			}
+			throw $ex;
+		}
 	}
 
 	public function previousCipherSolved(int $teamId, int $locId) {

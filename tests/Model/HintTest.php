@@ -54,8 +54,8 @@ class HintTest extends GameTestBase {
 
 	function testApplyNoPrevious() {
 		$this->db->execute("INSERT INTO team_hint (team_id, hint_id, cipher_id) VALUES (1, 2, NULL)");
-		$resp = $this->hint->apply("S3");
-		$this->assertEquals(new Text("cipher.no-previous", "S3"), $resp);
+		$resp = $this->hint->apply("S3a");
+		$this->assertEquals(new Text("cipher.no-previous", "S3a"), $resp);
 	}
 
 	function testApplyNoPreviousMulti() {

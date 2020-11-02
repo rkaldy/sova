@@ -3,13 +3,13 @@ namespace Sova\Repo;
 
 use Sova\DBException;
 
-class LocRepo extends RepoBase {
+class LocRepo extends PointRepo {
 
 	public function get(int $id) {
 		$loc = $this->db->squery("
-			SELECT loc.point_id, name, description, end_time, min_ciphers_solved 
+			SELECT loc.point_id, name, description, end_time, min_ciphers_solved, 
 			  GROUP_CONCAT(DISTINCT prev.from_point_id ORDER BY prev.from_point_id SEPARATOR ',') AS prev,
-			  GROUP_CONCAT(DISTINCT next.to_point_id ORDER BY next.to_point_id SEPARATOR ',') AS next,
+			  GROUP_CONCAT(DISTINCT next.to_point_id ORDER BY next.to_point_id SEPARATOR ',') AS next
 			FROM loc 
 			NATURAL JOIN point 
 			LEFT JOIN step AS prev ON prev.to_point_id = loc.point_id
@@ -50,6 +50,22 @@ class LocRepo extends RepoBase {
 
 	function delete(array $loc) {
 		$this->db->execute("DELETE FROM point WHERE point_id = :point_id", $loc, true);
+	}
+
+	
+	function hasPreviousCiphers(int $locId) {
+		return $this->db->equery("SELECT COUNT(*) FROM step WHERE to_point_id = ?", $locId) != 0;
+	}
+
+	function getNextCiphers(int $locId) {
+		return $this->db->aquery("
+			SELECT point.*, cipher.*, code.code 
+			FROM point
+			NATURAL JOIN cipher
+			JOIN code ON code.point_id = cipher.point_id
+			JOIN step ON step.to_point_id = point.point_id
+			WHERE from_point_id = ?
+		", $locId);
 	}
 }
 
