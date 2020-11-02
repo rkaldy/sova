@@ -156,9 +156,10 @@ thead  {
 	color: white;
 }
 
-tr.alt-row, tr.jsgrid-alt-row {
-	background-color: #e0e0e0;
-}
+tr.alt-row, tr.jsgrid-alt-row {	background-color: #e0e0e0; }
+tr.from-team { background-color: white; }
+tr.to-team { background-color: #e0e0e0; }
+
 
 td {
     padding: 0.5ex 2ex;

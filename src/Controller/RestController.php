@@ -91,7 +91,7 @@ class RestController {
 	}
 
 	function messages(array $args): array {
-		$message = new Message();
-		return array("data" => $message->list($args["page"], $args["pageSize"]), "itemsCount" => $message->count());
+		list($messages, $count) = (new Message())->list($args["page"], $args["pageSize"]);
+		return ["data" => $messages, "itemsCount" => $count];
 	}
 }

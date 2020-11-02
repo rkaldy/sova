@@ -21,11 +21,8 @@ if (!isset($page)) $page = 1;
 	</tr>
   </thead>
   <tbody>
-<?php 
-for ($i = 0; $i < count($messages); $i++) { 
-	$msg = $messages[$i];	
-?>
-    <tr<?php if ($i % 2 == 1) echo ' class="alt-row"' ?>>
+<?php foreach($messages as $msg) { ?>
+    <tr class="<?php echo $msg["direction"] == Message::FROM_TEAM ? "from-team" : "to-team" ?>">
 	  <td><?php echo $msg["time"] ?></td>
 	  <td><b><?php echo $msg["direction"] == Message::FROM_TEAM ? "in" : "out" ?></b></td>
 	  <td><?php echo $msg["text"] ?></td>

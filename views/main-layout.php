@@ -2,7 +2,6 @@
 $menu = [
 	"code" => "Zadej kód",
 	"applyhint" => "Použít nápovědu",
-	"codes" => "Historie kódů",
 	"messages" => "Historie zpráv",
 	"rank" => "Pořadí",
 	"logout" => "Logout"

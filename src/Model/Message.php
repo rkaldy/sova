@@ -10,9 +10,9 @@ class Message extends ModelBase {
 	public function list($page, $pageSize) {
 		$messages = $this->repo->list(Game::current(), ($page - 1) * $pageSize, $pageSize);
 		foreach ($messages as &$msg) {
-			$msg["name"] .= $msg["direction"] == self::FROM_TEAM ? " →" : " ←";
+			$msg["direction_str"] = $msg["direction"] == self::FROM_TEAM ? "in" : "out";
 		}
-		return [$messages, $this->repo->count()];
+		return [$messages, $this->repo->count(Game::current())];
 	}
 
 	public function listForTeam($page, $pageSize) {

@@ -9,10 +9,10 @@
 		  </tr>
 	   </thead>
 	   <tbody>
-<?php foreach ($teams as $team) { ?>
-	      <tr>
-			<td><?php echo $team["name"] ?></td>
-			<td><input type="checkbox" name="team[]" value="<?php echo $team["team_id"]?>"></td>
+<?php for ($i = 0; $i < count($teams); $i++) { ?>
+	      <tr<?php if ($i % 2 == 1) echo ' class="alt-row"'?>>
+			<td><?php echo $teams[$i]["name"] ?></td>
+			<td><input type="checkbox" name="team[]" value="<?php echo $teams[$i]["team_id"]?>"></td>
 		  </tr>
 <?php } ?>
       </tbody>
