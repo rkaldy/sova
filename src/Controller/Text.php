@@ -12,6 +12,8 @@ class Text {
 		"cipher.unknown"			=> "Neznámé číslo šifry: %s",
 		"cipher.no-previous"		=> "Na šifru %s jste se ještě nemohli dostat, protože jste nevyluštili předchozí šifru.",
 		"cipher.no-previous.multi"	=> "Na šifru %s jste se ještě nemohli dostat, protože jste nevyluštili všech %d předchozích šifer.",
+		"cipher.solved"				=> "Úspěšně jste vyluštili šifru %s. Poloha dalšího stanoviště je: %s.",
+		"cipher.solved.multi"		=> "Úspěšně jste vyluštili šifru %s. Polohy dalších stanovišť jsou: %s.",
 		"cipher.hint"				=> "Přišel čas na nápovědu k šifře %s: %s",
 		"cipher.solution"			=> "Přišel čas na řešení šifry %s: %s",
 

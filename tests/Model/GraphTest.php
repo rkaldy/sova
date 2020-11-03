@@ -15,11 +15,6 @@ class GraphTest extends TestBase {
 		$this->graph = new Graph();
 	}
 
-	function tearDown(): void {
-		$this->db->execute("DELETE FROM point");
-		parent::tearDown();
-	}
-
 	function build(array $locs, array $ciphers) {
 		$locModel = new Loc();
 		$locRepo = new LocRepo();

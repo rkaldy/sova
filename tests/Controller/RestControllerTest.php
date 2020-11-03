@@ -14,11 +14,6 @@ class RestControllerTest extends TestBase {
 		$_SESSION["user_id"] = 1;
 	}
 
-	function tearDown(): void {
-		$this->db->execute("DELETE FROM point");
-		parent::tearDown();
-	}
-
 	function rest(string $method, string $res, array $in = array()): array {
 		$req = new Request($method, "/", [], $in);
 		$resp = (new RestController())->process($req, [$res]);

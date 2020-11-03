@@ -8,20 +8,6 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 
-DROP TABLE IF EXISTS cipher;
-DROP TABLE IF EXISTS code;
-DROP TABLE IF EXISTS game;
-DROP TABLE IF EXISTS hint;
-DROP TABLE IF EXISTS loc;
-DROP TABLE IF EXISTS message;
-DROP TABLE IF EXISTS point;
-DROP TABLE IF EXISTS progress;
-DROP TABLE IF EXISTS step;
-DROP TABLE IF EXISTS team;
-DROP TABLE IF EXISTS team_hint;
-DROP TABLE IF EXISTS user;
-DROP TABLE IF EXISTS wordlist;
-
 CREATE TABLE `cipher` (
   point_id int(11) NOT NULL,
   name_int varchar(50) COLLATE utf8_czech_ci DEFAULT NULL,
@@ -34,7 +20,7 @@ CREATE TABLE `code` (
   game_id int(11) NOT NULL,
   code varchar(20) CHARACTER SET ascii NOT NULL,
   point_id int(11) DEFAULT NULL,
-  hint_id int(11) DEFAULT NULL,
+  unihint_id int(11) DEFAULT NULL,
   team_id int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
@@ -48,7 +34,11 @@ CREATE TABLE game (
 
 CREATE TABLE hint (
   hint_id int(11) NOT NULL,
-  game_id int(11) NOT NULL
+  team_id int(11) NOT NULL,
+  unihint_id int(11) NOT NULL,
+  cipher_id int(11) DEFAULT NULL,
+  time datetime DEFAULT NULL,
+  type int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
 CREATE TABLE loc (
@@ -77,8 +67,7 @@ CREATE TABLE `point` (
 CREATE TABLE progress (
   team_id int(11) NOT NULL,
   point_id int(11) NOT NULL,
-  time datetime NOT NULL DEFAULT current_timestamp(),
-  type int(11) NOT NULL DEFAULT 1
+  time datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
 CREATE TABLE step (
@@ -94,10 +83,9 @@ CREATE TABLE team (
   email varchar(50) COLLATE utf8_czech_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
-CREATE TABLE team_hint (
-  team_id int(11) NOT NULL,
-  hint_id int(11) NOT NULL,
-  cipher_id int(11) DEFAULT NULL
+CREATE TABLE unihint (
+  unihint_id int(11) NOT NULL,
+  game_id int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
 CREATE TABLE `user` (
@@ -116,17 +104,19 @@ ALTER TABLE `cipher`
 
 ALTER TABLE `code`
   ADD PRIMARY KEY (game_id,code) USING BTREE,
-  ADD KEY point_id (point_id),
-  ADD KEY team_id (team_id),
-  ADD KEY hint_id (hint_id) USING BTREE;
+  ADD UNIQUE KEY point_id (point_id,game_id) USING BTREE,
+  ADD UNIQUE KEY team_id (team_id,game_id) USING BTREE,
+  ADD UNIQUE KEY unihint_id (unihint_id,game_id) USING BTREE;
 
 ALTER TABLE game
   ADD PRIMARY KEY (game_id),
   ADD KEY owner_id (owner_id);
 
 ALTER TABLE hint
-  ADD PRIMARY KEY (hint_id),
-  ADD KEY game_id (game_id);
+  ADD PRIMARY KEY (hint_id) USING BTREE,
+  ADD UNIQUE KEY unihint_id (unihint_id,team_id) USING BTREE,
+  ADD UNIQUE KEY team_id (team_id,cipher_id,type) USING BTREE,
+  ADD KEY cipher_id (cipher_id);
 
 ALTER TABLE loc
   ADD PRIMARY KEY (point_id);
@@ -153,8 +143,9 @@ ALTER TABLE team
   ADD PRIMARY KEY (team_id),
   ADD UNIQUE KEY game_id (game_id,name);
 
-ALTER TABLE team_hint
-  ADD PRIMARY KEY (team_id,hint_id);
+ALTER TABLE unihint
+  ADD PRIMARY KEY (unihint_id),
+  ADD KEY game_id (game_id);
 
 ALTER TABLE `user`
   ADD PRIMARY KEY (user_id);
@@ -178,6 +169,9 @@ ALTER TABLE `point`
 ALTER TABLE team
   MODIFY team_id int(11) NOT NULL AUTO_INCREMENT;
 
+ALTER TABLE unihint
+  MODIFY unihint_id int(11) NOT NULL AUTO_INCREMENT;
+
 ALTER TABLE `user`
   MODIFY user_id int(11) NOT NULL AUTO_INCREMENT;
 
@@ -187,32 +181,40 @@ ALTER TABLE `cipher`
 
 ALTER TABLE `code`
   ADD CONSTRAINT code_ibfk_1 FOREIGN KEY (point_id) REFERENCES point (point_id) ON DELETE CASCADE,
-  ADD CONSTRAINT code_ibfk_2 FOREIGN KEY (hint_id) REFERENCES hint (hint_id) ON DELETE CASCADE,
-  ADD CONSTRAINT code_ibfk_3 FOREIGN KEY (team_id) REFERENCES team (team_id) ON DELETE CASCADE;
+  ADD CONSTRAINT code_ibfk_2 FOREIGN KEY (team_id) REFERENCES team (team_id) ON DELETE CASCADE,
+  ADD CONSTRAINT code_ibfk_3 FOREIGN KEY (unihint_id) REFERENCES unihint (unihint_id) ON DELETE CASCADE;
 
 ALTER TABLE game
   ADD CONSTRAINT game_ibfk_1 FOREIGN KEY (owner_id) REFERENCES `user` (user_id);
 
 ALTER TABLE hint
-  ADD CONSTRAINT hint_ibfk_1 FOREIGN KEY (game_id) REFERENCES game (game_id);
+  ADD CONSTRAINT hint_ibfk_1 FOREIGN KEY (team_id) REFERENCES team (team_id) ON DELETE CASCADE,
+  ADD CONSTRAINT hint_ibfk_2 FOREIGN KEY (unihint_id) REFERENCES unihint (unihint_id) ON DELETE CASCADE,
+  ADD CONSTRAINT hint_ibfk_3 FOREIGN KEY (cipher_id) REFERENCES cipher (point_id) ON DELETE CASCADE;
 
 ALTER TABLE loc
   ADD CONSTRAINT parent_entity_loc FOREIGN KEY (point_id) REFERENCES point (point_id) ON DELETE CASCADE;
 
 ALTER TABLE message
-  ADD CONSTRAINT message_ibfk_1 FOREIGN KEY (team_id) REFERENCES team (team_id),
-  ADD CONSTRAINT message_ibfk_2 FOREIGN KEY (cipher_id) REFERENCES cipher (point_id);
+  ADD CONSTRAINT message_ibfk_1 FOREIGN KEY (team_id) REFERENCES team (team_id) ON DELETE CASCADE,
+  ADD CONSTRAINT message_ibfk_2 FOREIGN KEY (cipher_id) REFERENCES cipher (point_id) ON DELETE CASCADE;
+
+ALTER TABLE `point`
+  ADD CONSTRAINT point_ibfk_1 FOREIGN KEY (game_id) REFERENCES game (game_id) ON DELETE CASCADE;
 
 ALTER TABLE progress
-  ADD CONSTRAINT progress_ibfk_1 FOREIGN KEY (team_id) REFERENCES team (team_id),
-  ADD CONSTRAINT progress_ibfk_2 FOREIGN KEY (point_id) REFERENCES point (point_id);
+  ADD CONSTRAINT progress_ibfk_1 FOREIGN KEY (team_id) REFERENCES team (team_id) ON DELETE CASCADE,
+  ADD CONSTRAINT progress_ibfk_2 FOREIGN KEY (point_id) REFERENCES point (point_id) ON DELETE CASCADE;
 
 ALTER TABLE step
   ADD CONSTRAINT step_ibfk_1 FOREIGN KEY (from_point_id) REFERENCES point (point_id) ON DELETE CASCADE,
   ADD CONSTRAINT step_ibfk_2 FOREIGN KEY (to_point_id) REFERENCES point (point_id) ON DELETE CASCADE;
 
 ALTER TABLE team
-  ADD CONSTRAINT team_ibfk_1 FOREIGN KEY (game_id) REFERENCES game (game_id);
+  ADD CONSTRAINT team_ibfk_1 FOREIGN KEY (game_id) REFERENCES game (game_id) ON DELETE CASCADE;
+
+ALTER TABLE unihint
+  ADD CONSTRAINT unihint_ibfk_1 FOREIGN KEY (game_id) REFERENCES game (game_id) ON DELETE CASCADE;
 SET FOREIGN_KEY_CHECKS=1;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

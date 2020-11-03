@@ -10,15 +10,9 @@ class HintTest extends GameTestBase {
 
 	function setUp(): void {
 		parent::setUp();
-		$this->db->execute("INSERT INTO team_hint (team_id, hint_id, cipher_id) VALUES (1, 1, 11)");
-		$this->progressRepo->create(1, 1, 1);
+		$this->db->execute("INSERT INTO hint (team_id, unihint_id, cipher_id, time) VALUES (1, 1, 11, NOW())");
+		$this->progressRepo->create(1, 1);
 		$this->hint = new Hint();
-	}
-
-	function tearDown(): void {
-		$this->db->execute("DELETE FROM team_hint");
-		$this->db->execute("DELETE FROM progress");
-		parent::tearDown();
 	}
 
 	function testUnusedHintCount() {
@@ -41,31 +35,31 @@ class HintTest extends GameTestBase {
 	}
 
 	function testApply() {
-		$this->db->execute("INSERT INTO team_hint (team_id, hint_id, cipher_id) VALUES (1, 2, NULL)");
+		$this->db->execute("INSERT INTO hint (team_id, unihint_id, cipher_id) VALUES (1, 2, NULL)");
 		$resp = $this->hint->apply("S1b");
 		$this->assertEquals(new Text("hint.apply.success", "S1b", "Zkus ji luštit poslepu"), $resp);
 	}
 
 	function testApplyAlready() {
-		$this->db->execute("INSERT INTO team_hint (team_id, hint_id, cipher_id) VALUES (1, 2, NULL)");
+		$this->db->execute("INSERT INTO hint (team_id, unihint_id, cipher_id) VALUES (1, 2, NULL)");
 		$resp = $this->hint->apply("S1a");
 		$this->assertEquals(new Text("hint.apply.already", "S1a"), $resp);
 	}
 
 	function testApplyNoPrevious() {
-		$this->db->execute("INSERT INTO team_hint (team_id, hint_id, cipher_id) VALUES (1, 2, NULL)");
+		$this->db->execute("INSERT INTO hint (team_id, unihint_id, cipher_id) VALUES (1, 2, NULL)");
 		$resp = $this->hint->apply("S3a");
 		$this->assertEquals(new Text("cipher.no-previous", "S3a"), $resp);
 	}
 
 	function testApplyNoPreviousMulti() {
-		$this->db->execute("INSERT INTO team_hint (team_id, hint_id, cipher_id) VALUES (1, 2, NULL)");
+		$this->db->execute("INSERT INTO hint (team_id, unihint_id, cipher_id) VALUES (1, 2, NULL)");
 		$resp = $this->hint->apply("S2");
 		$this->assertEquals(new Text("cipher.no-previous.multi", "S2", 2), $resp);
 	}
 
 	function testApplyUnknownCipher() {
-		$this->db->execute("INSERT INTO team_hint (team_id, hint_id, cipher_id) VALUES (1, 2, NULL)");
+		$this->db->execute("INSERT INTO hint (team_id, unihint_id, cipher_id) VALUES (1, 2, NULL)");
 		$resp = $this->hint->apply("S4");
 		$this->assertEquals(new Text("cipher.unknown", "S4"), $resp);
 	}

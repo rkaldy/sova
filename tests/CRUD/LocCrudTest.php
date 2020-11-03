@@ -15,11 +15,6 @@ class LocCrudTest extends CrudTestBase {
 		$this->db->execute("INSERT INTO code (game_id, point_id, code) VALUES (1, 2, 'KYBL')");
 	}
 
-	function tearDown(): void {
-		$this->db->exec("DELETE FROM point");
-		parent::tearDown();
-	}
-
 	function testCreate() {
 		$loc = $this->create(array("name" => "Dvoračky", "min_ciphers_solved" => 30, "code" => "ovce"));
 		$this->assertEquals(array(

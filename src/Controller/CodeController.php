@@ -20,9 +20,9 @@ class CodeController {
 		if ($entity == null) {
 			$response = new Text("code.unknown", $code);
 		} 
-		else if (isset($entity["hint_id"])) {
+		else if (isset($entity["unihint_id"])) {
 			$hint = new Hint();
-			$response = $hint->add($entity["hint_id"]);
+			$response = $hint->add($entity["unihint_id"]);
 		} 
 		else if (isset($entity["point_id"])) {
 			$locModel = new Loc();

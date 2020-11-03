@@ -11,11 +11,6 @@ class TeamCrudTest extends CrudTestBase {
 		$this->db->execute("INSERT INTO code (team_id, game_id, code) VALUES (1, 1, 'PRAK')");
 	}
 
-	function tearDown(): void {
-		$this->db->execute("DELETE FROM team");
-		parent::tearDown();
-	}
-
 	function testCreate() {
 		$team = $this->create(array("name" => "Redwool", "pswd" => "KURE"));
 		$this->assertEquals(array(

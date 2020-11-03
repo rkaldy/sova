@@ -21,10 +21,7 @@ if (CREATE_DB) {
 } else {
 	echo "Preparing database...";
 	$pdo->exec("USE ".DB_NAME);
-	foreach ($pdo->query("SHOW TABLES") as $table) {
-		if ($table[0] != 'wordlist') {
-			$pdo->exec("DELETE FROM {$table[0]}");
-		}
-	}
+	$pdo->exec("DELETE FROM game");
+	$pdo->exec("DELETE FROM user");
 	echo "done\n";
 }

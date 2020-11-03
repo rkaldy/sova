@@ -20,19 +20,19 @@ class LocTest extends GameTestBase {
 	}
 
 	function testCheckPreviousCipher() {
-		$this->assertFalse($this->loc->checkPreviousCipherSolved(2));
-		$this->progressRepo->create(1, 11, 1);
-		$this->assertTrue($this->loc->checkPreviousCipherSolved(2));
+		$this->assertFalse($this->loc->checkPreviousCiphersSolved(2));
+		$this->progressRepo->create(1, 11);
+		$this->assertTrue($this->loc->checkPreviousCiphersSolved(2));
 	}
 		
 	function testCheckPreviousNoCipher() {
-		$this->assertTrue($this->loc->checkPreviousCipherSolved(1));
+		$this->assertTrue($this->loc->checkPreviousCiphersSolved(1));
 	}
 	
 	function testCheckPreviousMultipleCiphers() {
-		$this->assertFalse($this->loc->checkPreviousCipherSolved(5));
-		$this->progressRepo->create(1, 14, 1);
-		$this->assertTrue($this->loc->checkPreviousCipherSolved(5));
+		$this->assertFalse($this->loc->checkPreviousCiphersSolved(5));
+		$this->progressRepo->create(1, 14);
+		$this->assertTrue($this->loc->checkPreviousCiphersSolved(5));
 	}
 
 	
@@ -43,7 +43,7 @@ class LocTest extends GameTestBase {
 
 	function testVisitAlready() {
 		$loc = $this->locRepo->get(1);
-		$this->progressRepo->create(1, 1, 1);
+		$this->progressRepo->create(1, 1);
 		$this->assertEquals(new Text("loc.already"), $this->loc->visit($loc, "KYBL"));
 	}
 

@@ -9,7 +9,7 @@ if ($superuser) {
 	$menu = array(
 		"locs" => "Stanoviště",
 		"ciphers" => "Šifry",
-		"hints" => "Nápovědy",
+		"unihints" => "Univerzální nápovědy",
 		"graph" => "Schéma",
 		"teams" => "Týmy",
 		"progress" => "Postup týmů",

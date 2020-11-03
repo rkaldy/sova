@@ -85,7 +85,7 @@ class AdminController {
 	public function games($args) 	{ return new View("admin/games"); }
 	public function locs($args)		{ return new View("admin/locs"); }
 	public function ciphers($args)	{ return new View("admin/ciphers"); }
-	public function hints($args)	{ return new View("admin/hints"); }
+	public function unihints($args)	{ return new View("admin/unihints"); }
 	public function teams($args)	{ return new View("admin/teams"); }
 	public function graph($args)	{ return new View("admin/graph"); }
 	public function messages($args)	{ return new View("admin/messages"); }

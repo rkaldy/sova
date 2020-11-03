@@ -22,8 +22,8 @@ class GameTestBase extends TestBase {
 		$this->db->execute("INSERT INTO code (game_id, point_id, code) VALUES (1, 1, 'PRALINKA')");
 		$this->db->execute("INSERT INTO code (game_id, point_id, code) VALUES (1, 2, 'KYBL')");
 		$this->db->execute("INSERT INTO code (game_id, point_id, code) VALUES (1, 3, 'PODNOS')");
-		$this->db->execute("INSERT INTO code (game_id, point_id, code) VALUES (1, 2, 'MEDVED')");
-		$this->db->execute("INSERT INTO code (game_id, point_id, code) VALUES (1, 3, 'SALVEJ')");
+		$this->db->execute("INSERT INTO code (game_id, point_id, code) VALUES (1, 4, 'MEDVED')");
+		$this->db->execute("INSERT INTO code (game_id, point_id, code) VALUES (1, 5, 'SALVEJ')");
 
 		$this->db->execute("INSERT INTO point (point_id, game_id, name) VALUES (11, 1, 'S1a')");
 		$this->db->execute("INSERT INTO point (point_id, game_id, name) VALUES (12, 1, 'S1b')");
@@ -39,26 +39,16 @@ class GameTestBase extends TestBase {
 		$this->db->execute("INSERT INTO code (game_id, point_id, code) VALUES (1, 12, 'ZABRADLI')");
 		$this->db->execute("INSERT INTO code (game_id, point_id, code) VALUES (1, 13, 'KOBLIHA')");
 		$this->db->execute("INSERT INTO code (game_id, point_id, code) VALUES (1, 14, 'KALENDAR')");
-		$this->db->execute("INSERT INTO code (game_id, point_id, code) VALUES (1, 14, 'SKLUZAVKA')");
+		$this->db->execute("INSERT INTO code (game_id, point_id, code) VALUES (1, 15, 'SKLUZAVKA')");
 
-		$this->db->execute("INSERT INTO hint (hint_id, game_id) VALUES (1, 1)");
-		$this->db->execute("INSERT INTO hint (hint_id, game_id) VALUES (2, 1)");
-		$this->db->execute("INSERT INTO code (hint_id, game_id, code) VALUES (1, 1, 'BUBEN')");
-		$this->db->execute("INSERT INTO code (hint_id, game_id, code) VALUES (2, 1, 'DIVIZNA')");
+		$this->db->execute("INSERT INTO unihint (unihint_id, game_id) VALUES (1, 1)");
+		$this->db->execute("INSERT INTO unihint (unihint_id, game_id) VALUES (2, 1)");
+		$this->db->execute("INSERT INTO code (unihint_id, game_id, code) VALUES (1, 1, 'BUBEN')");
+		$this->db->execute("INSERT INTO code (unihint_id, game_id, code) VALUES (2, 1, 'DIVIZNA')");
 
 		$this->db->execute("INSERT INTO step (from_point_id, to_point_id) VALUES (1, 11), (1, 12), (11, 2), (12, 3), (2, 13), (3, 13), (13, 4), (4, 14), (14, 5), (4, 15), (15, 5)");
 
 		$this->progressRepo = new ProgressRepo();
 		$_SESSION["team_id"] = 1;
-	}
-
-	function tearDown(): void {
-		$this->db->execute("DELETE FROM progress");
-		$this->db->execute("DELETE FROM message");
-		$this->db->execute("DELETE FROM team_hint");
-		$this->db->execute("DELETE FROM point");
-		$this->db->execute("DELETE FROM hint");
-		$this->db->execute("DELETE FROM team");
-		parent::tearDown();
 	}
 }

@@ -18,12 +18,6 @@ class MessageTest extends TestBase {
 		$_SESSION['team_id'] = 1;
 	}
 
-	function tearDown(): void {
-		$this->db->execute("DELETE FROM message");
-		$this->db->execute("DELETE FROM team");
-		parent::tearDown();
-	}
-
 	static function stripTimes($messages) {
 		foreach ($messages as &$msg) {
 			unset($msg["time"]);

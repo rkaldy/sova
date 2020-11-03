@@ -15,11 +15,6 @@ class TeamTest extends TestBase {
 		$_SESSION = array();
 	}
 
-	function tearDown(): void {
-		$this->db->execute("DELETE FROM team");
-		parent::tearDown();
-	}
-
 	function testLogin() {
 		$this->assertTrue($this->team->login(1, "prak"));
 		$this->assertTrue(Team::logged());

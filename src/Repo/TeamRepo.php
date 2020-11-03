@@ -8,8 +8,8 @@ class TeamRepo extends RepoBase {
 		return $this->db->squery("
 			SELECT team.*, code AS pswd, game.name AS game_name 
 			FROM team
+			NATURAL JOIN code
 			JOIN game ON game.game_id = team.game_id 
-			JOIN code ON code.team_id = team.team_id 
 			WHERE team.team_id = ? AND code = ?
 		", $team_id, $pswd);
 	}
@@ -18,7 +18,7 @@ class TeamRepo extends RepoBase {
 		return $this->db->aquery("
 			SELECT team.team_id, name, phone, email, code AS pswd 
 			FROM team 
-			JOIN code ON team.team_id = code.team_id
+			NATURAL JOIN code
 			WHERE team.game_id = ? ORDER BY name
 		", $gameId);
 	}

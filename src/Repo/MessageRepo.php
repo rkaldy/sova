@@ -53,4 +53,8 @@ class MessageRepo extends RepoBase {
 			$stmt->execute([$team_id, self::TO_TEAM, $message]);
 		}
 	}
+
+	public function deletePendingHints(int $teamId, array $cipherIds) {
+		$this->db->execute("DELETE FROM message WHERE team_id = ? AND cipher_id IN (".join(",", $cipherIds).") AND time > NOW()", $teamId);
+	}
 }

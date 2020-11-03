@@ -20,11 +20,6 @@ class CipherCrudTest extends CrudTestBase {
 		$this->db->execute("INSERT INTO step (from_point_id, to_point_id) VALUES (1, 5), (1, 6), (5, 2), (6, 3)");
 	}
 
-	function tearDown(): void {
-		$this->db->exec("DELETE FROM point");
-		parent::tearDown();
-	}
-
 	function testCreate() {
 		$cipher1 = $this->create(array("name" => "S3", "name_int" => "semafor", "code" => "javor", "prev" => array(2), "next" => array(4, 3)));
 		$cipher2 = $this->create(array("name" => "S4", "name_int" => "nahradni", "code" => "soliter", "prev" => array()));

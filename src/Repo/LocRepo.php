@@ -24,7 +24,7 @@ class LocRepo extends PointRepo {
 		return $this->db->aquery("
 			SELECT loc.point_id, name, description, end_time, min_ciphers_solved, code FROM loc
 			NATURAL JOIN point
-			JOIN code ON loc.point_id = code.point_id 
+			NATURAL JOIN code
 			WHERE point.game_id = ? 
 			ORDER BY sort_id, name
 		", $gameId);
@@ -53,19 +53,36 @@ class LocRepo extends PointRepo {
 	}
 
 	
-	function hasPreviousCiphers(int $locId) {
+	public function hasPreviousCiphers(int $locId) {
 		return $this->db->equery("SELECT COUNT(*) FROM step WHERE to_point_id = ?", $locId) != 0;
 	}
 
-	function getNextCiphers(int $locId) {
+	public function previousCipherSolved(int $teamId, int $locId) {
+		return $this->db->equery("
+			SELECT COUNT(*) FROM loc
+			JOIN step ON loc.point_id = step.to_point_id
+			JOIN progress ON progress.point_id = step.from_point_id
+			WHERE team_id = ? AND loc.point_id = ?
+		", $teamId, $locId) != 0;
+	}
+	
+	public function getNextCiphers(int $locId) {
 		return $this->db->aquery("
 			SELECT point.*, cipher.*, code.code 
 			FROM point
 			NATURAL JOIN cipher
-			JOIN code ON code.point_id = cipher.point_id
+			NATURAL JOIN code
 			JOIN step ON step.to_point_id = point.point_id
 			WHERE from_point_id = ?
 		", $locId);
+	}
+
+	public function visitedAllLocsWith(int $teamId, int $cipherId) {
+		return $this->db->equery("
+			SELECT COUNT(*) FROM step
+			LEFT JOIN progress ON step.from_point_id = progress.point_id AND progress.team_id = ?
+			WHERE step.to_point_id = ? AND progress.team_id IS NULL
+		", $teamId, $cipherId) == 0;
 	}
 }
 

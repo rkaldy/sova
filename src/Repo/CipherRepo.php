@@ -37,8 +37,8 @@ class CipherRepo extends PointRepo {
 			  GROUP_CONCAT(DISTINCT prev.from_point_id ORDER BY prev.from_point_id SEPARATOR ',') AS prev, 
 			  GROUP_CONCAT(DISTINCT next.to_point_id ORDER BY next.to_point_id SEPARATOR ',') AS next 
 			FROM cipher 
-			NATURAL JOIN point
-			JOIN code ON code.point_id = cipher.point_id
+			NATURAL JOIN point 
+			NATURAL JOIN code
 			LEFT JOIN step AS prev ON prev.to_point_id = cipher.point_id
 			LEFT JOIN step AS next ON next.from_point_id = cipher.point_id
 			WHERE point.game_id = ?
@@ -98,5 +98,33 @@ class CipherRepo extends PointRepo {
 			JOIN step AS prev2 ON prev2.to_point_id = prev.from_point_id
 			WHERE prev.to_point_id = ?
 		", $cipherId) != 0;
+	}
+
+	public function getTimeSpent(int $teamId, int $cipherId) {
+		return $this->db->equery("
+			SELECT TIMESTAMPDIFF(MINUTE, MAX(time), NOW())
+			FROM progress
+			JOIN step ON step.from_point_id = progress.point_id
+			WHERE progress.team_id = ? AND step.to_point_id = ?
+		", $teamId, $cipherId);
+	}
+
+	public function getNextLocs(int $cipherId) {
+		return $this->db->aquery("
+			SELECT point.*, loc*
+			FROM point 
+			NATURAL JOIN loc
+			JOIN step ON step.to_point_id = loc.point_id
+			WHERE step.from_point_id = ?
+		", $cipherId);
+	}
+
+	public function getParallelCipherIds($cipherId) {
+		return $this->db->aquery("
+			SELECT step2.from_point_id
+			FROM step AS step1
+			JOIN step AS step2 WHERE step1.to_point_id = step2.to_point_id
+			WHERE step1.from_point_id = ?
+		", $cipherId);
 	}
 }

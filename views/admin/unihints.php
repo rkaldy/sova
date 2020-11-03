@@ -3,7 +3,7 @@
 <script>
 $(function() {
 	setGrid({
-		table: "hint", 
+		table: "unihint", 
 		width: "20%",
 		fields: 
 		[
