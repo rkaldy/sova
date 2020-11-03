@@ -6,7 +6,7 @@ class Text {
 	const MESSAGES = array(
 		"code.unknown" 				=> "Neznámý kód: %s",
 
-		"loc.visited"				=> "Dostali jste se na stanoviště %s.",
+		"loc.visited"				=> "Dostali jste se na stanoviště %s. Jste tu %d. První tu byl tým %s v %s.",
 		"loc.already"				=> "Tento kód stanoviště jste již zadali.",
 		"loc.next"					=> "Poloha dalšího stanoviště je: %s.",
 		"loc.next.multi"			=> "Polohy dalších stanovišť jsou: %s.",
@@ -14,7 +14,7 @@ class Text {
 		"cipher.unknown"			=> "Neznámé číslo šifry: %s",
 		"cipher.no-previous"		=> "Na šifru %s jste se ještě nemohli dostat, protože jste nevyluštili předchozí šifru.",
 		"cipher.no-previous.multi"	=> "Na šifru %s jste se ještě nemohli dostat, protože jste nevyluštili všech %d předchozích šifer.",
-		"cipher.solved"				=> "Úspěšně jste vyluštili šifru %s.",
+		"cipher.solved"				=> "Úspěšně jste vyluštili šifru %s. Jste %d. První ji vyluštil tým %s v %s.",
 		"cipher.already"			=> "Toto řešení šifry jste již zadali.",
 		"cipher.hint"				=> "Přišel čas na nápovědu k šifře %s: %s.",
 		"cipher.solution"			=> "Přišel čas na řešení šifry %s: %s",
@@ -24,7 +24,7 @@ class Text {
 		"hint.add.success" 			=> "Získali jste univerzální nápovědu. Aktuálně máte %d nevyužitých nápověd.",
 		"hint.apply.already"		=> "Pro šifru %s jste již dostali nápovědu. Podívejte se do zpráv.",
 		"hint.apply.no-hint"		=> "Všechny získané univerzální nápovědy jste již použili.",
-		"hint.apply.success"		=> "Nápověda pro šifru %s: %s."
+		"hint.apply.success"		=> "Nápověda pro šifru %s: %s.",
 	);
 
 	public $code;

@@ -35,13 +35,16 @@ class Cipher extends ModelBase {
 			return new Text("code.unknown", $code);
 		}
 
-		if (!(new ProgressRepo())->create(Team::current(), $cipher["point_id"])) {
+		$progress = new Progress();
+		if (!$progress->create($cipher["point_id"])) {
 			return new Text("cipher.already");
 		}
 
 		$this->repo->deletePendingHintsForParallelCiphers(Team::current(), $cipher);
 
-		$ret = [new Text("cipher.solved", $cipher["name"])];
+		list($rank, $firstTeam, $firstTime) = $progress->getRank($cipher["point_id"]);
+		
+		$ret = [new Text("cipher.solved", $cipher["name"], $rank, $firstTeam, $firstTime)];
 		$next = $this->repo->getNextLocs($cipher);
 		if (count($next) == 1) {
 			$ret[] = new Text("loc.next", $next[0]["description"]);

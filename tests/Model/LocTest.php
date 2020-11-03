@@ -49,7 +49,7 @@ class LocTest extends GameTestBase {
 
 	function testVisit() {
 		$loc = $this->locRepo->get(1);
-		$this->assertEquals(new Text("loc.visited", "Start"), $this->loc->visit($loc, "KYBL"));
+		$this->assertEquals(new Text("loc.visited", "Start", 1, "Parta Nic", $this->dbNow()), $this->loc->visit($loc, "KYBL"));
 		$messages = $this->db->aquery("SELECT direction, text FROM message WHERE team_id = 1 ORDER BY time");
 	}
 }

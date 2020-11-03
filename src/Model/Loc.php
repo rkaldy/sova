@@ -27,7 +27,8 @@ class Loc extends ModelBase {
 			return new Text("code.unknown", $code);
 		}
 		
-		if (!(new ProgressRepo())->create(Team::current(), $loc["point_id"])) {
+		$progress = new Progress();
+		if (!$progress->create($loc["point_id"])) {
 			return new Text("loc.already");
 		}
 		
@@ -37,7 +38,9 @@ class Loc extends ModelBase {
 				$hint->amend($cipher);
 			}
 		}
+
+		list($rank, $firstTeam, $firstTime) = $progress->getRank($loc["point_id"]);
 		
-		return new Text("loc.visited", $loc["name"]);
+		return new Text("loc.visited", $loc["name"], $rank, $firstTeam, $firstTime);
 	}
 }

@@ -44,7 +44,7 @@ class DB extends PDO {
 		} else if (isset($params[0]) && is_array($params[0])) {
 			$params = $params[0];
 		}
-		if (strpos($sql, ":") === false) {
+		if (strpos($sql, "?") !== false) {
 			for ($i = 0; $i < count($params); $i++) {
 				self::bindValue($stmt, $i + 1, $params[$i]);
 			}

@@ -17,6 +17,7 @@ class CodeControllerTest extends GameTestBase {
 		return $messages;
 	}
 
+
 	function testBadCode() {
 		$this->assertEquals("Neznámý kód: BAD", CodeController::process("bad"));
 	}
@@ -34,7 +35,7 @@ class CodeControllerTest extends GameTestBase {
 	}
 
 	function testVisitLoc() {
-		$this->assertEquals("Dostali jste se na stanoviště Start.", CodeController::process("pralinka"));
+		$this->assertEquals("Dostali jste se na stanoviště Start. Jste tu 1. První tu byl tým Parta Nic v ".$this->dbNow().".", CodeController::process("pralinka"));
 		$this->assertEquals("Tento kód stanoviště jste již zadali.", CodeController::process("pralinka"));
 	}
 
@@ -57,63 +58,36 @@ class CodeControllerTest extends GameTestBase {
 	function testUnavailableCipher() {
 		$this->assertEquals("Neznámý kód: KOBLIHA", CodeController::process("kobliha"));
 		(new ProgressRepo())->create(1, 12);
-		$this->assertEquals("Úspěšně jste vyluštili šifru S2. Poloha dalšího stanoviště je: Pardubické boudy, hledej orga.", CodeController::process("kobliha"));
+		$this->assertEquals("Úspěšně jste vyluštili šifru S2. Jste 1. První ji vyluštil tým Parta Nic v ".$this->dbNow().". Poloha dalšího stanoviště je: Pardubické boudy, hledej orga.", CodeController::process("kobliha"));
 	}
 
 	function testSolveCipher() {
-		$this->assertEquals("Úspěšně jste vyluštili šifru S1a. Poloha dalšího stanoviště je: Vrchol Bílé hory.", CodeController::process("aberace"));
+		$this->assertEquals("Úspěšně jste vyluštili šifru S1a. Jste 1. První ji vyluštil tým Parta Nic v ".$this->dbNow().". Poloha dalšího stanoviště je: Vrchol Bílé hory.", CodeController::process("aberace"));
 		$this->assertEquals("Toto řešení šifry jste již zadali.", CodeController::process("aberace"));
 	}
 
 	function testDeletePendingHints() {
 		(new ProgressRepo())->create(1, 13);
-		$this->assertEquals("Dostali jste se na stanoviště Turniket.", CodeController::process("medved"));
+		$this->assertEquals("Dostali jste se na stanoviště Turniket. Jste tu 1. První tu byl tým Parta Nic v ".$this->dbNow().".", CodeController::process("medved"));
 		$this->assertEquals([
 			"Přišel čas na nápovědu k šifře S3a: Křižovatka, železnice, Suchý.",
 			"Přišel čas na nápovědu k šifře S3b: Jedničky a nuly.",
 			"Přišel čas na řešení šifry S3a: KALENDAR"
 		], $this->getFutureMessages());
-		$this->assertEquals("Úspěšně jste vyluštili šifru S3b. Poloha dalšího stanoviště je: Kóta 1019 nad Pražskou boudou.", CodeController::process("skluzavka"));
+		$this->assertEquals("Úspěšně jste vyluštili šifru S3b. Jste 1. První ji vyluštil tým Parta Nic v ".$this->dbNow().". Poloha dalšího stanoviště je: Kóta 1019 nad Pražskou boudou.", CodeController::process("skluzavka"));
 		$this->assertEmpty($this->getFutureMessages());
 	}
 
-
-	function testWalkthrough() {
-		$this->assertEquals("Dostali jste se na stanoviště Start.", CodeController::process("pralinka"));
-		$this->assertEquals([
-			"Přišel čas na nápovědu k šifře S1a: Čárka tečka čárka, tak začíná Klárka.",
-			"Přišel čas na nápovědu k šifře S1b: Zkus ji luštit poslepu.",
-			"Přišel čas na řešení šifry S1a: ABERACE"
-		], $this->getFutureMessages());
-		$this->assertEquals("Úspěšně jste vyluštili šifru S1a. Poloha dalšího stanoviště je: Vrchol Bílé hory.", CodeController::process("aberace"));
-		$this->assertEquals([
-			"Přišel čas na nápovědu k šifře S1b: Zkus ji luštit poslepu.",
-		], $this->getFutureMessages());
-		$this->assertEquals("Dostali jste se na stanoviště Bílá hora.", CodeController::process("kybl"));
-		$this->assertEquals("Získali jste univerzální nápovědu. Aktuálně máte 1 nevyužitých nápověd.", CodeController::process("buben"));
-		$this->assertEquals("Úspěšně jste vyluštili šifru S1b. Poloha dalšího stanoviště je: Vrchol Černé hory.", CodeController::process("zabradli"));
-		$this->assertEmpty($this->getFutureMessages());
-		$this->assertEquals("Získali jste univerzální nápovědu. Aktuálně máte 2 nevyužitých nápověd.", CodeController::process("divizna"));
-		$this->assertEquals("Dostali jste se na stanoviště Černá hora.", CodeController::process("podnos"));
-		$this->assertEquals([
-			"Přišel čas na nápovědu k šifře S2: Krzyz.",
-		], $this->getFutureMessages());
-		(new MainController())->applyhint(null, ["cipher" => "S2"]);
-		$this->assertEmpty($this->getFutureMessages());
-		$this->assertEquals("Úspěšně jste vyluštili šifru S2. Poloha dalšího stanoviště je: Pardubické boudy, hledej orga.", CodeController::process("kobliha"));
-		$this->assertEquals("Dostali jste se na stanoviště Turniket.", CodeController::process("medved"));
-		$this->assertEquals([
-			"Přišel čas na nápovědu k šifře S3a: Křižovatka, železnice, Suchý.",
-			"Přišel čas na nápovědu k šifře S3b: Jedničky a nuly.",
-			"Přišel čas na řešení šifry S3a: KALENDAR"
-		], $this->getFutureMessages());
-		(new MainController())->applyhint(null, ["cipher" => "S3b"]);
-		$this->assertEquals([
-			"Přišel čas na nápovědu k šifře S3a: Křižovatka, železnice, Suchý.",
-			"Přišel čas na řešení šifry S3a: KALENDAR"
-		], $this->getFutureMessages());
-		$this->assertEquals("Úspěšně jste vyluštili šifru S3a. Poloha dalšího stanoviště je: Kóta 1019 nad Pražskou boudou.", CodeController::process("kalendar"));
-		$this->assertEmpty($this->getFutureMessages());
-		$this->assertEquals("Dostali jste se na stanoviště Cíl.", CodeController::process("salvej"));
+	function testRank() {
+		$now = $this->dbNow();
+        $this->assertEquals("Dostali jste se na stanoviště Start. Jste tu 1. První tu byl tým Parta Nic v $now.", CodeController::process("pralinka"));
+		$_SESSION["team_id"] = 2;
+        $this->assertEquals("Dostali jste se na stanoviště Start. Jste tu 2. První tu byl tým Parta Nic v $now.", CodeController::process("pralinka"));
+		
+		$now = $this->dbNow();
+		$this->assertEquals("Úspěšně jste vyluštili šifru S1a. Jste 1. První ji vyluštil tým Redwool v $now. Poloha dalšího stanoviště je: Vrchol Bílé hory.", CodeController::process("aberace"));
+		$_SESSION["team_id"] = 1;
+		usleep(1000000);
+		$this->assertEquals("Úspěšně jste vyluštili šifru S1a. Jste 2. První ji vyluštil tým Redwool v $now. Poloha dalšího stanoviště je: Vrchol Bílé hory.", CodeController::process("aberace"));
 	}
 }

@@ -59,7 +59,7 @@ class CipherTest extends GameTestBase {
 	function testSolve() {
 		$cipher = $this->cipherRepo->get(11);
 		$this->assertEquals([
-			new Text("cipher.solved", "S1a"), 
+			new Text("cipher.solved", "S1a", 1, "Parta Nic", $this->dbNow()), 
 			new Text("loc.next", "Vrchol Bílé hory")
 		], $this->cipher->solve($cipher, "ABERACE"));
 	}

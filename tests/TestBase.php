@@ -21,4 +21,8 @@ class TestBase extends TestCase {
 		$this->db->execute("DELETE FROM user");
 		$_SESSION = array();
 	}
+
+	function dbNow() {
+		return $this->db->equery("SELECT DATE_FORMAT(NOW(), '%H:%i') FROM DUAL");
+	}
 }
