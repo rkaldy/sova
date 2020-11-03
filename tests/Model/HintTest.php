@@ -3,6 +3,7 @@ namespace Sova\Model;
 
 use Sova\GameTestBase;
 use Sova\Controller\Text;
+use Sova\Repo\CipherRepo;
 
 class HintTest extends GameTestBase {
 
@@ -10,7 +11,6 @@ class HintTest extends GameTestBase {
 
 	function setUp(): void {
 		parent::setUp();
-		$this->db->execute("INSERT INTO hint (team_id, unihint_id, cipher_id, time) VALUES (1, 1, 11, NOW())");
 		$this->progressRepo->create(1, 1);
 		$this->hint = new Hint();
 	}
@@ -31,6 +31,7 @@ class HintTest extends GameTestBase {
 
 	function testAddAlready() {
 		$resp = $this->hint->add(1);
+		$resp = $this->hint->add(1);
 		$this->assertEquals(new Text("hint.add.already"), $resp);
 	}
 
@@ -41,6 +42,7 @@ class HintTest extends GameTestBase {
 	}
 
 	function testApplyAlready() {
+		$this->db->execute("INSERT INTO hint (team_id, unihint_id, cipher_id, time, type) VALUES (1, 1, 11, NOW(), 1)");
 		$this->db->execute("INSERT INTO hint (team_id, unihint_id, cipher_id) VALUES (1, 2, NULL)");
 		$resp = $this->hint->apply("S1a");
 		$this->assertEquals(new Text("hint.apply.already", "S1a"), $resp);
@@ -63,8 +65,61 @@ class HintTest extends GameTestBase {
 		$resp = $this->hint->apply("S4");
 		$this->assertEquals(new Text("cipher.unknown", "S4"), $resp);
 	}
+	
 	function testApplyNoHint() {
 		$resp = $this->hint->apply("S1b");
 		$this->assertEquals(new Text("hint.apply.no-hint"), $resp);
+	}
+
+
+	function testAmend() {
+		$cipher = (new CipherRepo())->get(11);
+		$resp = $this->hint->amend($cipher);
+		
+		$hints = $this->db->aquery("SELECT team_id, unihint_id, cipher_id, type FROM hint ORDER BY time");
+		$this->assertEquals([
+			["team_id" => 1, "unihint_id" => null, "cipher_id" => 11, "type" => Hint::NORMAL],
+			["team_id" => 1, "unihint_id" => null, "cipher_id" => 11, "type" => Hint::ABSOLUTE]
+		], $hints);
+		$messages = $this->db->aquery("SELECT team_id, direction, text FROM message ORDER BY time");
+		$this->assertEquals([
+			["team_id" => 1, "direction" => Message::TO_TEAM, "text" => (new Text("cipher.hint", "S1a", "Čárka tečka čárka, tak začíná Klárka"))->format()],
+			["team_id" => 1, "direction" => Message::TO_TEAM, "text" => (new Text("cipher.solution", "S1a", "ABERACE"))->format()]
+		], $messages);
+	}
+	
+
+	function testAmendWithoutDead() {
+		$cipher = (new CipherRepo())->get(12);
+		$resp = $this->hint->amend($cipher);
+		
+		$hints = $this->db->aquery("SELECT team_id, unihint_id, cipher_id, type FROM hint ORDER BY time");
+		$this->assertEquals([
+			["team_id" => 1, "unihint_id" => null, "cipher_id" => 12, "type" => Hint::NORMAL]
+		], $hints);
+		$messages = $this->db->aquery("SELECT team_id, direction, text FROM message ORDER BY time");
+		$this->assertEquals([
+			["team_id" => 1, "direction" => Message::TO_TEAM, "text" => (new Text("cipher.hint", "S1b", "Zkus ji luštit poslepu"))->format()],
+		], $messages);
+	}
+
+
+	function testUniHintAfterAmend() {
+		$cipher = (new CipherRepo())->get(11);
+		$resp = $this->hint->amend($cipher);
+		
+		$this->db->execute("INSERT INTO hint (team_id, unihint_id, cipher_id) VALUES (1, 2, NULL)");
+		$resp = $this->hint->apply("S1a");
+		$this->assertEquals(new Text("hint.apply.success", "S1a", "Čárka tečka čárka, tak začíná Klárka"), $resp);
+
+		$hints = $this->db->aquery("SELECT team_id, unihint_id, cipher_id, type FROM hint ORDER BY time");
+		$this->assertEquals([
+			["team_id" => 1, "unihint_id" => 2, "cipher_id" => 11, "type" => Hint::NORMAL],
+			["team_id" => 1, "unihint_id" => null, "cipher_id" => 11, "type" => Hint::ABSOLUTE]
+		], $hints);
+		$messages = $this->db->aquery("SELECT team_id, direction, text FROM message ORDER BY time");
+		$this->assertEquals([
+			["team_id" => 1, "direction" => Message::TO_TEAM, "text" => (new Text("cipher.solution", "S1a", "ABERACE"))->format()]
+		], $messages);
 	}
 }

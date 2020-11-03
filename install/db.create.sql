@@ -8,6 +8,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 
+DROP TABLE IF EXISTS cipher;
 CREATE TABLE `cipher` (
   point_id int(11) NOT NULL,
   name_int varchar(50) COLLATE utf8_czech_ci DEFAULT NULL,
@@ -16,6 +17,7 @@ CREATE TABLE `cipher` (
   solution_timeout int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
+DROP TABLE IF EXISTS code;
 CREATE TABLE `code` (
   game_id int(11) NOT NULL,
   code varchar(20) CHARACTER SET ascii NOT NULL,
@@ -24,6 +26,7 @@ CREATE TABLE `code` (
   team_id int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
+DROP TABLE IF EXISTS game;
 CREATE TABLE game (
   game_id int(11) NOT NULL,
   owner_id int(11) NOT NULL,
@@ -32,15 +35,17 @@ CREATE TABLE game (
   end_time datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
+DROP TABLE IF EXISTS hint;
 CREATE TABLE hint (
   hint_id int(11) NOT NULL,
   team_id int(11) NOT NULL,
-  unihint_id int(11) NOT NULL,
+  unihint_id int(11) DEFAULT NULL,
   cipher_id int(11) DEFAULT NULL,
   time datetime DEFAULT NULL,
   type int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
+DROP TABLE IF EXISTS loc;
 CREATE TABLE loc (
   point_id int(11) NOT NULL,
   description varchar(500) COLLATE utf8_czech_ci DEFAULT NULL,
@@ -48,15 +53,17 @@ CREATE TABLE loc (
   min_ciphers_solved int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
+DROP TABLE IF EXISTS message;
 CREATE TABLE message (
   message_id int(11) NOT NULL,
   team_id int(11) NOT NULL,
-  cipher_id int(11) DEFAULT NULL,
+  hint_id int(11) DEFAULT NULL,
   direction tinyint(1) NOT NULL,
   time datetime NOT NULL DEFAULT current_timestamp(),
   text varchar(500) COLLATE utf8_czech_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
+DROP TABLE IF EXISTS point;
 CREATE TABLE `point` (
   point_id int(11) NOT NULL,
   game_id int(11) NOT NULL,
@@ -64,17 +71,20 @@ CREATE TABLE `point` (
   name varchar(40) COLLATE utf8_czech_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
+DROP TABLE IF EXISTS progress;
 CREATE TABLE progress (
   team_id int(11) NOT NULL,
   point_id int(11) NOT NULL,
   time datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
+DROP TABLE IF EXISTS step;
 CREATE TABLE step (
   from_point_id int(11) NOT NULL,
   to_point_id int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
+DROP TABLE IF EXISTS team;
 CREATE TABLE team (
   team_id int(11) NOT NULL,
   game_id int(11) NOT NULL,
@@ -83,17 +93,20 @@ CREATE TABLE team (
   email varchar(50) COLLATE utf8_czech_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
+DROP TABLE IF EXISTS unihint;
 CREATE TABLE unihint (
   unihint_id int(11) NOT NULL,
   game_id int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
+DROP TABLE IF EXISTS user;
 CREATE TABLE `user` (
   user_id int(11) NOT NULL,
   login varchar(30) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
   pswd varchar(60) CHARACTER SET ascii COLLATE ascii_bin NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
+DROP TABLE IF EXISTS wordlist;
 CREATE TABLE wordlist (
   word varchar(20) CHARACTER SET ascii NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
@@ -123,8 +136,8 @@ ALTER TABLE loc
 
 ALTER TABLE message
   ADD PRIMARY KEY (message_id),
-  ADD KEY cipher_id (cipher_id),
-  ADD KEY sort_idx (team_id,time,direction) USING BTREE;
+  ADD KEY sort_idx (team_id,time,direction) USING BTREE,
+  ADD KEY hint_id (hint_id);
 
 ALTER TABLE `point`
   ADD PRIMARY KEY (point_id),
@@ -197,7 +210,7 @@ ALTER TABLE loc
 
 ALTER TABLE message
   ADD CONSTRAINT message_ibfk_1 FOREIGN KEY (team_id) REFERENCES team (team_id) ON DELETE CASCADE,
-  ADD CONSTRAINT message_ibfk_2 FOREIGN KEY (cipher_id) REFERENCES cipher (point_id) ON DELETE CASCADE;
+  ADD CONSTRAINT message_ibfk_2 FOREIGN KEY (hint_id) REFERENCES hint (hint_id) ON DELETE CASCADE;
 
 ALTER TABLE `point`
   ADD CONSTRAINT point_ibfk_1 FOREIGN KEY (game_id) REFERENCES game (game_id) ON DELETE CASCADE;

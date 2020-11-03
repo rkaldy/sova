@@ -41,6 +41,8 @@ class DB extends PDO {
 		$this->lastParams = array();
 		if (!is_array($params)) {
 			$params = array($params);
+		} else if (isset($params[0]) && is_array($params[0])) {
+			$params = $params[0];
 		}
 		if (strpos($sql, ":") === false) {
 			for ($i = 0; $i < count($params); $i++) {

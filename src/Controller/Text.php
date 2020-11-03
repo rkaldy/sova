@@ -14,7 +14,7 @@ class Text {
 		"cipher.no-previous.multi"	=> "Na šifru %s jste se ještě nemohli dostat, protože jste nevyluštili všech %d předchozích šifer.",
 		"cipher.solved"				=> "Úspěšně jste vyluštili šifru %s. Poloha dalšího stanoviště je: %s.",
 		"cipher.solved.multi"		=> "Úspěšně jste vyluštili šifru %s. Polohy dalších stanovišť jsou: %s.",
-		"cipher.hint"				=> "Přišel čas na nápovědu k šifře %s: %s",
+		"cipher.hint"				=> "Přišel čas na nápovědu k šifře %s: %s.",
 		"cipher.solution"			=> "Přišel čas na řešení šifry %s: %s",
 
 		"hint.request"				=> "(Žádost o nápovědu na %s)",
@@ -22,7 +22,7 @@ class Text {
 		"hint.add.success" 			=> "Získali jste univerzální nápovědu. Aktuálně máte %d nevyužitých nápověd.",
 		"hint.apply.already"		=> "Pro šifru %s jste již dostali nápovědu. Podívejte se do zpráv.",
 		"hint.apply.no-hint"		=> "Všechny získané univerzální nápovědy jste již použili.",
-		"hint.apply.success"		=> "Nápověda pro šifru %s: %s"
+		"hint.apply.success"		=> "Nápověda pro šifru %s: %s."
 	);
 
 	public $code;

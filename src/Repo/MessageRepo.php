@@ -41,9 +41,9 @@ class MessageRepo extends RepoBase {
 
 	public function create(array $message) {
 		if (isset($message["time"])) {
-			$this->db->execute("INSERT INTO message (team_id, cipher_id, direction, time, text) VALUES (:team_id, :cipher_id, :direction, DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL :time MINUTE), :text)", $message);
+			$this->db->execute("INSERT INTO message (team_id, hint_id, direction, time, text) VALUES (:team_id, :hint_id, :direction, DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL :time MINUTE), :text)", $message);
 		} else {
-			$this->db->execute("INSERT INTO message (team_id, cipher_id, direction, text) VALUES (:team_id, :cipher_id, :direction, :text)", $message);
+			$this->db->execute("INSERT INTO message (team_id, hint_id, direction, text) VALUES (:team_id, :hint_id, :direction, :text)", $message);
 		}
 	}
 
@@ -52,9 +52,5 @@ class MessageRepo extends RepoBase {
 		foreach ($teams as $team_id) {
 			$stmt->execute([$team_id, self::TO_TEAM, $message]);
 		}
-	}
-
-	public function deletePendingHints(int $teamId, array $cipherIds) {
-		$this->db->execute("DELETE FROM message WHERE team_id = ? AND cipher_id IN (".join(",", $cipherIds).") AND time > NOW()", $teamId);
 	}
 }

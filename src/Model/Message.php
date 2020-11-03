@@ -30,8 +30,8 @@ class Message extends ModelBase {
 		$this->repo->create(["team_id" => Team::current(), "direction" => self::FROM_TEAM, "text" => $message]);
 	}
 
-	public function sendToTeam(string $message, int $cipherId = null, int $afterMinutes = null) {
-		$this->repo->create(["team_id" => Team::current(), "cipher_id" => $cipherId, "direction" => self::TO_TEAM, "time" => $afterMinutes, "text" => $message]);
+	public function sendToTeam(string $message, int $hintId = null, int $afterMinutes = null) {
+		$this->repo->create(["team_id" => Team::current(), "hint_id" => $hintId, "direction" => self::TO_TEAM, "time" => $afterMinutes, "text" => $message]);
 	}
 
 	public function broadcast(array $teams, string $message) {
