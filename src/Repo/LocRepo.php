@@ -5,6 +5,10 @@ use Sova\DBException;
 
 class LocRepo extends PointRepo {
 
+	public function isLoc(int $id) {
+		return $this->db->equery("SELECT COUNT(*) FROM loc WHERE point_id = ?", $id) != 0;
+	}
+
 	public function get(int $id) {
 		$loc = $this->db->squery("
 			SELECT loc.point_id, name, description, end_time, min_ciphers_solved, 

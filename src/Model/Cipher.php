@@ -3,6 +3,7 @@ namespace Sova\Model;
 
 use Sova\Repo\LocRepo;
 use Sova\Repo\ProgressRepo;
+use Sova\Controller\Text;
 
 class Cipher extends ModelBase {
 
@@ -11,8 +12,8 @@ class Cipher extends ModelBase {
 		(new Code())->prepare($cipher["code"]);
 	}
 
-	public function checkPreviousCiphersSolved(array $cipher) {
-		if (!$this->repo->hasPreviousCiphers($cipher["point_id"])) {
+	public function checkAllPreviousCiphersSolved(array $cipher) {
+		if (!$this->repo->hasPreviousCiphers($cipher)) {
 			return true;
 		}
 		$teamId = Team::current();
@@ -25,18 +26,32 @@ class Cipher extends ModelBase {
 		return true;
 	}
 
+	public function checkSomePreviousCipherSolved(array $cipher) {
+		return !$this->repo->hasPreviousCiphers($cipher) || $this->repo->previousCiphersSolved(Team::current(), $cipher);
+	}
+
 	public function solve(array $cipher, string $code) {
-		if (!$this->checkPreviousCiphersSolved($cipher)) {
+		if (!$this->checkSomePreviousCipherSolved($cipher)) {
 			return new Text("code.unknown", $code);
 		}
-		
-		$teamId = Team::current();
-		$message = new Message();
-		$timeiSpent = $this->repo->getTimeSpent();
-		if (isset($cipher["solution_timeout"]) && $timeVisited >= $cipher["solution_timeout"]) {
-		} else if (isset($cipher["hint_timeout"]) && $timeVisited >= $cipher["hint_timeout"]) {
-		} else {
+
+		if (!(new ProgressRepo())->create(Team::current(), $cipher["point_id"])) {
+			return new Text("cipher.already");
 		}
 
+		$this->repo->deletePendingHintsForParallelCiphers(Team::current(), $cipher);
+
+		$ret = [new Text("cipher.solved", $cipher["name"])];
+		$next = $this->repo->getNextLocs($cipher);
+		if (count($next) == 1) {
+			$ret[] = new Text("loc.next", $next[0]["description"]);
+		} else if (count($next) > 1) {
+			$nextLocs = [];
+			foreach ($next as $loc) {
+				$nextLocs[] = $loc["description"];
+			}
+			$ret[] = new Text("loc.next.multi", join("; ", $nextLocs));
+		}
+		return $ret;
 	}
 }

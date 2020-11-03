@@ -15,6 +15,10 @@ class CipherRepo extends PointRepo {
 			LEFT JOIN step AS prev ON prev.to_point_id = cipher.point_id
 			LEFT JOIN step AS next ON next.from_point_id = cipher.point_id";
 
+	public function isCipher(int $id) {
+		return $this->db->equery("SELECT COUNT(*) FROM cipher WHERE point_id = ?", $id) != 0;
+	}
+
 	public function get(int $id) {
 		$cipher = $this->db->squery(self::SQL." WHERE cipher.point_id = ?", $id);
 		$this->flattenPrevNext($cipher);
@@ -92,40 +96,43 @@ class CipherRepo extends PointRepo {
 	}
 
 
-	public function hasPreviousCiphers(int $cipherId) {
+	public function hasPreviousCiphers(array $cipher) {
 		return $this->db->equery("
 			SELECT COUNT(*) 
 			FROM step AS prev
 			JOIN step AS prev2 ON prev2.to_point_id = prev.from_point_id
 			WHERE prev.to_point_id = ?
-		", $cipherId) != 0;
+		", $cipher["point_id"]) != 0;
 	}
 
-	public function getTimeSpent(int $teamId, int $cipherId) {
+	public function previousCiphersSolved(int $teamId, array $cipher) {
 		return $this->db->equery("
-			SELECT TIMESTAMPDIFF(MINUTE, MAX(time), NOW())
-			FROM progress
-			JOIN step ON step.from_point_id = progress.point_id
-			WHERE progress.team_id = ? AND step.to_point_id = ?
-		", $teamId, $cipherId);
+			SELECT COUNT(*)
+			FROM step AS prev
+			JOIN step AS prev2 ON prev2.to_point_id = prev.from_point_id
+			JOIN progress ON point_id = prev2.from_point_id
+			WHERE team_id = ? AND prev.to_point_id = ?
+		", $teamId, $cipher["point_id"]) != 0;
 	}
 
-	public function getNextLocs(int $cipherId) {
+	public function getNextLocs(array $cipher) {
 		return $this->db->aquery("
-			SELECT point.*, loc*
+			SELECT point.*, loc.*
 			FROM point 
 			NATURAL JOIN loc
 			JOIN step ON step.to_point_id = loc.point_id
 			WHERE step.from_point_id = ?
-		", $cipherId);
+		", $cipher["point_id"]);
 	}
 
-	public function getParallelCipherIds($cipherId) {
-		return $this->db->aquery("
-			SELECT step2.from_point_id
-			FROM step AS step1
-			JOIN step AS step2 WHERE step1.to_point_id = step2.to_point_id
-			WHERE step1.from_point_id = ?
-		", $cipherId);
+	public function deletePendingHintsForParallelCiphers(int $teamId, array $cipher) {
+		$this->db->execute("
+			DELETE FROM hint 
+			WHERE team_id = ? AND time > NOW() AND cipher_id IN (
+				SELECT step2.from_point_id
+				FROM step AS step1
+				JOIN step AS step2 ON step1.to_point_id = step2.to_point_id
+				WHERE step1.from_point_id = ?
+			)", [$teamId, $cipher["point_id"]]);
 	}
 }

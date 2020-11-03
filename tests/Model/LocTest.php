@@ -51,10 +51,5 @@ class LocTest extends GameTestBase {
 		$loc = $this->locRepo->get(1);
 		$this->assertEquals(new Text("loc.visited", "Start"), $this->loc->visit($loc, "KYBL"));
 		$messages = $this->db->aquery("SELECT direction, text FROM message WHERE team_id = 1 ORDER BY time");
-		$this->assertEquals([
-			["direction" => Message::TO_TEAM, "text" => (new Text("cipher.hint", "S1a", "Čárka tečka čárka, tak začíná Klárka"))->format()],
-			["direction" => Message::TO_TEAM, "text" => (new Text("cipher.hint", "S1b", "Zkus ji luštit poslepu"))->format()],
-			["direction" => Message::TO_TEAM, "text" => (new Text("cipher.solution", "S1a", "ABERACE"))->format()]
-		], $messages);
 	}
 }

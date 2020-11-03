@@ -7,6 +7,7 @@ use Sova\Controller\Text;
 
 class Hint extends ModelBase {
 
+	public const NO_HINT = 0;
 	public const NORMAL = 1;
 	public const ABSOLUTE = 2;
 
@@ -36,7 +37,7 @@ class Hint extends ModelBase {
 
 		if ($this->repo->alreadyApplied($hint)) {
 			return new Text("hint.apply.already", $cipher["name"]);
-		} else if (!(new Cipher())->checkPreviousCiphersSolved($cipher)) {
+		} else if (!(new Cipher())->checkAllPreviousCiphersSolved($cipher)) {
 			if (count($cipher["prev"]) == 1) {
 				return new Text("cipher.no-previous", $cipher["name"]);
 			} else {

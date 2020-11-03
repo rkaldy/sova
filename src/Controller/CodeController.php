@@ -25,13 +25,14 @@ class CodeController {
 			$response = $hint->add($entity["unihint_id"]);
 		} 
 		else if (isset($entity["point_id"])) {
-			$locModel = new Loc();
-			$cipherModel = new Cipher();
-			if ($loc = $locModel->repo()->get($entity["point_id"])) {
-				$response = $locModel->visit($loc, $code);
+			$id = $entity["point_id"];
+			$loc = new Loc();
+			$cipher = new Cipher();
+			if ($loc->repo()->isLoc($id)) {
+				$response = $loc->visit($loc->repo()->get($id), $code);
 			}
-			else if ($cipher = $cipherModel->repo()->get($entity["point_id"])) {
-				$response = $cipherModel->visit($cipher, $code);
+			else if ($cipher->repo()->isCipher($id)) {
+				$response = $cipher->solve($cipher->repo()->get($id), $code);
 			}
 			else {
 				$response = new Text("code.unknown", $code);
@@ -39,9 +40,19 @@ class CodeController {
 		} else {
 			$response = new Text("code.unknown", $code);
 		}
-		
-		$response = $response->format();
-		$message->sendToTeam($response);
-		return $response;
+
+		if (is_array($response)) {
+			$responseStr = "";
+			foreach ($response as $resp) {
+				if (!empty($responseStr)) {
+					$responseStr .= " ";
+				}
+				$responseStr .= $resp->format();				
+			}
+		} else {
+			$responseStr = $response->format();
+		}
+		$message->sendToTeam($responseStr);
+		return $responseStr;
 	}
 }

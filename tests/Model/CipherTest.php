@@ -4,6 +4,7 @@ namespace Sova\Model;
 use Sova\GameTestBase;
 use Sova\Repo\CipherRepo;
 use Sova\Repo\ProgressRepo;
+use Sova\Controller\Text;
 
 class CipherTest extends GameTestBase {
 
@@ -16,18 +17,51 @@ class CipherTest extends GameTestBase {
 		$this->cipherRepo = new CipherRepo();
 	}
 
-	function testCheckPreviousCipher() {
+	function testCheckSomePreviousCipherSolved() {
 		$cipher = $this->cipherRepo->get(14);
-		$this->assertFalse($this->cipher->checkPreviousCiphersSolved($cipher));
+		$this->assertFalse($this->cipher->checkSomePreviousCipherSolved($cipher));
 		$this->progressRepo->create(1, 13);
-		$this->assertTrue($this->cipher->checkPreviousCiphersSolved($cipher));
+		$this->assertTrue($this->cipher->checkSomePreviousCipherSolved($cipher));
 	}
 
-	function testCheckPreviousMultipleCiphers() {
+	function testCheckSomePreviousCiphersSolvedMulti() {
 		$cipher = $this->cipherRepo->get(13);
 		$this->progressRepo->create(1, 11);
-		$this->assertFalse($this->cipher->checkPreviousCiphersSolved($cipher));
-		$this->progressRepo->create(1, 12);
-		$this->assertTrue($this->cipher->checkPreviousCiphersSolved($cipher));
+		$this->assertTrue($this->cipher->checkSomePreviousCipherSolved($cipher));
 	}
+
+	function testCheckAllPreviousCiphersSolved() {
+		$cipher = $this->cipherRepo->get(14);
+		$this->assertFalse($this->cipher->checkAllPreviousCiphersSolved($cipher));
+		$this->progressRepo->create(1, 13);
+		$this->assertTrue($this->cipher->checkAllPreviousCiphersSolved($cipher));
+	}
+
+	function testCheckAllPreviousCiphersSolvedMulti() {
+		$cipher = $this->cipherRepo->get(13);
+		$this->progressRepo->create(1, 11);
+		$this->assertFalse($this->cipher->checkAllPreviousCiphersSolved($cipher));
+		$this->progressRepo->create(1, 12);
+		$this->assertTrue($this->cipher->checkAllPreviousCiphersSolved($cipher));
+	}
+
+	function testSolveNotReachable() {
+		$cipher = $this->cipherRepo->get(13);
+		$this->assertEquals(new Text("code.unknown", "KOBLIHA"), $this->cipher->solve($cipher, "KOBLIHA"));
+	}
+
+	function testSolveAlready() {
+		$this->progressRepo->create(1, 11);
+		$cipher = $this->cipherRepo->get(11);
+		$this->assertEquals(new Text("cipher.already"), $this->cipher->solve($cipher, "KOBLIHA"));
+	}
+	
+	function testSolve() {
+		$cipher = $this->cipherRepo->get(11);
+		$this->assertEquals([
+			new Text("cipher.solved", "S1a"), 
+			new Text("loc.next", "Vrchol Bílé hory")
+		], $this->cipher->solve($cipher, "ABERACE"));
+	}
+
 }

@@ -38,15 +38,4 @@ class HintRepo extends RepoBase {
 		$this->db->execute("INSERT INTO hint (team_id, cipher_id, time, type) VALUES (:team_id, :cipher_id, DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL :time MINUTE), :type)", $hint);
 		$hint["hint_id"] = $this->db->lastInsertId();
 	}
-
-	public function deletePendingHintsForParallelCiphers(int $teamId, int $cipherId) {
-		$this->db->execute("
-			DELETE FROM hint 
-			WHERE team_id = ? AND time > NOW() AND cipher_id IN (
-				SELECT step2.from_point_id
-				FROM step AS step1
-				JOIN step AS step2 ON step1.to_point_id = step2.to_point_id
-				WHERE step1.from_point_id = ?
-			)", [$teamId, $cipherId]);
-	}
 }
