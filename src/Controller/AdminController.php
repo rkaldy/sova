@@ -9,6 +9,7 @@ use Sova\Model\User;
 use Sova\Model\Game;
 use Sova\Model\Team;
 use Sova\Model\Message;
+use Sova\Model\Progress;
 
 
 class AdminController {
@@ -100,5 +101,9 @@ class AdminController {
 			(new Message())->broadcast($args["team"], $args["message"]);
 		}
 		return new Redirect("messages");
+	}
+
+	public function rank($args) {
+		return new View("main/rank", ["teams" => (new Progress())->rankTotal()]);
 	}
 }

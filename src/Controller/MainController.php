@@ -8,6 +8,7 @@ use Sova\Model\Team;
 use Sova\Model\Code;
 use Sova\Model\Hint;
 use Sova\Model\Message;
+use Sova\Model\Progress;
 
 class MainController {
 
@@ -37,7 +38,7 @@ class MainController {
 		return new Response(200, $output);
 	}
 
-	function login($params, $data) {
+	public function login($params, $data) {
 		if (isset($data["team_id"])) {
 			if ((new Team())->login((int)$data["team_id"], $data["pswd"])) {
 				return new View("main/code");
@@ -48,21 +49,23 @@ class MainController {
 		return new View("main/login");
 	}
 
-	function logout($params, $data) {
+	public function logout($params, $data) {
 		Team::logout();
 		return new View("main/login");
 	}
 
-	function code($params, $data) {
+	public function code($params, $data) {
 		if (isset($data["code"])) {
 			$response = CodeController::process($data["code"]);
+		} else if (isset($params["code"])) {
+			$response = CodeController::process($params["code"]);
 		} else {
 			$response = null;
 		}
 		return new View("main/code", ["response" => $response]);
 	}	
 
-	function applyhint($params, $data) {
+	public function applyhint($params, $data) {
 		$hint = new Hint();
 		if (isset($data["cipher"])) {
 			$cipherName = Code::polish($data["cipher"]);
@@ -76,10 +79,13 @@ class MainController {
 		return new View("main/applyhint", ["response" => $response, "hintCount" => $hint->unusedHintCount()]);
 	}
 
-	function messages($params, $data) {
+	public function messages($params, $data) {
 		$page = isset($params["page"]) ? $params["page"] : 1;
 		list($messages, $count) = (new Message())->listForTeam($page, 20);
 		return new View("main/messages", ["messages" => $messages, "totalCount" => $count, "page" => $page]);
 	}
 
+	public function rank($params, $data) {
+		return new View("main/rank", ["teams" => (new Progress())->rankTotal()]);
+	}
 }

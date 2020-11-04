@@ -12,4 +12,8 @@ class Progress extends ModelBase {
 		$firstTeam = $this->repo->firstTeamAtPoint($pointId);
 		return [$rank, $firstTeam["name"], $firstTeam["time"]];
 	}
+
+	public function rankTotal() {
+		return $this->repo->rankTotal(Game::current());
+	}
 }
