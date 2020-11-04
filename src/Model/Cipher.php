@@ -40,6 +40,10 @@ class Cipher extends ModelBase {
 			return new Text("cipher.already");
 		}
 
+		foreach ($cipher["prev"] AS $prev) {
+			$progress->create($prev);
+		}
+
 		$this->repo->deletePendingHintsForParallelCiphers(Team::current(), $cipher);
 
 		list($rank, $firstTeam, $firstTime) = $progress->getRank($cipher["point_id"]);
