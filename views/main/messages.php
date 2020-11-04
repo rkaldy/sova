@@ -4,13 +4,15 @@ use Sova\Model\Message;
 if (!isset($page)) $page = 1;
 ?>
 
+<p>
 <?php if ($page != 1) { ?>
   <a class="pgbutton" href="?page=<?php echo $page-1 ?>">Předchozí</a>
 <?php } ?>
-<span class="pgbutton">Strana <?php echo $page ?></span>
+<span class="pgbutton"><?php echo "Strana $page / ".intdiv($totalCount+19, 20) ?></span>
 <?php if ($page * 20 < $totalCount) { ?>
   <a class="pgbutton" href="?page=<?php echo $page+1 ?>">Další</a>
 <?php } ?>
+</p>
 
 <table class="table">
   <thead>
