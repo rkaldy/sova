@@ -51,11 +51,11 @@ $(function() {
   </tr>
   <tr>
     <th>Čas odeslání nápovědy</th>
-    <td>Čas v minutách po příchodu na stanoviště, po němž Sova pošle týmům nápovědu <i>(nepovinné)</i>.</td>
+    <td>Čas v minutách po příchodu na stanoviště, po němž Sova pošle nápovědu <i>(nepovinné)</i>.</td>
   </tr>
   <tr>
     <th>Čas odeslání řešení</th>
-    <td>Čas v minutách po příchodu na stanoviště, po němž Sova pošle týmům polohu dalšího stanoviště <i>(nepovinné)</i>.</td>
+    <td>Čas v minutách po příchodu na stanoviště, po němž Sova pošle řešení šifry <i>(nepovinné)</i>.</td>
   </tr>
   <tr>
     <th>Umístění šifry</h3>
@@ -63,6 +63,6 @@ $(function() {
   </tr>
   <tr>
     <th>Následující stanoviště</th>
-	<td>Stanoviště, jehož polohu Sova vrátí po odeslání správného řešení. Pokud zadáte stanovišt více, Sova pošle po vyluštění polohy všech těchto stanovišť.</td>
+	<td>Stanoviště, na které šifra ukazuje. Stanovišť může být i více, v takovém případě po vyluštění šifry Sova vrátí polohu všech těchto stanovišť.</td>
   </tr>
 </table>
