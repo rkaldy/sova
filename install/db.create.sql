@@ -49,8 +49,7 @@ DROP TABLE IF EXISTS loc;
 CREATE TABLE loc (
   point_id int(11) NOT NULL,
   description varchar(500) COLLATE utf8_czech_ci DEFAULT NULL,
-  end_time datetime DEFAULT NULL,
-  min_ciphers_solved int(11) DEFAULT NULL
+  end_time datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
 DROP TABLE IF EXISTS message;
