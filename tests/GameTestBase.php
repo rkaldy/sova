@@ -13,11 +13,11 @@ class GameTestBase extends TestBase {
 		$this->db->execute("INSERT INTO team (team_id, game_id, name) VALUE (1, 1, 'Parta Nic')");
 		$this->db->execute("INSERT INTO team (team_id, game_id, name) VALUE (2, 1, 'Redwool')");
 
-		$this->db->execute("INSERT INTO point (point_id, game_id, sort_id, name) VALUES (1, 1, 1, 'Start')");
-		$this->db->execute("INSERT INTO point (point_id, game_id, sort_id, name) VALUES (2, 1, 4, 'Bílá hora')");
-		$this->db->execute("INSERT INTO point (point_id, game_id, sort_id, name) VALUES (3, 1, 5, 'Černá hora')");
-		$this->db->execute("INSERT INTO point (point_id, game_id, sort_id, name) VALUES (4, 1, 7, 'Turniket')");
-		$this->db->execute("INSERT INTO point (point_id, game_id, sort_id, name) VALUES (5, 1, 10, 'Cíl')");
+		$this->db->execute("INSERT INTO point (point_id, game_id, name) VALUES (1, 1, 'Start')");
+		$this->db->execute("INSERT INTO point (point_id, game_id, name) VALUES (2, 1, '1a')");
+		$this->db->execute("INSERT INTO point (point_id, game_id, name) VALUES (3, 1, '1b')");
+		$this->db->execute("INSERT INTO point (point_id, game_id, name) VALUES (4, 1, 'Turniket')");
+		$this->db->execute("INSERT INTO point (point_id, game_id, name) VALUES (5, 1, 'Cíl')");
 		$this->db->execute("INSERT INTO loc (point_id, description) VALUES (1, '')");
 		$this->db->execute("INSERT INTO loc (point_id, description) VALUES (2, 'Vrchol Bílé hory')");
 		$this->db->execute("INSERT INTO loc (point_id, description) VALUES (3, 'Vrchol Černé hory')");
@@ -30,11 +30,11 @@ class GameTestBase extends TestBase {
 		$this->db->execute("INSERT INTO code (game_id, point_id, code) VALUES (1, 4, 'MEDVED')");
 		$this->db->execute("INSERT INTO code (game_id, point_id, code) VALUES (1, 5, 'SALVEJ')");
 
-		$this->db->execute("INSERT INTO point (point_id, game_id, sort_id, name) VALUES (11, 1, 2, 'S1a')");
-		$this->db->execute("INSERT INTO point (point_id, game_id, sort_id, name) VALUES (12, 1, 3, 'S1b')");
-		$this->db->execute("INSERT INTO point (point_id, game_id, sort_id, name) VALUES (13, 1, 6, 'S2')");
-		$this->db->execute("INSERT INTO point (point_id, game_id, sort_id, name) VALUES (14, 1, 8, 'S3a')");
-		$this->db->execute("INSERT INTO point (point_id, game_id, sort_id, name) VALUES (15, 1, 9, 'S3b')");
+		$this->db->execute("INSERT INTO point (point_id, game_id, name) VALUES (11, 1, 'S1a')");
+		$this->db->execute("INSERT INTO point (point_id, game_id, name) VALUES (12, 1, 'S1b')");
+		$this->db->execute("INSERT INTO point (point_id, game_id, name) VALUES (13, 1, 'S2')");
+		$this->db->execute("INSERT INTO point (point_id, game_id, name) VALUES (14, 1, 'S3a')");
+		$this->db->execute("INSERT INTO point (point_id, game_id, name) VALUES (15, 1, 'S3b')");
 		$this->db->execute("INSERT INTO cipher (point_id, name_int, hint, hint_timeout, solution_timeout) VALUES (11, 'Morseovka', 'Čárka tečka čárka, tak začíná Klárka', 30, 60)");
 		$this->db->execute("INSERT INTO cipher (point_id, name_int, hint, hint_timeout, solution_timeout) VALUES (12, 'Braille', 'Zkus ji luštit poslepu', 40, NULL)");
 		$this->db->execute("INSERT INTO cipher (point_id, name_int, hint, hint_timeout, solution_timeout) VALUES (13, 'Polský kříž', 'Krzyz', 50, NULL)");

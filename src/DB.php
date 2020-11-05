@@ -104,21 +104,19 @@ class DB extends PDO {
 	}
 
 	public function dquery($sql, ...$params) {
-		$ret = array();
+		$ret = [];
 		$stmt = self::execute($sql, $params);
 		while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-			$id = intval($row[0]);
-			$ret[$id == 0 ? $row[0] : $id] = $row[1];
+			$ret[$row[0]] = $row[1];
 		}
 		return $ret;
 	}
 	
 	public function daquery($sql, ...$params) {
-		$ret = array();
+		$ret = [];
 		$stmt = self::execute($sql, $params);
 		while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-			$id = intval($row[0]);
-			$ret[$id == 0 ? row[0] : $id] = array_slice($row, 1);
+			$ret[row[0]] = array_slice($row, 1);
 		}
 		return $ret;
 	}

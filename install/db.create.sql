@@ -67,7 +67,6 @@ DROP TABLE IF EXISTS point;
 CREATE TABLE `point` (
   point_id int(11) NOT NULL,
   game_id int(11) NOT NULL,
-  sort_id int(11) DEFAULT NULL,
   name varchar(40) COLLATE utf8_czech_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 
@@ -140,9 +139,8 @@ ALTER TABLE message
   ADD KEY hint_id (hint_id);
 
 ALTER TABLE `point`
-  ADD PRIMARY KEY (point_id),
-  ADD UNIQUE KEY name (game_id,name),
-  ADD KEY sort_idx (game_id,sort_id);
+  ADD PRIMARY KEY (point_id,game_id) USING BTREE,
+  ADD UNIQUE KEY name (game_id,name);
 
 ALTER TABLE progress
   ADD PRIMARY KEY (team_id,point_id),

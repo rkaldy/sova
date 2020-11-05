@@ -30,13 +30,13 @@ class LocRepo extends PointRepo {
 			NATURAL JOIN point
 			NATURAL JOIN code
 			WHERE point.game_id = ? 
-			ORDER BY sort_id, name
+			ORDER BY name
 		", $gameId);
 	}
 
 	function create(array &$loc) {
 		try {
-			$this->db->execute("INSERT INTO point (game_id, sort_id, name) VALUES (:game_id, :sort_id, :name)", $loc, true);
+			$this->db->execute("INSERT INTO point (game_id, name) VALUES (:game_id, :name)", $loc, true);
 			$loc["point_id"] = $this->db->lastInsertId();
 			$this->db->execute("INSERT INTO loc (point_id, description, end_time, min_ciphers_solved) VALUES (:point_id, :description, :end_time, :min_ciphers_solved)", $loc, true);
 			$this->db->execute("INSERT INTO code (game_id, code, point_id) VALUES (:game_id, :code, :point_id)", $loc, true);
@@ -47,7 +47,7 @@ class LocRepo extends PointRepo {
 	}
 
 	function update(array $loc) {
-		$this->db->execute("UPDATE point SET sort_id = :sort_id, name = :name WHERE point_id = :point_id", $loc);
+		$this->db->execute("UPDATE point SET name = :name WHERE point_id = :point_id", $loc);
 		$this->db->execute("UPDATE loc SET description = :description, end_time = :end_time, min_ciphers_solved = :min_ciphers_solved WHERE point_id = :point_id", $loc);
 		$this->db->execute("UPDATE code SET code = :code WHERE point_id = :point_id", $loc);
 	}

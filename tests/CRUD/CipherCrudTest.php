@@ -7,10 +7,10 @@ class CipherCrudTest extends CrudTestBase {
 
 	function setUp(): void {
 		parent::setUp();
-		$this->db->execute("INSERT INTO point (point_id, game_id, name) VALUES (1, 1, 'Bílá hora')");
-		$this->db->execute("INSERT INTO point (point_id, game_id, name) VALUES (2, 1, 'Černá hora')");
-		$this->db->execute("INSERT INTO point (point_id, game_id, name) VALUES (3, 1, 'Dvoračky')");
-		$this->db->execute("INSERT INTO point (point_id, game_id, name) VALUES (4, 1, 'Obří důl')");
+		$this->db->execute("INSERT INTO point (point_id, game_id, name) VALUES (1, 1, '1a')");
+		$this->db->execute("INSERT INTO point (point_id, game_id, name) VALUES (2, 1, '1b')");
+		$this->db->execute("INSERT INTO point (point_id, game_id, name) VALUES (3, 1, 'Turniket')");
+		$this->db->execute("INSERT INTO point (point_id, game_id, name) VALUES (4, 1, 'Cíl')");
 		$this->db->execute("INSERT INTO point (point_id, game_id, name) VALUES (5, 1, 'S1')");
 		$this->db->execute("INSERT INTO point (point_id, game_id, name) VALUES (6, 1, 'S2')");
 		$this->db->execute("INSERT INTO cipher (point_id, name_int) VALUES (5, 'Morseovka')");

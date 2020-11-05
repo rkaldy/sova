@@ -29,7 +29,7 @@ $(function() {
 						id: v.point_id,
 						label: v.name,
 						color: colors[v.type],
-						fixed: i == 0
+						fixed: v.isStart
 					}
 				}),
 				edges: $.map(data["edges"], function(e, i) {
@@ -40,7 +40,7 @@ $(function() {
 				height: height + "px",
 				physics: { enabled: true, wind: { x: 1, y: 0 }},
 				nodes: { shape: "box", margin: 15 },
-				edges: { arrows: "to", color: "#000000", smooth: false, length: 200 }
+				edges: { arrows: "to", color: "#000000", smooth: false, length: 100 }
 			}
 		);
 	});

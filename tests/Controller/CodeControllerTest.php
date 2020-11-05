@@ -150,13 +150,13 @@ class CodeControllerTest extends GameTestBase {
 		$this->sendCode(2, "podnos");
 		$this->assertEquals([
 			["name" => "Parta Nic", "solved" => 2, "last_loc" => "Start"],
-			["name" => "Redwool", "solved" => 2, "last_loc" => "Černá hora"],
+			["name" => "Redwool", "solved" => 2, "last_loc" => "1b"],
 			["name" => "abpopa", "solved" => 1, "last_loc" => "Start"]
 		], self::stripTimes($this->progressRepo->rankTotal(1)));
 		
 		$this->sendCode(2, "kobliha");
 		$this->assertEquals([
-			["name" => "Redwool", "solved" => 3, "last_loc" => "Bílá hora"],
+			["name" => "Redwool", "solved" => 3, "last_loc" => "1a"],
 			["name" => "Parta Nic", "solved" => 2, "last_loc" => "Start"],
 			["name" => "abpopa", "solved" => 1, "last_loc" => "Start"]
 		], self::stripTimes($this->progressRepo->rankTotal(1)));
@@ -166,7 +166,7 @@ class CodeControllerTest extends GameTestBase {
 		$this->sendCode(3, "kobliha");
 		$this->sendCode(3, "medved");
 		$this->assertEquals([
-			["name" => "Redwool", "solved" => 3, "last_loc" => "Bílá hora"],
+			["name" => "Redwool", "solved" => 3, "last_loc" => "1a"],
 			["name" => "abpopa", "solved" => 3, "last_loc" => "Turniket"],
 			["name" => "Parta Nic", "solved" => 2, "last_loc" => "Start"]
 		], self::stripTimes($this->progressRepo->rankTotal(1)));

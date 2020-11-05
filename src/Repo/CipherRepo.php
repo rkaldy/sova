@@ -48,7 +48,7 @@ class CipherRepo extends PointRepo {
 			LEFT JOIN step AS next ON next.from_point_id = cipher.point_id
 			WHERE point.game_id = ?
 			GROUP BY cipher.point_id
-			ORDER BY sort_id, name
+			ORDER BY name
 		", $gameId);
 		foreach ($ciphers as &$cipher) {
 			self::flattenPrevNext($cipher);
@@ -72,7 +72,7 @@ class CipherRepo extends PointRepo {
 
 	function create(array &$cipher) {
 		try {
-			$this->db->execute("INSERT INTO point (game_id, sort_id, name) VALUES (:game_id, :sort_id, :name)", $cipher, true);
+			$this->db->execute("INSERT INTO point (game_id, name) VALUES (:game_id, :name)", $cipher, true);
 			$cipher["point_id"] = $this->db->lastInsertId();
 			$this->db->execute("INSERT INTO cipher (point_id, name_int, solution_timeout, hint, hint_timeout) VALUES (:point_id, :name_int, :solution_timeout, :hint, :hint_timeout)", $cipher, true);
 			$this->db->execute("INSERT INTO code (game_id, point_id, code) VALUES (:game_id, :point_id, :code)", $cipher, true);
@@ -84,7 +84,7 @@ class CipherRepo extends PointRepo {
 	}
 
 	function update(array &$cipher) {
-		$this->db->execute("UPDATE point SET sort_id = :sort_id, name = :name WHERE point_id = :point_id", $cipher);
+		$this->db->execute("UPDATE point SET name = :name WHERE point_id = :point_id", $cipher);
 		$this->db->execute("UPDATE cipher SET name_int = :name_int, solution_timeout = :solution_timeout, hint = :hint, hint_timeout = :hint_timeout WHERE point_id = :point_id", $cipher);
 		$this->db->execute("UPDATE code SET code = :code WHERE point_id = :point_id", $cipher);
 		$this->db->execute("DELETE FROM step WHERE from_point_id = :point_id OR to_point_id = :point_id", $cipher);

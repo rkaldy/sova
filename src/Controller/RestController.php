@@ -86,7 +86,7 @@ class RestController {
 
 
 	function graph(array $args): array {
-		list($vertices, $edges) = (new Graph())->sortAndGet();
+		list($vertices, $edges) = (new Graph())->build();
 		return array("vertices" => $vertices, "edges" => $edges);
 	}
 

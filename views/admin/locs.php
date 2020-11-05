@@ -22,11 +22,11 @@ $(function() {
 <table id="legend">
   <tr>
     <th>Název</th>
-    <td>Krátký název stanoviště (Černá hora, Sedlo pod Holubníkem...).</td>
+    <td>Identifikační kód stanoviště (Start, Turniket, L1...), který se zobrazuje např. u pořadí týmů, proto by z něj nemělo jít odvodit jeho polohu.</td>
   </tr>
   <tr>
     <th>Popis</th>
-    <td>Přesný popis polohy, který systém pošle po úspěšném vyluštění předchozí šifry <i>(nepovinné</i>.</td>
+    <td>Přesný popis polohy, který systém pošle po úspěšném vyluštění předchozí šifry <i>(nepovinné)</i>.</td>
   </tr>
   <tr>
     <th>Vstupní kód</th>
