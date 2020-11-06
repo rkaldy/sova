@@ -36,9 +36,9 @@ class ProgressRepo extends RepoBase {
 
 	public function rankTotal(int $gameId) {
 		return $this->db->aquery("
-			SELECT team.name, ciphers.count AS solved, DATE_FORMAT(last_cipher.time, '%H:%i:%s') AS last_cipher_time, last_loc.name AS last_loc
+			SELECT team.name, IFNULL(ciphers.count, 0) AS solved, IFNULL(DATE_FORMAT(last_cipher.time, '%H:%i:%s'), '-') AS last_cipher_time, IFNULL(last_loc.name, '-') AS last_loc
 			FROM team
-			JOIN (
+			LEFT JOIN (
 				SELECT team_id, COUNT(cipher.point_id) AS count 
 				FROM progress
 				NATURAL JOIN point
@@ -46,7 +46,7 @@ class ProgressRepo extends RepoBase {
 				WHERE game_id = :game_id
 				GROUP BY team_id
 			) ciphers ON ciphers.team_id = team.team_id
-			JOIN (
+			LEFT JOIN (
 				SELECT team_id, time FROM (
 					SELECT team_id, time, ROW_NUMBER() OVER (PARTITION BY team_id ORDER BY time DESC) AS rank
 					FROM progress
@@ -56,7 +56,7 @@ class ProgressRepo extends RepoBase {
 				) loctimes
 				WHERE rank = 1
 			) last_cipher ON last_cipher.team_id = team.team_id
-			JOIN (
+			LEFT JOIN (
 				SELECT team_id, name, time FROM (
 					SELECT team_id, point.name, time, ROW_NUMBER() OVER (PARTITION BY team_id ORDER BY time DESC) AS rank
 					FROM progress
@@ -66,7 +66,7 @@ class ProgressRepo extends RepoBase {
 				) loctimes
 				WHERE rank = 1
 			) last_loc ON last_loc.team_id = team.team_id
-			ORDER BY ciphers.count DESC, last_cipher.time				
+			ORDER BY ciphers.count DESC, last_cipher.time, team.team_id	
 		", ["game_id" => $gameId]);
 	}
 }

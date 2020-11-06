@@ -124,20 +124,33 @@ class CodeControllerTest extends GameTestBase {
 	function testRankTotal() {
 		$this->db->execute("INSERT INTO team (team_id, game_id, name) VALUES (3, 1, 'abpopa')");
 		
-		$this->sendCode(3, "aberace");
+		$this->assertEquals([
+			["name" => "Parta Nic", "solved" => 0, "last_loc" => "-"],
+			["name" => "Redwool", "solved" => 0, "last_loc" => "-"],
+			["name" => "abpopa", "solved" => 0, "last_loc" => "-"],
+		], self::stripTimes($this->progressRepo->rankTotal(1)));
+
+		$this->sendCode(1, "pralinka");
 		$this->sendCode(2, "aberace");
+		$this->assertEquals([
+			["name" => "Redwool", "solved" => 1, "last_loc" => "Start"],
+			["name" => "Parta Nic", "solved" => 0, "last_loc" => "Start"],
+			["name" => "abpopa", "solved" => 0, "last_loc" => "-"],
+		], self::stripTimes($this->progressRepo->rankTotal(1)));
+
+		$this->sendCode(3, "aberace");
 		$this->sendCode(1, "zabradli");
 		$this->assertEquals([
-			["name" => "abpopa", "solved" => 1, "last_loc" => "Start"],
 			["name" => "Redwool", "solved" => 1, "last_loc" => "Start"],
+			["name" => "abpopa", "solved" => 1, "last_loc" => "Start"],
 			["name" => "Parta Nic", "solved" => 1, "last_loc" => "Start"]
 		], self::stripTimes($this->progressRepo->rankTotal(1)));
 		
 		$this->sendCode(1, "aberace");
 		$this->assertEquals([
 			["name" => "Parta Nic", "solved" => 2, "last_loc" => "Start"],
+			["name" => "Redwool", "solved" => 1, "last_loc" => "Start"],
 			["name" => "abpopa", "solved" => 1, "last_loc" => "Start"],
-			["name" => "Redwool", "solved" => 1, "last_loc" => "Start"]
 		], self::stripTimes($this->progressRepo->rankTotal(1)));
 		
 		$this->sendCode(2, "zabradli");
