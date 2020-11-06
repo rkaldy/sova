@@ -3,7 +3,6 @@ namespace Sova\Model;
 
 use Sova\Repo\HintRepo;
 use Sova\Repo\CipherRepo;
-use Sova\Controller\Text;
 
 class Hint extends ModelBase {
 

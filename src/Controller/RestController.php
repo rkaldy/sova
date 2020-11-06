@@ -8,6 +8,7 @@ use Sova\HttpException;
 use Sova\Model\User;
 use Sova\Model\Game;
 use Sova\Model\Graph;
+use Sova\Model\Text;
 use Sova\Model\Message;
 
 class RestController {

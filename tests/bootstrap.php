@@ -12,6 +12,8 @@ if (CREATE_DB) {
 	$pdo->exec("CREATE DATABASE ".DB_NAME);
 	$pdo->exec("USE ".DB_NAME);
 	$pdo->exec(file_get_contents(__DIR__."/../install/db.create.sql"));
+	$pdo->exec("LOAD DATA LOCAL INFILE '".__DIR__."/../install/wordlist.txt' INTO TABLE wordlist");
+	$pdo->exec("LOAD DATA LOCAL INFILE '".__DIR__."/../install/texts.txt' INTO TABLE text FIELDS TERMINATED BY ';' (code, text)");
 	echo "done\n";
 	
 	register_shutdown_function(function() {

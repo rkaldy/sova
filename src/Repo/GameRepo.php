@@ -18,6 +18,7 @@ class GameRepo extends RepoBase {
 	public function create(array &$game) {
 		$this->db->execute("INSERT INTO game (owner_id, name, start_time, end_time) VALUES (:owner_id, :name, :start_time, :end_time)", $game, true);
 		$game["game_id"] = $this->db->lastInsertId();
+		$this->db->execute("INSERT INTO text (game_id, code, text) SELECT ?, code, text FROM text WHERE game_id IS NULL", $game["game_id"]);
 	}
 
 	public function update(array $game) {

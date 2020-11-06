@@ -7,7 +7,7 @@ use Sova\Model\Cipher;
 use Sova\Model\Hint;
 use Sova\Model\Game;
 use Sova\Model\Message;
-
+use Sova\Model\Text;
 
 class CodeController {
 

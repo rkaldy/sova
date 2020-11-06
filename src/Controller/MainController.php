@@ -9,6 +9,7 @@ use Sova\Model\Code;
 use Sova\Model\Hint;
 use Sova\Model\Message;
 use Sova\Model\Progress;
+use Sova\Model\Text;
 
 class MainController {
 

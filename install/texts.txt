@@ -1,0 +1,18 @@
+code.unknown;Neznámý kód: %s
+loc.visited;Dostali jste se na stanoviště %s. Jste tu %s. První tu byl tým %s v %s.
+loc.already;Tento kód stanoviště jste již zadali.
+loc.next;Poloha dalšího stanoviště je: %s.
+loc.next.multi;Polohy dalších stanovišť jsou: %s.
+cipher.unknown;Neznámé číslo šifry: %s
+cipher.no-previous;Na šifru %s jste se ještě nemohli dostat, protože jste nevyluštili předchozí šifru.
+cipher.no-previous.multi;Na šifru %s jste se ještě nemohli dostat, protože jste nevyluštili všech %s předchozích šifer.
+cipher.solved;Úspěšně jste vyluštili šifru %s. Jste %s. První ji vyluštil tým %s v %s.
+cipher.already;Toto řešení šifry jste již zadali.
+cipher.hint;Přišel čas na nápovědu k šifře %s: %s.
+cipher.solution;Přišel čas na řešení šifry %s: %s
+hint.request;(Žádost o nápovědu na %s)
+hint.add.already ;Tento kód nápovědy jste již zadali.
+hint.add.success ;Získali jste univerzální nápovědu. Aktuálně máte %s nevyužitých nápověd.
+hint.apply.already;Pro šifru %s jste již dostali nápovědu. Podívejte se do zpráv.
+hint.apply.no-hint;Všechny získané univerzální nápovědy jste již použili.
+hint.apply.success;Nápověda pro šifru %s: %s.

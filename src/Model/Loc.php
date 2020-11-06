@@ -1,7 +1,6 @@
 <?php
 namespace Sova\Model;
 
-use Sova\Controller\Text;
 use Sova\Model\Message;
 use Sova\Repo\ProgressRepo;
 

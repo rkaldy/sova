@@ -2,7 +2,6 @@
 namespace Sova\Model;
 
 use Sova\GameTestBase;
-use Sova\Controller\Text;
 use Sova\Repo\CipherRepo;
 
 class HintTest extends GameTestBase {

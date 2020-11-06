@@ -4,7 +4,6 @@ namespace Sova\Model;
 use Sova\GameTestBase;
 use Sova\Repo\LocRepo;
 use Sova\Repo\ProgressRepo;
-use Sova\Controller\Text;
 
 class LocTest extends GameTestBase {
 

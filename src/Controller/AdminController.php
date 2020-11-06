@@ -89,6 +89,7 @@ class AdminController {
 	public function unihints($args)	{ return new View("admin/unihints"); }
 	public function teams($args)	{ return new View("admin/teams"); }
 	public function graph($args)	{ return new View("admin/graph"); }
+	public function texts($args)	{ return new View("admin/texts"); }
 	public function messages($args)	{ return new View("admin/messages"); }
 
 	public function broadcast($args) {

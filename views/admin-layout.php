@@ -11,6 +11,7 @@ if ($superuser) {
 		"ciphers" => "Šifry",
 		"unihints" => "Univerzální nápovědy",
 		"graph" => "Schéma",
+		"texts" => "Texty",
 		"teams" => "Týmy",
 		"progress" => "Postup týmů",
 		"rank" => "Pořadí",

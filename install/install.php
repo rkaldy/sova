@@ -75,6 +75,7 @@ else {
 			$stmt = $pdo->prepare("INSERT INTO user (user_id, login, pswd) VALUES (?, ?, ?)");
 			$stmt->execute(array(1, $_POST["su_login"], password_hash($_POST["su_pswd"], PASSWORD_BCRYPT)));
 			$pdo->exec("LOAD DATA LOCAL INFILE '".__DIR__."/wordlist.txt' INTO TABLE wordlist");
+			$pdo->exec("LOAD DATA LOCAL INFILE '".__DIR__."/texts.txt' INTO TABLE text FIELDS TERMINATED BY ';' (code, text)");
 ?>
 	<p>Hotovo. Přejděte na <a href="..">hlavní stránku</a> nebo do <a href="../admin">administrace</a>.</p>
 <?php
