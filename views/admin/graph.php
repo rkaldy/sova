@@ -19,7 +19,8 @@ $(function() {
 	var height = $(window).height() - $("header").height() - $("nav").height() - $("#graph-legend").height() - 100;
 	data = $.ajax({
 		type: "GET",
-		url: "../api/graph"
+		url: "../api/graph",
+		error: ajaxErrorHandler
 	}).done(function(data) {
 		var graph = new vis.Network(
 			document.getElementById("graph"),

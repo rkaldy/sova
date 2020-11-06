@@ -13,8 +13,8 @@ use Sova\Model\Message;
 
 class RestController {
 
-	const RES_SU_READ = array("user");
-	const RES_SU_WRITE = array("game", "user");
+	const RES_SU_READ = ["user"];
+	const RES_SU_WRITE = ["game", "user"];
 
 	
 	public function process(Request $req, array $path): Response {
@@ -40,7 +40,7 @@ class RestController {
 		} 
 		catch (DBException $ex) {
 			$status = 422;
-			$ret = array("error" => $ex->getMessage(), "code" => $ex->getCode());
+			$ret = ["error" => $ex->getMessage(), "code" => $ex->getCode()];
 			if (DEVELOPMENT) {
 				$ret["sql_query"] = $ex->query;
 				$ret["sql_params"] = $ex->params;
@@ -48,11 +48,15 @@ class RestController {
 		}
 		catch (HttpException $ex) {
 			$status = $ex->getCode();
-			$ret = array("error" => $ex->getMessage());
+			$ret = ["error" => $ex->getMessage()];
 		}
 		catch (\Exception $ex) {
 			$status = 422;
-			$ret = array("error" => $ex->getMessage());
+			$ret = ["error" => $ex->getMessage()];
+			if (DEVELOPMENT) {
+				$ret["file"] = $ex->getFile();
+				$ret["line"] = $ex->getLine();
+			}
 		}
 
 		$resp = new Response($status, json_encode($ret));
@@ -88,7 +92,7 @@ class RestController {
 
 	function graph(array $args): array {
 		list($vertices, $edges) = (new Graph())->build();
-		return array("vertices" => $vertices, "edges" => $edges);
+		return ["vertices" => $vertices, "edges" => $edges];
 	}
 
 	function messages(array $args): array {

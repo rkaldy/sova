@@ -9,7 +9,8 @@ var longText = function(item) {
 $(function() {
 	locs = $.ajax({
 		type: "GET",
-		url: "../api/loc"
+		url: "../api/loc",
+		error: ajaxErrorHandler
 	}).done(function(locs) {
 	setGrid({
 		table: "cipher", 

@@ -4,7 +4,8 @@
 $(function() {
 	users = $.ajax({
 		type: "GET",
-		url: "../api/user"
+		url: "../api/user",
+		error: ajaxErrorHandler
 	}).done(function(users) {
 		setGrid({
 			table: "game",

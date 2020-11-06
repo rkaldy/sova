@@ -29,7 +29,7 @@ ajaxErrorHandler = function(jqXHR) {
 					default: alert('Databázová chyba:\n' + resp.error); break;
 				}
 			} else {
-				alert(resp.error);
+				alert("Chyba na straně serveru:\n" + resp.error);
 			}
 			break;
 		default: alert('Chyba na straně serveru:\n' + resp.error); break;
