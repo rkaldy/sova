@@ -10,7 +10,7 @@ $(function() {
 		[
 			{ name: "login", title: "Login", type: "text", width: 50, validate: "required" },
 			{ name: "pswd", title: "Heslo", type: "text", width: 50 },
-			{ type: "control", width: 5 }
+			{ type: "control", width: 20 }
 		]
 	});
 });

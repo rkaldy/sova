@@ -1,7 +1,5 @@
 vendor
 node_modules
-install/dump
-install/db.data.sql
 release
 *.swp
 *.log

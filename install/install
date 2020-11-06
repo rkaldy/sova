@@ -4,16 +4,21 @@ $test = count($_SERVER["argv"]) >= 2 && $_SERVER["argv"][1] == "-t";
 $db = $test ? "sova_test" : "sova";
 
 $pdo = new PDO("mysql:host=localhost", "root", "taliyota");
+
+echo "Vytvářím databázi...\n";
 $pdo->exec("DROP DATABASE IF EXISTS $db");
 $pdo->exec("CREATE DATABASE $db");
 $pdo->exec("USE $db");
+
+echo "Vytvářím tabulky...\n";
 $pdo->exec(file_get_contents(__DIR__."/db.create.sql"));
 
+echo "Naplňuji tabulky...\n";
 $pdo->exec("LOAD DATA INFILE '".__DIR__."/wordlist.txt' INTO TABLE wordlist");
 $pdo->exec("LOAD DATA INFILE '".__DIR__."/texts.txt' INTO TABLE text FIELDS TERMINATED BY ';' (code, text)");
 
 if (!$test) {
 	$pdo->exec("INSERT INTO user VALUES (1, 'admin', '".password_hash("nimda", PASSWORD_BCRYPT)."')");
-	$pdo->exec("INSERT INTO user VALUES (2, 'bubak', '".password_hash("bubu", PASSWORD_BCRYPT)."')");
-	$pdo->exec("INSERT INTO game VALUES (1, 2, 'Lavina', '2020-01-01', '2020-01-02')");
+	$pdo->exec("INSERT INTO user VALUES (2, 'org', '".password_hash("gro", PASSWORD_BCRYPT)."')");
+	$pdo->exec(file_get_contents(__DIR__."/db.data.sql"));
 }

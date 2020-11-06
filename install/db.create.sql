@@ -9,6 +9,21 @@ SET time_zone = "+00:00";
 
 
 DROP TABLE IF EXISTS cipher;
+DROP TABLE IF EXISTS code;
+DROP TABLE IF EXISTS game;
+DROP TABLE IF EXISTS hint;
+DROP TABLE IF EXISTS loc;
+DROP TABLE IF EXISTS message;
+DROP TABLE IF EXISTS point;
+DROP TABLE IF EXISTS progress;
+DROP TABLE IF EXISTS step;
+DROP TABLE IF EXISTS team;
+DROP TABLE IF EXISTS text;
+DROP TABLE IF EXISTS unihint;
+DROP TABLE IF EXISTS user;
+DROP TABLE IF EXISTS wordlist;
+
+
 CREATE TABLE `cipher` (
   point_id int(11) NOT NULL,
   name_int varchar(50) COLLATE utf8mb4_czech_ci DEFAULT NULL,
@@ -17,7 +32,6 @@ CREATE TABLE `cipher` (
   solution_timeout int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
 
-DROP TABLE IF EXISTS code;
 CREATE TABLE `code` (
   game_id int(11) NOT NULL,
   code varchar(20) CHARACTER SET ascii NOT NULL,
@@ -26,7 +40,6 @@ CREATE TABLE `code` (
   team_id int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
 
-DROP TABLE IF EXISTS game;
 CREATE TABLE game (
   game_id int(11) NOT NULL,
   owner_id int(11) NOT NULL,
@@ -35,7 +48,6 @@ CREATE TABLE game (
   end_time datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
 
-DROP TABLE IF EXISTS hint;
 CREATE TABLE hint (
   hint_id int(11) NOT NULL,
   team_id int(11) NOT NULL,
@@ -45,14 +57,12 @@ CREATE TABLE hint (
   type int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
 
-DROP TABLE IF EXISTS loc;
 CREATE TABLE loc (
   point_id int(11) NOT NULL,
   description varchar(500) COLLATE utf8mb4_czech_ci DEFAULT NULL,
   end_time datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
 
-DROP TABLE IF EXISTS message;
 CREATE TABLE message (
   message_id int(11) NOT NULL,
   team_id int(11) NOT NULL,
@@ -62,27 +72,23 @@ CREATE TABLE message (
   text varchar(500) COLLATE utf8mb4_czech_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
 
-DROP TABLE IF EXISTS point;
 CREATE TABLE `point` (
   point_id int(11) NOT NULL,
   game_id int(11) NOT NULL,
   name varchar(40) COLLATE utf8mb4_czech_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
 
-DROP TABLE IF EXISTS progress;
 CREATE TABLE progress (
   team_id int(11) NOT NULL,
   point_id int(11) NOT NULL,
   time datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
 
-DROP TABLE IF EXISTS step;
 CREATE TABLE step (
   from_point_id int(11) NOT NULL,
   to_point_id int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
 
-DROP TABLE IF EXISTS team;
 CREATE TABLE team (
   team_id int(11) NOT NULL,
   game_id int(11) NOT NULL,
@@ -91,7 +97,6 @@ CREATE TABLE team (
   email varchar(50) COLLATE utf8mb4_czech_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
 
-DROP TABLE IF EXISTS text;
 CREATE TABLE `text` (
   text_id int(11) NOT NULL,
   game_id int(11) DEFAULT NULL,
@@ -99,20 +104,17 @@ CREATE TABLE `text` (
   text varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_czech_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-DROP TABLE IF EXISTS unihint;
 CREATE TABLE unihint (
   unihint_id int(11) NOT NULL,
   game_id int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
 
-DROP TABLE IF EXISTS user;
 CREATE TABLE `user` (
   user_id int(11) NOT NULL,
   login varchar(30) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
   pswd varchar(60) CHARACTER SET ascii COLLATE ascii_bin NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
 
-DROP TABLE IF EXISTS wordlist;
 CREATE TABLE wordlist (
   word varchar(20) CHARACTER SET ascii NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;

@@ -29,15 +29,15 @@ try {
   <head>
 	<meta charset="UTF-8">
     <title>Sova 2.0 | installer</title>
-    <link rel="stylesheet" href="../css/sova.css">
-    <link rel="stylesheet" href="../css/admin.css">
-    <link rel="icon" href="../css/favicon.png" sizes="32x32" type="image/png">
+    <link rel="stylesheet" href="../static/sova.css">
+    <link rel="stylesheet" href="../static/admin.css">
+    <link rel="icon" href="../static/favicon.png" sizes="32x32" type="image/png">
   </head>
   <body>
     <header>
       <a href=".">
         <div id="logo">
-          <img src="../css/owl.png" height="30">
+          <img src="../static/owl.png" height="30">
         </div>
       </a>
       <div id="title">
@@ -77,7 +77,7 @@ else {
 			$pdo->exec("LOAD DATA LOCAL INFILE '".__DIR__."/wordlist.txt' INTO TABLE wordlist");
 			$pdo->exec("LOAD DATA LOCAL INFILE '".__DIR__."/texts.txt' INTO TABLE text FIELDS TERMINATED BY ';' (code, text)");
 ?>
-	<p>Hotovo. Přejděte na <a href="..">hlavní stránku</a> nebo do <a href="../admin">administrace</a>.</p>
+	<p>Hotovo. Přejděte do <a href="../admin">administrace</a>.</p>
 <?php
 		} catch (PDOException $e) {
 			if ($e->getCode() == 1045) {
