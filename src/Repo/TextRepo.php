@@ -8,9 +8,6 @@ class TextRepo extends RepoBase {
 	}
 
 	public function create(array $gameId) {
-	}
-
-	public function update(array $text) {
 		$this->db->execute("UPDATE text SET text = :text WHERE text_id = :text_id", $text);
 	}
 

@@ -3,7 +3,7 @@ namespace Sova\Model;
 
 use Sova\TestBase;
 
-class TextText extends TestBase {
+class TextTest extends TestBase {
 
 	function testFormat() {
 		$text = new Text("loc.next", "Vrchol Černé hory");
