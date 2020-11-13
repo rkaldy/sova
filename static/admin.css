@@ -24,6 +24,10 @@ h3 {
 	padding-right: 2ex;
 }
 
+th small {
+	font-weight: normal;
+}
+
 
 /* Table */
 

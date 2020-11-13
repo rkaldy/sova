@@ -15,6 +15,8 @@ class TestBase extends TestCase {
 		$this->db->execute("INSERT INTO game VALUES (2, 2, 'game2', '2020-02-01', '2020-02-02')");
 		$this->db->execute("INSERT INTO text (game_id, code, text) SELECT 1, code, text FROM text WHERE game_id IS NULL");
 		$this->db->execute("INSERT INTO text (game_id, code, text) SELECT 2, code, text FROM text WHERE game_id IS NULL");
+		$this->db->execute("INSERT INTO settings (game_id, name, value) SELECT 1, name, value FROM settings WHERE game_id IS NULL");
+		$this->db->execute("INSERT INTO settings (game_id, name, value) SELECT 2, name, value FROM settings WHERE game_id IS NULL");
 		$_SESSION["game_id"] = 1;
 	}
 

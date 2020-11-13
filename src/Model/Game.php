@@ -16,6 +16,7 @@ class Game extends ModelBase {
 		} else if (count($games) == 1) {
 			$_SESSION["game_id"] = $games[0]["game_id"];
 			$_SESSION["game_name"] = $games[0]["name"];
+			(new Settings())->load();
 			return 1;
 		} else {
 			return $games;

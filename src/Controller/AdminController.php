@@ -10,6 +10,8 @@ use Sova\Model\Game;
 use Sova\Model\Team;
 use Sova\Model\Message;
 use Sova\Model\Progress;
+use Sova\Model\Settings;
+use Sova\Repo\LocRepo;
 
 
 class AdminController {
@@ -28,7 +30,8 @@ class AdminController {
 		} else if (in_array($action, self::ACTIONS_SU) && !User::super()) {
 			$view = new View("error", "Nedostatečná práva k akci '$action'");
 		} else {
-			$view = $this->$action($req->data);
+			$args = array_merge($req->params, $req->data);
+			$view = $this->$action($args);
 			if ($view instanceof Redirect) {
 				return $view->buildResponse();
 			}
@@ -106,5 +109,17 @@ class AdminController {
 
 	public function rank($args) {
 		return new View("main/rank", ["teams" => (new Progress())->rankTotal()]);
+	}
+
+	public function settings($args) {
+		$settings = new Settings();
+		if (!empty($args)) {
+			$ret = $settings->set($args);
+		}
+		$fields = $settings->get();
+		if (isset($ret)) {
+			$fields["flash"] = $ret;
+		}
+		return new View("admin/settings", $fields);
 	}
 }

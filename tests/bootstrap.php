@@ -14,6 +14,7 @@ if (CREATE_DB) {
 	$pdo->exec(file_get_contents(__DIR__."/../install/db.create.sql"));
 	$pdo->exec("LOAD DATA LOCAL INFILE '".__DIR__."/../install/wordlist.txt' INTO TABLE wordlist");
 	$pdo->exec("LOAD DATA LOCAL INFILE '".__DIR__."/../install/texts.txt' INTO TABLE text FIELDS TERMINATED BY ';' (code, text)");
+	$pdo->exec("LOAD DATA LOCAL INFILE '".__DIR__."/../install/settings.txt' INTO TABLE settings FIELDS TERMINATED BY ';' (name, value)");
 	echo "done\n";
 	
 	register_shutdown_function(function() {

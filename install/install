@@ -16,6 +16,7 @@ $pdo->exec(file_get_contents(__DIR__."/db.create.sql"));
 echo "Naplňuji tabulky...\n";
 $pdo->exec("LOAD DATA INFILE '".__DIR__."/wordlist.txt' INTO TABLE wordlist");
 $pdo->exec("LOAD DATA INFILE '".__DIR__."/texts.txt' INTO TABLE text FIELDS TERMINATED BY ';' (code, text)");
+$pdo->exec("LOAD DATA INFILE '".__DIR__."/settings.txt' INTO TABLE settings FIELDS TERMINATED BY ';' (name, value)");
 
 if (!$test) {
 	$pdo->exec("INSERT INTO user VALUES (1, 'admin', '".password_hash("nimda", PASSWORD_BCRYPT)."')");

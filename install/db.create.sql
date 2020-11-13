@@ -16,6 +16,7 @@ DROP TABLE IF EXISTS loc;
 DROP TABLE IF EXISTS message;
 DROP TABLE IF EXISTS point;
 DROP TABLE IF EXISTS progress;
+DROP TABLE IF EXISTS settings;
 DROP TABLE IF EXISTS step;
 DROP TABLE IF EXISTS team;
 DROP TABLE IF EXISTS text;
@@ -83,6 +84,13 @@ CREATE TABLE progress (
   point_id int(11) NOT NULL,
   time datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
+
+CREATE TABLE settings (
+  settings_id int(11) NOT NULL,
+  game_id int(11) DEFAULT NULL,
+  name varchar(50) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+  value int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE step (
   from_point_id int(11) NOT NULL,
@@ -155,6 +163,10 @@ ALTER TABLE progress
   ADD PRIMARY KEY (team_id,point_id),
   ADD KEY point_id (point_id);
 
+ALTER TABLE settings
+  ADD PRIMARY KEY (settings_id),
+  ADD UNIQUE KEY name (game_id,name);
+
 ALTER TABLE step
   ADD PRIMARY KEY (from_point_id,to_point_id) USING BTREE,
   ADD KEY to_point_id (to_point_id) USING BTREE;
@@ -189,6 +201,9 @@ ALTER TABLE message
 
 ALTER TABLE `point`
   MODIFY point_id int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE settings
+  MODIFY settings_id int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE team
   MODIFY team_id int(11) NOT NULL AUTO_INCREMENT;
@@ -232,6 +247,9 @@ ALTER TABLE `point`
 ALTER TABLE progress
   ADD CONSTRAINT progress_ibfk_1 FOREIGN KEY (team_id) REFERENCES team (team_id) ON DELETE CASCADE,
   ADD CONSTRAINT progress_ibfk_2 FOREIGN KEY (point_id) REFERENCES point (point_id) ON DELETE CASCADE;
+
+ALTER TABLE settings
+  ADD CONSTRAINT settings_ibfk_1 FOREIGN KEY (game_id) REFERENCES game (game_id) ON DELETE CASCADE;
 
 ALTER TABLE step
   ADD CONSTRAINT step_ibfk_1 FOREIGN KEY (from_point_id) REFERENCES point (point_id) ON DELETE CASCADE,

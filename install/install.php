@@ -76,6 +76,7 @@ else {
 			$stmt->execute(array(1, $_POST["su_login"], password_hash($_POST["su_pswd"], PASSWORD_BCRYPT)));
 			$pdo->exec("LOAD DATA LOCAL INFILE '".__DIR__."/wordlist.txt' INTO TABLE wordlist");
 			$pdo->exec("LOAD DATA LOCAL INFILE '".__DIR__."/texts.txt' INTO TABLE text FIELDS TERMINATED BY ';' (code, text)");
+			$pdo->exec("LOAD DATA LOCAL INFILE '".__DIR__."/settings.txt' INTO TABLE settings FIELDS TERMINATED BY ';' (name, value)");
 ?>
 	<p>Hotovo. Přejděte do <a href="../admin">administrace</a>.</p>
 <?php
