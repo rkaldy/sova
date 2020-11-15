@@ -11,26 +11,19 @@ class Cipher extends ModelBase {
 		(new Code())->prepare($cipher["code"]);
 	}
 
-	public function checkAllPreviousCiphersSolved(array $cipher) {
-		if (!$this->repo->hasPreviousCiphers($cipher)) {
-			return true;
-		}
-		$teamId = Team::current();
-		$locRepo = new LocRepo();
-		foreach ($cipher["prev"] as $prevLoc) {
-			if (!$locRepo->previousCipherSolved($teamId, $prevLoc)) {
-				return false;
-			}
-		}
-		return true;
+	public function checkSomePreviousCipherSolved(array $cipher) {
 	}
 
-	public function checkSomePreviousCipherSolved(array $cipher) {
-		return !$this->repo->hasPreviousCiphers($cipher) || $this->repo->previousCiphersSolved(Team::current(), $cipher);
+	public function isReachable(array $cipher) {
+		if (Settings::isLocVisitMandatory()) {
+			return $this->repo->previousLocsVisited(Team::current(), $cipher);
+		} else {
+			return !$this->repo->hasPreviousCiphers($cipher) || $this->repo->previousCiphersSolved(Team::current(), $cipher);
+		}
 	}
 
 	public function solve(array $cipher, string $code) {
-		if (!$this->checkSomePreviousCipherSolved($cipher)) {
+		if (!$this->isReachable($cipher)) {
 			return new Text("code.unknown", $code);
 		}
 

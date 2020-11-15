@@ -4,8 +4,8 @@ loc.already;Tento kód stanoviště jste již zadali.
 loc.next;Poloha dalšího stanoviště je: %s.
 loc.next.multi;Polohy dalších stanovišť jsou: %s.
 cipher.unknown;Neznámé číslo šifry: %s
-cipher.no-previous;Na šifru %s jste se ještě nemohli dostat, protože jste nevyluštili předchozí šifru.
-cipher.no-previous.multi;Na šifru %s jste se ještě nemohli dostat, protože jste nevyluštili všech %s předchozích šifer.
+cipher.no-previous-cipher;Na šifru %s jste se ještě nemohli dostat, protože jste nevyluštili předchozí šifru.
+cipher.no-previous-loc;Na šifru %s jste se ještě nemohli dostat, protože jste nezadali kód jejího stanoviště.
 cipher.solved;Úspěšně jste vyluštili šifru %s. Jste %s. První ji vyluštil tým %s v %s.
 cipher.already;Toto řešení šifry jste již zadali.
 cipher.hint;Přišel čas na nápovědu k šifře %s: %s.

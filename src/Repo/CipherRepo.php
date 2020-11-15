@@ -115,6 +115,14 @@ class CipherRepo extends PointRepo {
 		", $teamId, $cipher["point_id"]) != 0;
 	}
 
+	public function previousLocsVisited(int $teamId, array $cipher) {
+		return $this->db->equery("
+			SELECT COUNT(*) FROM step
+			LEFT JOIN progress ON point_id = step.from_point_id AND team_id = ?
+			WHERE step.to_point_id = ? AND progress.point_id IS NULL
+		", $teamId, $cipher["point_id"]) == 0;
+	}
+
 	public function getNextLocs(array $cipher) {
 		return $this->db->aquery("
 			SELECT point.*, loc.*

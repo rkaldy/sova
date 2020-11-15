@@ -18,30 +18,26 @@ class CipherTest extends GameTestBase {
 
 	function testCheckSomePreviousCipherSolved() {
 		$cipher = $this->cipherRepo->get(14);
-		$this->assertFalse($this->cipher->checkSomePreviousCipherSolved($cipher));
+		$this->assertFalse($this->cipher->isReachable($cipher));
 		$this->progressRepo->create(1, 13);
-		$this->assertTrue($this->cipher->checkSomePreviousCipherSolved($cipher));
+		$this->assertTrue($this->cipher->isReachable($cipher));
 	}
 
 	function testCheckSomePreviousCiphersSolvedMulti() {
 		$cipher = $this->cipherRepo->get(13);
 		$this->progressRepo->create(1, 11);
-		$this->assertTrue($this->cipher->checkSomePreviousCipherSolved($cipher));
+		$this->assertTrue($this->cipher->isReachable($cipher));
 	}
 
-	function testCheckAllPreviousCiphersSolved() {
-		$cipher = $this->cipherRepo->get(14);
-		$this->assertFalse($this->cipher->checkAllPreviousCiphersSolved($cipher));
-		$this->progressRepo->create(1, 13);
-		$this->assertTrue($this->cipher->checkAllPreviousCiphersSolved($cipher));
-	}
-
-	function testCheckAllPreviousCiphersSolvedMulti() {
+	function testCheckPreviouslLocsVisited() {
+		$_SESSION["settings"]["locVisitMandatory"] = 1;
 		$cipher = $this->cipherRepo->get(13);
-		$this->progressRepo->create(1, 11);
-		$this->assertFalse($this->cipher->checkAllPreviousCiphersSolved($cipher));
-		$this->progressRepo->create(1, 12);
-		$this->assertTrue($this->cipher->checkAllPreviousCiphersSolved($cipher));
+		$this->assertFalse($this->cipher->isReachable($cipher));
+		$this->progressRepo->create(1, 2);
+		$this->assertFalse($this->cipher->isReachable($cipher));
+		$this->progressRepo->create(1, 3);
+		$this->assertTrue($this->cipher->isReachable($cipher));
+		
 	}
 
 	function testSolveNotReachable() {

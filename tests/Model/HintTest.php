@@ -50,13 +50,14 @@ class HintTest extends GameTestBase {
 	function testApplyNoPrevious() {
 		$this->db->execute("INSERT INTO hint (team_id, unihint_id, cipher_id) VALUES (1, 2, NULL)");
 		$resp = $this->hint->apply("S3a");
-		$this->assertEquals(new Text("cipher.no-previous", "S3a"), $resp);
+		$this->assertEquals(new Text("cipher.no-previous-cipher", "S3a"), $resp);
 	}
 
-	function testApplyNoPreviousMulti() {
+	function testApplyNoPreviousLoc() {
 		$this->db->execute("INSERT INTO hint (team_id, unihint_id, cipher_id) VALUES (1, 2, NULL)");
+		$_SESSION["settings"]["locVisitMandatory"] = 1;
 		$resp = $this->hint->apply("S2");
-		$this->assertEquals(new Text("cipher.no-previous.multi", "S2", 2), $resp);
+		$this->assertEquals(new Text("cipher.no-previous-loc", "S2"), $resp);
 	}
 
 	function testApplyUnknownCipher() {

@@ -36,11 +36,11 @@ class Hint extends ModelBase {
 
 		if ($this->repo->alreadyApplied($hint)) {
 			return new Text("hint.apply.already", $cipher["name"]);
-		} else if (!(new Cipher())->checkAllPreviousCiphersSolved($cipher)) {
-			if (count($cipher["prev"]) == 1) {
-				return new Text("cipher.no-previous", $cipher["name"]);
+		} else if (!(new Cipher())->isReachable($cipher)) {
+			if (Settings::isLocVisitMandatory()) {
+				return new Text("cipher.no-previous-loc", $cipher["name"]);
 			} else {
-				return new Text("cipher.no-previous.multi", $cipher["name"], count($cipher["prev"]));
+				return new Text("cipher.no-previous-cipher", $cipher["name"]);
 			}
 		} else {
 			$this->repo->apply($hint);

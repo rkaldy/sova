@@ -2,6 +2,7 @@
 namespace Sova;
 
 use PHPUnit\Framework\TestCase;
+use Sova\Model\Settings;
 
 class TestBase extends TestCase {
 
@@ -18,6 +19,7 @@ class TestBase extends TestCase {
 		$this->db->execute("INSERT INTO settings (game_id, name, value) SELECT 1, name, value FROM settings WHERE game_id IS NULL");
 		$this->db->execute("INSERT INTO settings (game_id, name, value) SELECT 2, name, value FROM settings WHERE game_id IS NULL");
 		$_SESSION["game_id"] = 1;
+		(new Settings())->load();
 	}
 
 	function tearDown(): void {
