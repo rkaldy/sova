@@ -1,5 +1,6 @@
 <?php
 require "../config.php";
+require "load.php";
 
 function progress($msg) {
 	echo "<p>$msg</p>";
@@ -28,25 +29,25 @@ try {
 <html lang="cs">
   <head>
 	<meta charset="UTF-8">
-    <title>Sova 2.0 | installer</title>
-    <link rel="stylesheet" href="../static/sova.css">
-    <link rel="stylesheet" href="../static/admin.css">
-    <link rel="icon" href="../static/favicon.png" sizes="32x32" type="image/png">
+	<title>Sova 2.0 | installer</title>
+	<link rel="stylesheet" href="../static/sova.css">
+	<link rel="stylesheet" href="../static/admin.css">
+	<link rel="icon" href="../static/favicon.png" sizes="32x32" type="image/png">
   </head>
   <body>
-    <header>
-      <a href=".">
-        <div id="logo">
-          <img src="../static/owl.png" height="30">
-        </div>
-      </a>
-      <div id="title">
-        <h1>SOVA <span id="version">2.0</span> <span id="section">installer</span></h1>
-      </div>
-      <div class="clear"></div>
-    </header>
+	<header>
+	  <a href=".">
+		<div id="logo">
+		  <img src="../static/owl.png" height="30">
+		</div>
+	  </a>
+	  <div id="title">
+		<h1>SOVA <span id="version">2.0</span> <span id="section">installer</span></h1>
+	  </div>
+	  <div class="clear"></div>
+	</header>
 
-    <div id="contents">
+	<div id="contents">
 <?php
 if (isset($error)) {
 	echo "<p>$error</p><pre>$errorDesc</pre>";
@@ -61,22 +62,22 @@ else {
 		try {
 			$pdo = new PDO(
 				"mysql:host=".DB_HOST, $_POST["db_root_login"], $_POST["db_root_pswd"],
-				array(
-					PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, 
-					PDO::MYSQL_ATTR_LOCAL_INFILE => true
-				)
+				[ PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION ]
 			);
+			
 			progress("Vytvářím databázi...");
 			$pdo->exec("CREATE DATABASE IF NOT EXISTS ".DB_NAME);
 			$pdo->exec("USE ".DB_NAME);
+			
 			progress("Vytvářím tabulky...");
 			$pdo->exec(file_get_contents(__DIR__."/db.create.sql"));
+			
 			progress("Naplňuji tabulky...");
 			$stmt = $pdo->prepare("INSERT INTO user (user_id, login, pswd) VALUES (?, ?, ?)");
 			$stmt->execute(array(1, $_POST["su_login"], password_hash($_POST["su_pswd"], PASSWORD_BCRYPT)));
-			$pdo->exec("LOAD DATA LOCAL INFILE '".__DIR__."/wordlist.txt' INTO TABLE wordlist");
-			$pdo->exec("LOAD DATA LOCAL INFILE '".__DIR__."/texts.txt' INTO TABLE text FIELDS TERMINATED BY ';' (code, text)");
-			$pdo->exec("LOAD DATA LOCAL INFILE '".__DIR__."/settings.txt' INTO TABLE settings FIELDS TERMINATED BY ';' (name, value)");
+			loadInfile($pdo, __DIR__."/wordlist.txt", "wordlist", ["word"]);
+			loadInfile($pdo, __DIR__."/texts.txt", "text", ["code", "text"]);
+			loadInfile($pdo, __DIR__."/settings.txt", "settings", ["name", "value"]);
 ?>
 	<p>Hotovo. Přejděte do <a href="../admin">administrace</a>.</p>
 <?php
@@ -91,6 +92,6 @@ else {
 	}
 }
 ?>
-    </div>
+	</div>
   </body>
 </html>

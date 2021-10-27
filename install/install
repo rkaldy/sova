@@ -1,5 +1,7 @@
 #!/usr/bin/php
 <?php
+require("load.php");
+
 $test = count($_SERVER["argv"]) >= 2 && $_SERVER["argv"][1] == "-t";
 $db = $test ? "sova_test" : "sova";
 
@@ -14,9 +16,9 @@ echo "Vytvářím tabulky...\n";
 $pdo->exec(file_get_contents(__DIR__."/db.create.sql"));
 
 echo "Naplňuji tabulky...\n";
-$pdo->exec("LOAD DATA INFILE '".__DIR__."/wordlist.txt' INTO TABLE wordlist");
-$pdo->exec("LOAD DATA INFILE '".__DIR__."/texts.txt' INTO TABLE text FIELDS TERMINATED BY ';' (code, text)");
-$pdo->exec("LOAD DATA INFILE '".__DIR__."/settings.txt' INTO TABLE settings FIELDS TERMINATED BY ';' (name, value)");
+loadInfile($pdo, __DIR__."/wordlist.txt", "wordlist", ["word"]);
+loadInfile($pdo, __DIR__."/texts.txt", "text", ["code", "text"]);
+loadInfile($pdo, __DIR__."/settings.txt", "settings", ["name", "value"]);
 
 if (!$test) {
 	$pdo->exec("INSERT INTO user VALUES (1, 'admin', '".password_hash("nimda", PASSWORD_BCRYPT)."')");
