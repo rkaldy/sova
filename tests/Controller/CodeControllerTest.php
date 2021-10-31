@@ -4,6 +4,7 @@ namespace Sova\Controller;
 use Sova\GameTestBase;
 use Sova\Model\Team;
 use Sova\Model\Message;
+use Sova\Model\Settings;
 use Sova\Repo\ProgressRepo;
 
 class CodeControllerTest extends GameTestBase {
@@ -117,6 +118,9 @@ class CodeControllerTest extends GameTestBase {
 	private static function stripTimes($ranks) {
 		foreach ($ranks as &$rank) {
 			unset($rank["last_cipher_time"]);
+			if ($rank["finish_time"] != "-") {
+				$rank["finish_time"] = "+";
+			}
 		}
 		return $ranks;
 	}
@@ -125,53 +129,53 @@ class CodeControllerTest extends GameTestBase {
 		$this->db->execute("INSERT INTO team (team_id, game_id, name) VALUES (3, 1, 'abpopa')");
 		
 		$this->assertEquals([
-			["name" => "Parta Nic", "solved" => 0, "last_loc" => "-"],
-			["name" => "Redwool", "solved" => 0, "last_loc" => "-"],
-			["name" => "abpopa", "solved" => 0, "last_loc" => "-"],
+			["name" => "Parta Nic", "solved" => 0, "last_loc" => "-", "finish_time" => "-"],
+			["name" => "Redwool", "solved" => 0, "last_loc" => "-", "finish_time" => "-"],
+			["name" => "abpopa", "solved" => 0, "last_loc" => "-", "finish_time" => "-"],
 		], self::stripTimes($this->progressRepo->rankTotal(1)));
 
 		$this->sendCode(1, "pralinka");
 		$this->sendCode(2, "aberace");
 		$this->assertEquals([
-			["name" => "Redwool", "solved" => 1, "last_loc" => "Start"],
-			["name" => "Parta Nic", "solved" => 0, "last_loc" => "Start"],
-			["name" => "abpopa", "solved" => 0, "last_loc" => "-"],
+			["name" => "Redwool", "solved" => 1, "last_loc" => "Start", "finish_time" => "-"],
+			["name" => "Parta Nic", "solved" => 0, "last_loc" => "Start", "finish_time" => "-"],
+			["name" => "abpopa", "solved" => 0, "last_loc" => "-", "finish_time" => "-"],
 		], self::stripTimes($this->progressRepo->rankTotal(1)));
 
 		$this->sendCode(3, "aberace");
 		$this->sendCode(1, "zabradli");
 		$this->assertEquals([
-			["name" => "Redwool", "solved" => 1, "last_loc" => "Start"],
-			["name" => "abpopa", "solved" => 1, "last_loc" => "Start"],
-			["name" => "Parta Nic", "solved" => 1, "last_loc" => "Start"]
+			["name" => "Redwool", "solved" => 1, "last_loc" => "Start", "finish_time" => "-"],
+			["name" => "abpopa", "solved" => 1, "last_loc" => "Start", "finish_time" => "-"],
+			["name" => "Parta Nic", "solved" => 1, "last_loc" => "Start", "finish_time" => "-"],
 		], self::stripTimes($this->progressRepo->rankTotal(1)));
 		
 		$this->sendCode(1, "aberace");
 		$this->assertEquals([
-			["name" => "Parta Nic", "solved" => 2, "last_loc" => "Start"],
-			["name" => "Redwool", "solved" => 1, "last_loc" => "Start"],
-			["name" => "abpopa", "solved" => 1, "last_loc" => "Start"],
+			["name" => "Parta Nic", "solved" => 2, "last_loc" => "Start", "finish_time" => "-"],
+			["name" => "Redwool", "solved" => 1, "last_loc" => "Start", "finish_time" => "-"],
+			["name" => "abpopa", "solved" => 1, "last_loc" => "Start", "finish_time" => "-"],
 		], self::stripTimes($this->progressRepo->rankTotal(1)));
 		
 		$this->sendCode(2, "zabradli");
 		$this->assertEquals([
-			["name" => "Parta Nic", "solved" => 2, "last_loc" => "Start"],
-			["name" => "Redwool", "solved" => 2, "last_loc" => "Start"],
-			["name" => "abpopa", "solved" => 1, "last_loc" => "Start"]
+			["name" => "Parta Nic", "solved" => 2, "last_loc" => "Start", "finish_time" => "-"],
+			["name" => "Redwool", "solved" => 2, "last_loc" => "Start", "finish_time" => "-"],
+			["name" => "abpopa", "solved" => 1, "last_loc" => "Start", "finish_time" => "-"],
 		], self::stripTimes($this->progressRepo->rankTotal(1)));
 		
 		$this->sendCode(2, "podnos");
 		$this->assertEquals([
-			["name" => "Parta Nic", "solved" => 2, "last_loc" => "Start"],
-			["name" => "Redwool", "solved" => 2, "last_loc" => "1b"],
-			["name" => "abpopa", "solved" => 1, "last_loc" => "Start"]
+			["name" => "Parta Nic", "solved" => 2, "last_loc" => "Start", "finish_time" => "-"],
+			["name" => "Redwool", "solved" => 2, "last_loc" => "1b", "finish_time" => "-"],
+			["name" => "abpopa", "solved" => 1, "last_loc" => "Start", "finish_time" => "-"],
 		], self::stripTimes($this->progressRepo->rankTotal(1)));
 		
 		$this->sendCode(2, "kobliha");
 		$this->assertEquals([
-			["name" => "Redwool", "solved" => 3, "last_loc" => "1a"],
-			["name" => "Parta Nic", "solved" => 2, "last_loc" => "Start"],
-			["name" => "abpopa", "solved" => 1, "last_loc" => "Start"]
+			["name" => "Redwool", "solved" => 3, "last_loc" => "1a", "finish_time" => "-"],
+			["name" => "Parta Nic", "solved" => 2, "last_loc" => "Start", "finish_time" => "-"],
+			["name" => "abpopa", "solved" => 1, "last_loc" => "Start", "finish_time" => "-"],
 		], self::stripTimes($this->progressRepo->rankTotal(1)));
 		
 		$this->sendCode(3, "zabradli");
@@ -179,11 +183,29 @@ class CodeControllerTest extends GameTestBase {
 		$this->sendCode(3, "kobliha");
 		$this->sendCode(3, "medved");
 		$this->assertEquals([
-			["name" => "Redwool", "solved" => 3, "last_loc" => "1a"],
-			["name" => "abpopa", "solved" => 3, "last_loc" => "Turniket"],
-			["name" => "Parta Nic", "solved" => 2, "last_loc" => "Start"]
+			["name" => "Redwool", "solved" => 3, "last_loc" => "1a", "finish_time" => "-"],
+			["name" => "abpopa", "solved" => 3, "last_loc" => "Turniket", "finish_time" => "-"],
+			["name" => "Parta Nic", "solved" => 2, "last_loc" => "Start", "finish_time" => "-"],
 		], self::stripTimes($this->progressRepo->rankTotal(1)));
 		
-		$this->sendCode(3, "kobliha");
+		$this->sendCode(3, "kalendar");
+		$this->sendCode(3, "skluzavka");
+		$this->sendCode(1, "kobliha");
+		$this->sendCode(1, "skluzavka");
+		$this->sendCode(1, "salvej");
+		$this->assertEquals([
+			["name" => "abpopa", "solved" => 5, "last_loc" => "Turniket", "finish_time" => "-"],
+			["name" => "Parta Nic", "solved" => 4, "last_loc" => "Cíl", "finish_time" => "-"],
+			["name" => "Redwool", "solved" => 3, "last_loc" => "1a", "finish_time" => "-"],
+		], self::stripTimes($this->progressRepo->rankTotal(1)));
+
+		$settings = new Settings();
+		$settings->set(["locFinish" => 5, "locVisitMandatory" => true]);
+		$settings->load();
+		$this->assertEquals([
+			["name" => "Parta Nic", "solved" => 4, "last_loc" => "Cíl", "finish_time" => "+"],
+			["name" => "abpopa", "solved" => 5, "last_loc" => "Turniket", "finish_time" => "-"],
+			["name" => "Redwool", "solved" => 3, "last_loc" => "1a", "finish_time" => "-"],
+		], self::stripTimes($this->progressRepo->rankTotal(1)));
 	}
 }
