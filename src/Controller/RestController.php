@@ -20,14 +20,8 @@ class RestController {
 	public function process(Request $req, array $path): Response {
 		try {
 			$resource = $path[0];
-			if (!User::logged()) {
-				throw new HttpException(401);
-			} else if ($req->method == "GET" && in_array($resource, self::RES_SU_READ) && !User::super()) {
-				throw new HttpException(403);
-			} else if (in_array($resource, self::RES_SU_WRITE) && !User::super()) {
-				throw new HttpException(403);
-			}
-
+			$this->authenticate();
+			$this->authorize($resource, $req->method);
 			if (method_exists($this, $resource)) {
 				if ($req->method != "GET") {
 					throw new HttpException(405);
@@ -62,6 +56,36 @@ class RestController {
 		$resp = new Response($status, json_encode($ret));
 		$resp->addHeader("Content-Type", "application/json; charset=UTF-8");
 		return $resp;
+	}
+
+
+	public function authenticate() {
+		if (!User::logged()) {
+			if (isset($_SERVER["PHP_AUTH_USER"]) && isset($_SERVER["PHP_AUTH_PW"])) {
+				if (!(new User())->login($_SERVER["PHP_AUTH_USER"], $_SERVER["PHP_AUTH_PW"])) {
+					throw new HttpException(401);
+				}
+			}
+			else {
+				throw new HttpException(401);
+			}
+		}
+	}
+
+
+	public function authorize(string $resource, string $method) {
+		if (User::super()) {
+			return;
+		}
+		if ($method == "GET") {
+			if (in_array($resource, self::RES_SU_READ)) {
+				throw new HttpException(403);
+			}
+		} else {
+			if (in_array($resource, self::RES_SU_WRITE)) {
+				throw new HttpException(403);
+			}
+		}
 	}
 
 	
