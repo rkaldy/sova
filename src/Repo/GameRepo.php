@@ -11,6 +11,10 @@ class GameRepo extends RepoBase {
 		return $this->db->aquery("SELECT game_id, name FROM game WHERE owner_id = ? ORDER BY start_time DESC", $ownerId);
 	}
 
+	public function getIdByName(string $name, int $ownerId) {
+		return $this->db->equery("SELECT game_id FROM game WHERE owner_id = ? AND name = ?", $ownerId, $name);
+	}
+
 	public function list() {
 		return $this->db->aquery("SELECT * FROM game ORDER BY start_time DESC");
 	}

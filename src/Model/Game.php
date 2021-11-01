@@ -23,6 +23,10 @@ class Game extends ModelBase {
 		}
 	}
 
+    public function getIdByName(string $name) {
+        return $this->repo->getIdByName($name, User::current());
+    }
+
 	public static function selected() 	 { return isset($_SESSION["game_id"]); }
 	public static function current() 	 { return $_SESSION["game_id"]; }
 	public static function currentName() { return $_SESSION["game_name"]; }

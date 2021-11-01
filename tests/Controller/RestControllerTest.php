@@ -14,12 +14,12 @@ class RestControllerTest extends TestBase {
 		$_SESSION["user_id"] = 1;
 	}
 
-	function rest(string $method, string $res, array $in = []): array {
-		$req = new Request($method, "/", [], $in);
-		$resp = (new RestController())->process($req, [$res]);
+	function rest(string $method, string $path, array $in = [], array $params = []): array {
+		$path = explode("/", $path);
+		$req = new Request($method, "/", $params, $in);
+		$resp = (new RestController())->process($req, $path);
 		return [$resp->status, json_decode($resp->data, true)];
 	}
-
 
 	function testUnknownTable() {
 		list($status, $data) = $this->rest("GET", "bad", []);
@@ -38,9 +38,23 @@ class RestControllerTest extends TestBase {
 		$this->assertEquals(403, $status);
 	}
 
-	function testInvalidMethod() {
-		list($status, $data) = $this->rest("POST", "graph", []);
-		$this->assertEquals(405, $status);
+	function testUnknownResource() {
+		list($status, $data) = $this->rest("GET", "bad/bad");
+		$this->assertEquals(400, $status);
+		$this->assertEquals("Unknown resource: 'bad'", $data["error"]);
+	}
+
+	function testUnknownQuery() {
+		list($status, $data) = $this->rest("GET", "game/bad");
+		$this->assertEquals(400, $status);
+		$this->assertEquals("Method game.bad not found", $data["error"]);
+	}
+
+	function testQuery() {
+		$_SESSION["user_id"] = 2;
+		list($status, $data) = $this->rest("GET", "game/idbyname", [], ["name" => "game2"]);
+		$this->assertEquals(200, $status);
+		$this->assertEquals(["game_id" => 2], $data);
 	}
 
 	function testGeneralError() {

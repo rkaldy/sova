@@ -20,15 +20,24 @@ class RestController {
 	public function process(Request $req, array $path): Response {
 		try {
 			$resource = $path[0];
+			if (isset($path[1])) {
+				$query = $path[1];
+			}
 			$this->authenticate();
 			$this->authorize($resource, $req->method);
-			if (method_exists($this, $resource)) {
-				if ($req->method != "GET") {
-					throw new HttpException(405);
+
+			if ($req->method == "GET" && isset($query)) {
+				$controllerClass = "\\Sova\\Controller\\REST\\" . ucfirst($resource) . "Controller";
+				if (!class_exists($controllerClass)) {
+					throw new HttpException(400, "Unknown resource: '$resource'");
 				}
-				$ret = $this->$resource($req->params);
+				$controller = new $controllerClass();
+				if (!method_exists($controller, $query)) {
+					throw new HttpException(400, "Method $resource.$query not found");
+				}
+				$ret = $controller->$query($req->params);
 			} else {
-				$ret = $this->crud($resource, $req->method, $req->data);
+				$ret = $this->crud($resource, $req->method, $req->data, $req->params);
 			}
 			$status = 200;
 		} 
@@ -52,8 +61,12 @@ class RestController {
 				$ret["line"] = $ex->getLine();
 			}
 		}
-
-		$resp = new Response($status, json_encode($ret));
+		
+		$jsonFlags = JSON_UNESCAPED_SLASHES;
+        if (isset($req->params["pretty"])) {
+            $jsonFlags |= JSON_PRETTY_PRINT;
+        }
+		$resp = new Response($status, json_encode($ret, $jsonFlags));
 		$resp->addHeader("Content-Type", "application/json; charset=UTF-8");
 		return $resp;
 	}
@@ -63,11 +76,11 @@ class RestController {
 		if (!User::logged()) {
 			if (isset($_SERVER["PHP_AUTH_USER"]) && isset($_SERVER["PHP_AUTH_PW"])) {
 				if (!(new User())->login($_SERVER["PHP_AUTH_USER"], $_SERVER["PHP_AUTH_PW"])) {
-					throw new HttpException(401);
+					throw new HttpException(401, "Invalid login or password");
 				}
 			}
 			else {
-				throw new HttpException(401);
+				throw new HttpException(401, "Unauthorized");
 			}
 		}
 	}
@@ -89,7 +102,7 @@ class RestController {
 	}
 
 	
-	public function crud(string $resource, string $method, $obj): array {
+	public function crud(string $resource, string $method, array $obj, array $params = []): array {
 		$modelClass = "\\Sova\\Model\\".ucfirst($resource);
 		if (!class_exists($modelClass)) {
 			throw new HttpException(400, "Unknown resource: '$resource'");
@@ -99,7 +112,11 @@ class RestController {
 
 		switch ($method) {
 			case "GET": 	$gameId = Game::selected() ? Game::current() : null;
-							return $repo->list($gameId);
+							if (isset($params["page"]) && isset($params["pageSize"])) {
+								return $repo->list($gameId, $params["page"], $params["pageSize"]);
+							} else {
+								return $repo->list($gameId);
+							}
 			case "POST":	$model->prepare($obj);
 							$repo->create($obj);
 							break;
@@ -111,16 +128,5 @@ class RestController {
 			default:		throw new HttpException(405);
 		}
 		return $obj;
-	}
-
-
-	function graph(array $args): array {
-		list($vertices, $edges) = (new Graph())->build();
-		return ["vertices" => $vertices, "edges" => $edges];
-	}
-
-	function messages(array $args): array {
-		list($messages, $count) = (new Message())->list($args["page"], $args["pageSize"]);
-		return ["data" => $messages, "itemsCount" => $count];
 	}
 }
