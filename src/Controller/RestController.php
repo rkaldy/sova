@@ -7,9 +7,7 @@ use Sova\DBException;
 use Sova\HttpException;
 use Sova\Model\User;
 use Sova\Model\Game;
-use Sova\Model\Graph;
-use Sova\Model\Text;
-use Sova\Model\Message;
+
 
 class RestController {
 
@@ -23,8 +21,10 @@ class RestController {
 			if (isset($path[1])) {
 				$query = $path[1];
 			}
+
 			$this->authenticate();
 			$this->authorize($resource, $req->method);
+            $this->setGame($req);
 
 			if ($req->method == "GET" && isset($query)) {
 				$controllerClass = "\\Sova\\Controller\\REST\\" . ucfirst($resource) . "Controller";
@@ -62,7 +62,7 @@ class RestController {
 			}
 		}
 		
-		$jsonFlags = JSON_UNESCAPED_SLASHES;
+		$jsonFlags = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
         if (isset($req->params["pretty"])) {
             $jsonFlags |= JSON_PRETTY_PRINT;
         }
@@ -100,6 +100,19 @@ class RestController {
 			}
 		}
 	}
+
+
+    public function setGame(Request $req) {
+        if (isset($req->params["game_id"])) {
+            $_SESSION["game_id"] = $req->params["game_id"];
+        } else if (isset($req->params["game"])) {
+            $gameId = (new Game())->getIdByName($req->params["game"]);
+            if (!isset($gameId)) {
+                throw new HttpException(400, "Unknown game: " . $req->params["game"]);
+            }
+            $_SESSION["game_id"] = $gameId;
+        }
+    }
 
 	
 	public function crud(string $resource, string $method, array $obj, array $params = []): array {

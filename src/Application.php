@@ -65,6 +65,8 @@ class Application {
 		$method = $serverVars["REQUEST_METHOD"];
 		if ($method == "GET") {
 			$data = [];
+		} else if ($method == "POST" && substr($serverVars["CONTENT_TYPE"], 0, 19) == "multipart/form-data") {
+			$data = $_POST;
 		} else if (substr($serverVars["CONTENT_TYPE"], 0, 33) == "application/x-www-form-urlencoded") {
 			parse_str($this->getRequestData(), $data);
 		} else if (substr($serverVars["CONTENT_TYPE"], 0, 16) == "application/json") {

@@ -25,7 +25,7 @@ class TeamRepo extends RepoBase {
 
 	function create(array &$team) {
 		try {
-			$this->db->execute("INSERT INTO team (game_id, name, phone, email) VALUES (:game_id, :name, phone, :email)", $team, true);
+			$this->db->execute("INSERT INTO team (game_id, name, phone, email) VALUES (:game_id, :name, :phone, :email)", $team, true);
 			$team["team_id"] = $this->db->lastInsertId();
 			$this->db->execute("INSERT INTO code (game_id, team_id, code) VALUES (:game_id, :team_id, :pswd)", $team, true);
 		} catch (DBException $ex) {
