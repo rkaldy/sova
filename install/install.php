@@ -10,9 +10,11 @@ function progress($msg) {
 
 if (DEVELOPMENT) {
 	error_reporting(E_ALL);
-	ini_set('display_errors', 1);
+	ini_set("display_errors", 1);
 }
+ini_set("output_buffering", 4096);
 
+ob_start();
 try {
 	$pdo = new PDO("mysql:host=".DB_HOST, DB_USER, DB_PASS);
 	$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -61,12 +63,13 @@ else {
 	} else {
 		try {
 			$pdo = new PDO(
-				"mysql:host=".DB_HOST, $_POST["db_root_login"], $_POST["db_root_pswd"],
+				"mysql:host=".DB_HOST.";charset=utf8mb4", $_POST["db_root_login"], $_POST["db_root_pswd"],
 				[ PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION ]
 			);
 			
 			progress("Vytvářím databázi...");
-			$pdo->exec("CREATE DATABASE IF NOT EXISTS ".DB_NAME);
+			$pdo->exec("DROP DATABASE IF EXISTS ".DB_NAME);
+			$pdo->exec("CREATE DATABASE ".DB_NAME);
 			$pdo->exec("USE ".DB_NAME);
 			
 			progress("Vytvářím tabulky...");
