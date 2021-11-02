@@ -74,13 +74,12 @@ class RestController {
 
 	public function authenticate() {
 		if (!User::logged()) {
-			if (isset($_SERVER["PHP_AUTH_USER"]) && isset($_SERVER["PHP_AUTH_PW"])) {
-				if (!(new User())->login($_SERVER["PHP_AUTH_USER"], $_SERVER["PHP_AUTH_PW"])) {
-					throw new HttpException(401, "Invalid login or password");
-				}
+			if (empty($_SERVER["HTTP_AUTHORIZATION"])) {
+				throw new HttpException(401, "Unauthenticated");
 			}
-			else {
-				throw new HttpException(401, "Unauthorized");
+			list($user, $password) = explode(":", base64_decode(substr($_SERVER["HTTP_AUTHORIZATION"], 6)));
+			if (!(new User())->login($_SERVER["PHP_AUTH_USER"], $_SERVER["PHP_AUTH_PW"])) {
+				throw new HttpException(401, "Authentication failed");
 			}
 		}
 	}
@@ -126,7 +125,9 @@ class RestController {
 		switch ($method) {
 			case "GET": 	$gameId = Game::selected() ? Game::current() : null;
 							if (isset($params["page"]) && isset($params["pageSize"])) {
-								return $repo->list($gameId, $params["page"], $params["pageSize"]);
+								$from = ($params["page"] - 1) * $params["pageSize"];
+								$limit = $params["pageSize"];
+								return $repo->list($gameId, $from, $limit);
 							} else {
 								return $repo->list($gameId);
 							}
