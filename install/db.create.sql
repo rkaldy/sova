@@ -70,7 +70,7 @@ CREATE TABLE message (
   hint_id int(11) DEFAULT NULL,
   direction tinyint(1) NOT NULL,
   time datetime NOT NULL DEFAULT current_timestamp(),
-  text varchar(500) COLLATE utf8mb4_czech_ci NOT NULL
+  text varchar(500) COLLATE utf8mb4_czech_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
 
 CREATE TABLE `point` (
