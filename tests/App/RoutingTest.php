@@ -69,7 +69,7 @@ class RoutingTest extends TestCase {
 	}
 
 	function testBaseUrl() {
-		$this->app->setBaseUrl("sova/")
+		$this->app->setBaseUrl("/sova")
 			      ->addRoute("/admin", "AdminController")
 			      ->addRoute("/", "MainController");
 		
@@ -94,24 +94,20 @@ class RoutingTest extends TestCase {
 	}
 
 	function testTrailingSlash() {
-		$this->app->setBaseUrl("sova/")
-			      ->addRoute("/admin", "AdminController")
+		$this->app->setBaseUrl("/sova")
+			      ->addRoute("/admin", "AdminController", true)
 			      ->addRoute("/", "MainController");
 
-		$resp = $this->app->route(new Request("GET", "/sova", null, null));
-		$this->assertEquals(301, $resp->status);
-		$this->assertEquals("/sova/", $resp->headers["Location"]);
-
-		$resp = $this->app->route(new Request("GET", "/sova/login/", null, null));
-		$this->assertEquals(301, $resp->status);
-		$this->assertEquals("/sova/login", $resp->headers["Location"]);
+		$resp = $this->app->route(new Request("GET", "/sova/login", null, null));
+		$this->assertEquals("MainController", $this->controller);
+		$this->assertEquals(["login"], $this->path);
 
 		$resp = $this->app->route(new Request("GET", "/sova/admin", null, null));
 		$this->assertEquals(301, $resp->status);
 		$this->assertEquals("/sova/admin/", $resp->headers["Location"]);
 
-		$resp = $this->app->route(new Request("GET", "/sova/admin/login/", null, null));
-		$this->assertEquals(301, $resp->status);
-		$this->assertEquals("/sova/admin/login", $resp->headers["Location"]);
+		$resp = $this->app->route(new Request("GET", "/sova/admin/login", null, null));
+		$this->assertEquals("AdminController", $this->controller);
+		$this->assertEquals(["login"], $this->path);
 	}
 }

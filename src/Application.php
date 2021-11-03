@@ -4,7 +4,7 @@ namespace Sova;
 
 class Application {
 
-	protected $baseUrl = "/";
+	protected $baseUrl = [];
 	protected $routes = [];
 
 
@@ -17,12 +17,12 @@ class Application {
 	}
 	
 	public function setBaseUrl(string $baseUrl) {
-		$this->baseUrl = $baseUrl;
+		$this->baseUrl = self::parseUrl($baseUrl);
 		return $this;
 	}
 
-	public function addRoute($route, $controller) {
-		$this->routes[] = [self::parseUrl($route), $controller];
+	public function addRoute($route, $controller, $fixTrailingSlash = false) {
+		$this->routes[] = [self::parseUrl($route), $controller, $fixTrailingSlash];
 		return $this;
 	}
 
@@ -44,13 +44,13 @@ class Application {
 		catch (PHPException $e) {
 			$response = new Response(
 				500,
-				"<html><head><title>Error</title></head><body><h1>Error</h1><p><b>File: {$e->file}<br>Line: {$e->line}</b></p><p>".$e->getMessage()."</p></body></html>"
+				DEVELOPMENT ? "<html><head><title>Error</title></head><body><h1>Error</h1><p><b>File: {$e->file}<br>Line: {$e->line}</b></p><p>".$e->getMessage()."</p><h2>Stack trace</h2><pre>".$e->getTraceAsString().".</pre></body></html>" : ""
 			);
 		}
 		catch (\Throwable $e) {
 			$response = new Response(
 				500,
-				"<html><head><title>Error</title></head><body><h1>Error</h1><p><b>File: {$e->getFile()}<br>Line: {$e->getLine()}</b></p><p>".$e->getMessage()."</p><h2>Stack trace</h2><pre>".$e->getTraceAsString().".</pre></body></html>"
+				DEVELOPMENT ? "<html><head><title>Error</title></head><body><h1>Error</h1><p><b>File: {$e->getFile()}<br>Line: {$e->getLine()}</b></p><p>".$e->getMessage()."</p><h2>Stack trace</h2><pre>".$e->getTraceAsString().".</pre></body></html>" : ""
 			);
 		}
 
@@ -85,28 +85,20 @@ class Application {
 	
 	public function route($request) {
 		$url = self::parseUrl($request->url);
-		$baseUrl = self::parseUrl($this->baseUrl);
 		
-		$basePart = array_slice($url, 0, count($baseUrl));
-		if ($basePart != $baseUrl) {
-			throw new HttpException(404, "The requested URL doesn't match the base {$this->baseUrl}");
+		$basePart = array_slice($url, 0, count($this->baseUrl));
+		if ($basePart != $this->baseUrl) {
+			throw new HttpException(404, "The requested URL doesn't match the base ".join("/", $this->baseUrl));
 		}
 
-		$routePart = array_slice($url, count($baseUrl));
-		foreach ($this->routes as list($route, $controllerClass)) {
+		$routePart = array_slice($url, count($this->baseUrl));
+		foreach ($this->routes as list($route, $controllerClass, $fixTrailingSlash)) {
 			$routeLen = count($route);
 			if ($route == array_slice($routePart, 0, $routeLen)) {
-				if (count($routePart) == $routeLen) {
-					if (substr($request->url, -1, 1) != "/") {
-						return (new Redirect($request->url."/"))->buildResponse();
-					}
-					$path = [];
-				} else {
-					if (substr($request->url, -1, 1) == "/") {
-						return (new Redirect(substr($request->url, 0, -1)))->buildResponse();
-					}
-					$path = array_slice($routePart, $routeLen);
-				}
+                if ($fixTrailingSlash && count($routePart) == $routeLen && substr($request->url, -1, 1) != "/") {
+                    return (new Redirect($request->url."/"))->buildResponse();
+                }
+				$path = array_slice($routePart, $routeLen);
 				return $this->runController($controllerClass, $request, $path);
 			}
 		}

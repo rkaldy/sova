@@ -1,8 +1,7 @@
 RewriteEngine On
 
-RewriteCond %{REQUEST_FILENAME} "/install/"
-RewriteRule ^ install/install.php [QSA,L]
+RewriteRule ^install/?$ install/install.php [QSA,END]
 
-RewriteCond %{REQUEST_FILENAME} "!/static/."
-RewriteCond %{REQUEST_FILENAME} "!/node_modules/."
+RewriteCond %{REQUEST_URI} "!/static/."
+RewriteCond %{REQUEST_URI} "!/node_modules/."
 RewriteRule ^ index.php [QSA,E=HTTP_AUTHORIZATION:%{HTTP:Authorization},L]
