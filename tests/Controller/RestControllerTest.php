@@ -45,21 +45,19 @@ class RestControllerTest extends TestBase {
 	}
 
 	function testUnknownQuery() {
-		list($status, $data) = $this->rest("GET", "game/bad");
+		list($status, $data) = $this->rest("GET", "graph/bad");
 		$this->assertEquals(400, $status);
-		$this->assertEquals("Method game.bad not found", $data["error"]);
+		$this->assertEquals("Query graph.bad not found", $data["error"]);
 	}
 
 	function testQuery() {
-		$_SESSION["user_id"] = 2;
-		list($status, $data) = $this->rest("GET", "game/idbyname", [], ["name" => "game2"]);
+		list($status, $data) = $this->rest("GET", "graph/build", [], []);
 		$this->assertEquals(200, $status);
-		$this->assertEquals(["game_id" => 2], $data);
 	}
 
 	function testGeneralError() {
 		list($status, $data) = $this->rest("POST", "user", ["login" => "user", "pswd" => ""]);
-		$this->assertEquals(422, $status);
+		$this->assertEquals(500, $status);
 		$this->assertFalse(isset($data["code"]));
 	}
 
@@ -74,14 +72,12 @@ class RestControllerTest extends TestBase {
 		$this->assertEquals(401, $status);
 		$this->assertFalse(isset($_SESSION["user_id"]));
 		
-		$_SERVER["PHP_AUTH_USER"] = "user";
-		$_SERVER["PHP_AUTH_PW"] = "bad";
+        $_SERVER["HTTP_AUTHORIZATION"] = "Basic ".base64_encode("user:bad");
 		list($status, $data) = $this->rest("GET", "game", []);
 		$this->assertEquals(401, $status);
 		$this->assertFalse(isset($_SESSION["user_id"]));
 
-		$_SERVER["PHP_AUTH_USER"] = "user";
-		$_SERVER["PHP_AUTH_PW"] = "swordfish";
+        $_SERVER["HTTP_AUTHORIZATION"] = "Basic ".base64_encode("user:swordfish");
 		list($status, $data) = $this->rest("GET", "game", []);
 		$this->assertEquals(200, $status);
 		$this->assertEquals(2, $_SESSION["user_id"]);

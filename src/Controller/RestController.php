@@ -17,7 +17,10 @@ class RestController {
 	
 	public function process(Request $req, array $path): Response {
 		try {
-			$resource = $path[0];
+			if (empty($path)) {
+                throw new HttpException(400, "No resource specified");
+            }
+            $resource = $path[0];
 			if (isset($path[1])) {
 				$query = $path[1];
 			}
@@ -33,7 +36,7 @@ class RestController {
 				}
 				$controller = new $controllerClass();
 				if (!method_exists($controller, $query)) {
-					throw new HttpException(400, "Method $resource.$query not found");
+					throw new HttpException(400, "Query $resource.$query not found");
 				}
 				$ret = $controller->$query($req->params);
 			} else {
@@ -54,12 +57,12 @@ class RestController {
 			$ret = ["error" => $ex->getMessage()];
 		}
 		catch (\Exception $ex) {
-			$status = 422;
-			$ret = ["error" => $ex->getMessage()];
+			$status = 500;
 			if (DEVELOPMENT) {
-				$ret["file"] = $ex->getFile();
-				$ret["line"] = $ex->getLine();
-			}
+			    $ret = ["error" => $ex->getMessage(), "file" => $ex->getFile(), "line" => $ex->getLine()];
+			} else {
+                $ret = ["error" => "Internal server error" ];
+            }
 		}
 		
 		$jsonFlags = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
@@ -75,10 +78,10 @@ class RestController {
 	public function authenticate() {
 		if (!User::logged()) {
 			if (empty($_SERVER["HTTP_AUTHORIZATION"])) {
-				throw new HttpException(401, "Unauthenticated");
+				throw new HttpException(401, "Unauthorized");
 			}
 			list($user, $password) = explode(":", base64_decode(substr($_SERVER["HTTP_AUTHORIZATION"], 6)));
-			if (!(new User())->login($_SERVER["PHP_AUTH_USER"], $_SERVER["PHP_AUTH_PW"])) {
+			if (!(new User())->login($user, $password)) {
 				throw new HttpException(401, "Authentication failed");
 			}
 		}
