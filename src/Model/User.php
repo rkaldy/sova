@@ -24,7 +24,10 @@ class User extends ModelBase {
 	}
 
 	
-	public static function logout() 	 { $_SESSION = array(); }
+	public static function logout() { 
+        $_SESSION = [];
+        session_destroy(); 
+    }
 
 	public static function logged() 	 { return isset($_SESSION["user_id"]); }
 	public static function current() 	 { return $_SESSION["user_id"]; }
