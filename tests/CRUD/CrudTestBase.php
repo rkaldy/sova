@@ -2,7 +2,7 @@
 namespace Sova\CRUD;
 
 use Sova\TestBase;
-use Sova\Controller\RestController;
+use Sova\Controller\RestHandler;
 
 class CrudTestBase extends TestBase {
 
@@ -11,7 +11,7 @@ class CrudTestBase extends TestBase {
 
 	function setUp(): void {
 		parent::setUp();
-		$this->rest = new RestController();
+		$this->rest = new RestHandler();
 		preg_match("/([A-Za-z]+)CrudTest/", get_class($this), $match);
 		$this->resource = $match[1];
 	}

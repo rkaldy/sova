@@ -21,37 +21,27 @@ class RestControllerTest extends TestBase {
 		return [$resp->status, json_decode($resp->data, true)];
 	}
 
-	function testUnknownTable() {
-		list($status, $data) = $this->rest("GET", "bad", []);
-		$this->assertEquals(400, $status);
-	}
-
+	
 	function testUnauthenticated() {
 		unset($_SESSION["user_id"]);
-		list($status, $data) = $this->rest("GET", "loc", []);
+		list($status, $data) = $this->rest("GET", "loc");
 		$this->assertEquals(401, $status);
 	}
 
 	function testUnauthorized() {
 		$_SESSION["user_id"] = 2;
-		list($status, $data) = $this->rest("PUT", "game", []);
+		list($status, $data) = $this->rest("PUT", "game");
 		$this->assertEquals(403, $status);
 	}
 
 	function testUnknownResource() {
-		list($status, $data) = $this->rest("GET", "bad/bad");
+		list($status, $data) = $this->rest("GET", "bad");
 		$this->assertEquals(400, $status);
 		$this->assertEquals("Unknown resource: 'bad'", $data["error"]);
 	}
 
-	function testUnknownQuery() {
-		list($status, $data) = $this->rest("GET", "graph/bad");
-		$this->assertEquals(400, $status);
-		$this->assertEquals("Query graph.bad not found", $data["error"]);
-	}
-
 	function testQuery() {
-		list($status, $data) = $this->rest("GET", "graph/build", [], []);
+		list($status, $data) = $this->rest("GET", "graph");
 		$this->assertEquals(200, $status);
 	}
 

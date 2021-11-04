@@ -5,6 +5,7 @@ use Sova\Request;
 use Sova\Response;
 use Sova\DBException;
 use Sova\HttpException;
+use Sova\PHPException;
 use Sova\Model\User;
 use Sova\Model\Game;
 
@@ -21,26 +22,16 @@ class RestController {
                 throw new HttpException(400, "No resource specified");
             }
             $resource = $path[0];
-			if (isset($path[1])) {
-				$query = $path[1];
-			}
 
 			$this->authenticate();
 			$this->authorize($resource, $req->method);
             $this->setGame($req);
 
-			if ($req->method == "GET" && isset($query)) {
-				$controllerClass = "\\Sova\\Controller\\REST\\" . ucfirst($resource) . "Controller";
-				if (!class_exists($controllerClass)) {
-					throw new HttpException(400, "Unknown resource: '$resource'");
-				}
-				$controller = new $controllerClass();
-				if (!method_exists($controller, $query)) {
-					throw new HttpException(400, "Query $resource.$query not found");
-				}
-				$ret = $controller->$query($req->params);
+			$handler = new RestHandler();
+			if ($req->method == "GET" && method_exists($handler, $resource)) {
+				$ret = $handler->$resource($req->params);
 			} else {
-				$ret = $this->crud($resource, $req->method, $req->data, $req->params);
+				$ret = $handler->crud($resource, $req->method, $req->data, $req->params);
 			}
 			$status = 200;
 		} 
@@ -56,7 +47,11 @@ class RestController {
 			$status = $ex->getCode();
 			$ret = ["error" => $ex->getMessage()];
 		}
-		catch (\Exception $ex) {
+		catch (PHPException $ex) {
+			$status = 500;
+			$ret = ["error" => $ex->getMessage(), "file" => $ex->getFile(), "line" => $ex->getLine()];
+		}
+		catch (\Throwable $ex) {
 			$status = 500;
 			if (DEVELOPMENT) {
 			    $ret = ["error" => $ex->getMessage(), "file" => $ex->getFile(), "line" => $ex->getLine()];
@@ -115,35 +110,4 @@ class RestController {
             $_SESSION["game_id"] = $gameId;
         }
     }
-
-	
-	public function crud(string $resource, string $method, array $obj, array $params = []): array {
-		$modelClass = "\\Sova\\Model\\".ucfirst($resource);
-		if (!class_exists($modelClass)) {
-			throw new HttpException(400, "Unknown resource: '$resource'");
-		}
-		$model = new $modelClass();
-		$repo = $model->repo();
-
-		switch ($method) {
-			case "GET": 	$gameId = Game::selected() ? Game::current() : null;
-							if (isset($params["page"]) && isset($params["pageSize"])) {
-								$from = ($params["page"] - 1) * $params["pageSize"];
-								$limit = $params["pageSize"];
-								return $repo->list($gameId, $from, $limit);
-							} else {
-								return $repo->list($gameId);
-							}
-			case "POST":	$model->prepare($obj);
-							$repo->create($obj);
-							break;
-			case "PUT":		$model->prepare($obj);
-							$repo->update($obj);
-							break;
-			case "DELETE":	$repo->delete($obj);
-							break;
-			default:		throw new HttpException(405);
-		}
-		return $obj;
-	}
 }

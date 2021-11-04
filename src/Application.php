@@ -44,7 +44,7 @@ class Application {
 		catch (PHPException $e) {
 			$response = new Response(
 				500,
-				DEVELOPMENT ? "<html><head><title>Error</title></head><body><h1>Error</h1><p><b>File: {$e->file}<br>Line: {$e->line}</b></p><p>".$e->getMessage()."</p><h2>Stack trace</h2><pre>".$e->getTraceAsString().".</pre></body></html>" : ""
+				"<html><head><title>Error</title></head><body><h1>Error</h1><p><b>File: {$e->file}<br>Line: {$e->line}</b></p><p>".$e->getMessage()."</p><h2>Stack trace</h2><pre>".$e->getTraceAsString().".</pre></body></html>"
 			);
 		}
 		catch (\Throwable $e) {
