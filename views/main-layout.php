@@ -21,7 +21,15 @@ $menu = [
         <img src="static/owl.png" height="50">
       </div>
       <div id="title">
-        <h1>SOVA <span id="version">2.0</span></h1>
+        <h1>
+<?php 
+if (isset($team)) {
+    echo '<span id="version">'.$game.'</span>';
+} else {
+    echo 'SOVA <span id="version">2.0</span>';
+}
+?>
+        </h1>
         <div id="user">
 <?php 
 if (isset($team)) {
@@ -57,7 +65,7 @@ if (isset($team)) {
 ?>
 
     <div id="contents">
-<?php echo $contents; ?>
+<?php echo $_contents; ?>
     </div>
 
     <script type="text/javascript">

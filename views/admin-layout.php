@@ -90,7 +90,7 @@ if ($superuser || isset($game)) {
 ?>
 
     <div id="contents">
-<?php echo $contents ?>
+<?php echo $_contents ?>
     </div>
   </body>
 </html>

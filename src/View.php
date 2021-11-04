@@ -20,7 +20,7 @@ class View {
 
 		ob_start();
 		include("views/$this->template.php");
-		$contents = ob_get_clean();
+		$_contents = ob_get_clean();
 
 		ob_start();
 		$minify = DEVELOPMENT ? "" : ".min";
