@@ -3,8 +3,8 @@ namespace Sova\Repo;
 
 class GameRepo extends RepoBase {
 	
-	public function get(int $gameId, int $ownerId) {
-		return $this->db->aquery("SELECT * FROM game WHERE game_id = ? AND owner_id = ?", $gameId, $ownerId);
+	public function get(int $gameId) {
+		return $this->db->squery("SELECT * FROM game WHERE game_id = ?", $gameId);
 	}
 
 	public function getOwned(int $ownerId) {

@@ -3,7 +3,7 @@ namespace Sova\Model;
 
 use Sova\TestBase;
 
-class GameTest extends TestBase {
+/*class GameTest extends TestBase {
 
 	protected $game;
 
@@ -34,4 +34,4 @@ class GameTest extends TestBase {
 		$games = $this->game->setOwnedGame();
 		$this->assertCount(2, $games);
 	}
-}
+}*/

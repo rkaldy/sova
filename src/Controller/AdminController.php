@@ -49,6 +49,7 @@ class AdminController {
 		return new Response(200, $output);
 	}
 
+
 	public function login($args) {
 		$user = new User();
 		$game = new Game();
@@ -57,10 +58,11 @@ class AdminController {
 				if (User::super()) {
 					return new Redirect("games");
 				}
-				$ret = $game->setOwnedGame();
-				if ($ret == 0) {
+				$games = $game->getOwnedGames();
+				if (count($games) == 0) {
 					return new View("admin/login", array("flash" => "Tento uživatel nemá nastavenou žádnou hru"));
-				} else if ($ret == 1) {
+				} else if (count($games) == 1) {
+                    $game->setCurrentGame($games[0]["game_id"]);
 					return new Redirect("locs");
 				} else {
 					return new View("admin/selectgame", array("games" => $ret));
@@ -69,8 +71,7 @@ class AdminController {
 				return new View("admin/login", array("flash" => "Špatný login nebo heslo"));
 			}
 		} else if (isset($args["game_id"])) {
-			$ret = $game->setOwnedGame($args["game_id"]);
-			if ($ret == 1) {
+			if ($game->setCurrentGame($args["game_id"])) { 
 				return new Redirect("locs");
 			} else {
 				return new View("admin/login");
@@ -80,10 +81,12 @@ class AdminController {
 		}
 	}
 
+
 	public function logout($args) {
 		User::logout();
 		return new View("admin/login");
 	}
+
 
 	public function users($args) 	{ return new View("admin/users"); }
 	public function games($args) 	{ return new View("admin/games"); }
@@ -94,6 +97,7 @@ class AdminController {
 	public function graph($args)	{ return new View("admin/graph"); }
 	public function texts($args)	{ return new View("admin/texts"); }
 	public function messages($args)	{ return new View("admin/messages"); }
+
 
 	public function broadcast($args) {
 		$teams = (new Team())->list();

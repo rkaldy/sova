@@ -5,23 +5,29 @@ use Sova\Repo\GameRepo;
 
 class Game extends ModelBase {
 
-	public function setOwnedGame($gameId = null) {
-		if (isset($gameId)) {
-			$games = $this->repo->get($gameId, User::current());
-		} else {
-			$games = $this->repo->getOwned(User::current());
-		}
-		if (count($games) == 0) {
-			return 0;
-		} else if (count($games) == 1) {
-			$_SESSION["game_id"] = $games[0]["game_id"];
-			$_SESSION["game_name"] = $games[0]["name"];
-			(new Settings())->load();
-			return 1;
-		} else {
-			return $games;
-		}
-	}
+    const CURRENT = 1;
+    const PAST = 2;
+    const FUTURE = 3;
+
+	public function setCurrentGame($gameId) {
+        $game = $this->repo->get($gameId);
+        if ($game["owner_id"] != User::current()) {
+            return false;
+        }
+        $_SESSION["game_id"] = $game["game_id"];
+        $_SESSION["game_name"] = $game["name"];
+        (new Settings())->load();
+        return true;
+    }
+
+    public function getOwnedGames() {
+		return $this->repo->getOwned(User::current());
+    }
+
+    public function getStatus() {
+        $game = $this->repo->get(self::current());
+    }
+
 
     public function getIdByName(string $name) {
         return $this->repo->getIdByName($name, User::current());
