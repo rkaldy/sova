@@ -17,13 +17,13 @@ class RestHandler {
 		$repo = $model->repo();
 
 		switch ($method) {
-			case "GET": 	$gameId = Game::selected() ? Game::current() : null;
-							if (isset($params["page"]) && isset($params["pageSize"])) {
+			case "GET": 	if (isset($params["page"]) && isset($params["pageSize"])) {
 								$from = ($params["page"] - 1) * $params["pageSize"];
 								$limit = $params["pageSize"];
-								return $repo->list($gameId, $from, $limit);
+								$data = $repo->list(Game::current(), $from, $limit);
+								return ["data" => $data, "itemsCount" => count($data)];
 							} else {
-								return $repo->list($gameId);
+								return $repo->list(Game::current());
 							}
 			case "POST":	$model->prepare($obj);
 							$repo->create($obj);

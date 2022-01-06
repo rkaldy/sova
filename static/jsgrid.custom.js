@@ -16,7 +16,7 @@ codeValidatorReq = {
 
 
 ajaxErrorHandler = function(jqXHR) {
-	resp = JSON.parse(jqXHR.responseText);
+	var resp = JSON.parse(jqXHR.responseText);
 	switch (jqXHR.status) {
 		case 400: alert('Neznámá funkce: ' + resp.error); break;
 		case 401: window.location.redirect('?page=login'); break;
