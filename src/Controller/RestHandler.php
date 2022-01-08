@@ -14,24 +14,21 @@ class RestHandler {
 			throw new HttpException(400, "Unknown resource: '$resource'");
 		}
 		$model = new $modelClass();
-		$repo = $model->repo();
 
 		switch ($method) {
 			case "GET": 	if (isset($params["page"]) && isset($params["pageSize"])) {
 								$from = ($params["page"] - 1) * $params["pageSize"];
 								$limit = $params["pageSize"];
-								$data = $repo->list(Game::current(), $from, $limit);
+								$data = $model->list($from, $limit);
 								return ["data" => $data, "itemsCount" => count($data)];
 							} else {
-								return $repo->list(Game::current());
+								return $model->list();
 							}
-			case "POST":	$model->prepare($obj);
-							$repo->create($obj);
+			case "POST":	$model->create($obj);
 							break;
-			case "PUT":		$model->prepare($obj);
-							$repo->update($obj);
+			case "PUT":		$model->update($obj);
 							break;
-			case "DELETE":	$repo->delete($obj);
+			case "DELETE":	$model->delete($obj);
 							break;
 			default:		throw new HttpException(405);
 		}

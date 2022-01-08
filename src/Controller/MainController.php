@@ -15,7 +15,7 @@ use Sova\Model\Text;
 class MainController {
 
 	const ACTIONS_PUBLIC = ["login"];
-    const ACTIONS_DURING_GAME = ["code", "applyhint"];
+	const ACTIONS_DURING_GAME = ["code", "applyhint"];
 
 	public function process(Request $req, array $path): Response {
 		if (empty($path)) {
@@ -35,7 +35,7 @@ class MainController {
 		$view->addField("action", $action);
 		if (Team::logged()) {
 			$view->addField("team", Team::currentName());
-            $view->addField("game", Game::currentName());
+			$view->addField("game", Game::currentName());
 		}
 
 		$output = $view->render("main-layout");
@@ -90,7 +90,7 @@ class MainController {
 
 	public function messages($params, $data) {
 		$page = isset($params["page"]) ? $params["page"] : 1;
-		list($messages, $count) = (new Message())->listForTeam($page, 20);
+		list($messages, $count) = (new Message())->listForTeam(($page - 1) * 20, 20);
 		return new View("main/messages", ["messages" => $messages, "totalCount" => $count, "page" => $page]);
 	}
 

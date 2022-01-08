@@ -18,4 +18,22 @@ class ModelBase {
 	}
 
 	public function prepare(array &$obj) {}
+
+	public function list(int $from = null, $limit = null) {
+		return $this->repo->list(Game::current(), $from, $limit);		
+	}
+
+	public function create(array &$obj) {
+		$this->prepare($obj);
+		$this->repo->create($obj);
+	}
+
+	public function update(array &$obj) {
+		$this->prepare($obj);
+		$this->repo->update($obj);
+	}
+
+	public function delete(array &$obj) {
+		$this->repo->delete($obj);
+	}
 }

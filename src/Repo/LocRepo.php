@@ -57,11 +57,11 @@ class LocRepo extends PointRepo {
 	}
 
 	
-	public function hasPreviousCiphers(int $locId) {
+	public function hasPreviousPoints(int $locId) {
 		return $this->db->equery("SELECT COUNT(*) FROM step WHERE to_point_id = ?", $locId) != 0;
 	}
 
-	public function previousCipherSolved(int $teamId, int $locId) {
+	public function previousPointsVisited(int $teamId, int $locId) {
 		return $this->db->equery("
 			SELECT COUNT(*) FROM loc
 			JOIN step ON loc.point_id = step.to_point_id
@@ -81,7 +81,7 @@ class LocRepo extends PointRepo {
 		", $locId);
 	}
 
-	public function visitedAllLocsWith(int $teamId, int $cipherId) {
+	public function visitedAllLocsWithCipher(int $teamId, int $cipherId) {
 		return $this->db->equery("
 			SELECT COUNT(*) FROM step
 			LEFT JOIN progress ON step.from_point_id = progress.point_id AND progress.team_id = ?

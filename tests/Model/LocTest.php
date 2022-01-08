@@ -19,19 +19,19 @@ class LocTest extends GameTestBase {
 	}
 
 	function testCheckPreviousCipher() {
-		$this->assertFalse($this->loc->checkPreviousCiphersSolved(2));
+		$this->assertFalse($this->loc->checkPreviousPointsVisited(2));
 		$this->progressRepo->create(1, 11);
-		$this->assertTrue($this->loc->checkPreviousCiphersSolved(2));
+		$this->assertTrue($this->loc->checkPreviousPointsVisited(2));
 	}
 		
 	function testCheckPreviousNoCipher() {
-		$this->assertTrue($this->loc->checkPreviousCiphersSolved(1));
+		$this->assertTrue($this->loc->checkPreviousPointsVisited(1));
 	}
 	
 	function testCheckPreviousMultipleCiphers() {
-		$this->assertFalse($this->loc->checkPreviousCiphersSolved(5));
+		$this->assertFalse($this->loc->checkPreviousPointsVisited(5));
 		$this->progressRepo->create(1, 14);
-		$this->assertTrue($this->loc->checkPreviousCiphersSolved(5));
+		$this->assertTrue($this->loc->checkPreviousPointsVisited(5));
 	}
 
 	

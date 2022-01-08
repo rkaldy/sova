@@ -27,10 +27,6 @@ class Team extends ModelBase {
         session_destroy(); 
     }
 
-	public function list() {
-		return $this->repo->list(Game::current());
-	}
-
 	public static function logged() 	 { return isset($_SESSION['team_id']); }
 	public static function current() 	 { return $_SESSION['team_id']; }
 	public static function currentName() { return $_SESSION['team_name']; }

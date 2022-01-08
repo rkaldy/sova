@@ -13,16 +13,16 @@ class Message extends ModelBase {
 		}
 	}
 
-	public function list(int $page = 1, int $pageSize = 9999) {
-		$messages = $this->repo->list(Game::current(), ($page - 1) * $pageSize, $pageSize);
+	public function list($from = 0, $limit = 999999) {
+		$messages = $this->repo->list(Game::current(), $from, $limit);
 		$this->addDirectionStr($messages);
-		return [$messages, $this->repo->count(Game::current())];
+		return $messages;
 	}
 
-	public function listForTeam(int $page = 1, $pageSize = 9999) {
-		$messages = $this->repo->listForTeam(Team::current(), ($page - 1) * $pageSize, $pageSize);
+	public function listForTeam($from = 0, $limit = 999999) {
+		$messages = $this->repo->listForTeam(Team::current(), $from, $limit);
 		$this->addDirectionStr($messages);
-		return [$messages, $this->repo->countForTeam(Team::current())];
+		return $messages;
 	}
 
 
