@@ -21,6 +21,19 @@ class Loc extends ModelBase {
 	}
 
 
+	public static function buildNextLocMessage(array &$ret, array $next) {
+		if (count($next) == 1) {
+			$ret[] = new Text("loc.next", $next[0]["description"]);
+		} else if (count($next) > 1) {
+			$nextLocs = [];
+			foreach ($next as $loc) {
+				$nextLocs[] = $loc["description"];
+			}
+			$ret[] = new Text("loc.next.multi", join("; ", $nextLocs));
+		}
+	}
+
+
 	public function visit(array $loc, string $code) {
 		if (!$this->checkPreviousPointsVisited($loc["point_id"])) {
 			return new Text("code.unknown", $code);
@@ -32,14 +45,21 @@ class Loc extends ModelBase {
 		}
 		
 		$hint = new Hint();
-		foreach ($this->repo->getNextCiphers($loc["point_id"]) as $cipher) {
-			if ($this->repo->visitedAllLocsWithCipher(Team::current(), $cipher["point_id"])) {
-				$hint->amend($cipher);
+		$nextLocs = [];
+		foreach ($this->repo->getNextPoints($loc["point_id"]) as $point) {
+			if ($point["is_cipher"]) {
+				if ($this->repo->visitedAllLocsWithCipher(Team::current(), $point["point_id"])) {
+					$hint->amend($point);
+				}
+			} else {
+				$nextLocs[] = $point;
 			}
 		}
-
-		list($rank, $firstTeam, $firstTime) = $progress->getRank($loc);
 		
-		return new Text("loc.visited", $loc["name"], $rank, $firstTeam, $firstTime);
+		list($rank, $firstTeam, $firstTime) = $progress->getRank($loc);
+		$ret = [new Text("loc.visited", $loc["name"], $rank, $firstTeam, $firstTime)];
+
+		Loc::buildNextLocMessage($ret, $nextLocs);
+		return $ret;
 	}
 }

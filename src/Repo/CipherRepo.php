@@ -21,14 +21,14 @@ class CipherRepo extends PointRepo {
 
 	public function get(int $id) {
 		$cipher = $this->db->squery(self::SQL." WHERE cipher.point_id = ?", $id);
-		$this->flattenPrevNext($cipher);
+		self::flattenPrevNext($cipher);
 		return $cipher;
 	}
 
 	public function getByName(string $name, int $gameId) {
 		$cipher = $this->db->squery(self::SQL." WHERE name = ? and point.game_id = ?", $name, $gameId);
 		if (isset($cipher["point_id"])) {
-			$this->flattenPrevNext($cipher);
+			self::flattenPrevNext($cipher);
 			return $cipher;
 		} else {		
 			return null;
@@ -58,6 +58,7 @@ class CipherRepo extends PointRepo {
 
 
 	protected function addPrevNextLocs($cipher) {
+		$this->db->execute("DELETE FROM step WHERE from_point_id = :point_id OR to_point_id = :point_id", $cipher);
 		if (isset($cipher["prev"])) {
 			foreach ($cipher["prev"] as $prev) {
 				$this->db->execute("INSERT INTO step (from_point_id, to_point_id) VALUES (?, ?)", array($prev, $cipher["point_id"]), true);
@@ -87,7 +88,6 @@ class CipherRepo extends PointRepo {
 		$this->db->execute("UPDATE point SET name = :name WHERE point_id = :point_id", $cipher);
 		$this->db->execute("UPDATE cipher SET name_int = :name_int, solution_timeout = :solution_timeout, hint = :hint, hint_timeout = :hint_timeout WHERE point_id = :point_id", $cipher);
 		$this->db->execute("UPDATE code SET code = :code WHERE point_id = :point_id", $cipher);
-		$this->db->execute("DELETE FROM step WHERE from_point_id = :point_id OR to_point_id = :point_id", $cipher);
 		$this->addPrevNextLocs($cipher);
 	}
 
@@ -101,6 +101,7 @@ class CipherRepo extends PointRepo {
 			SELECT COUNT(*) 
 			FROM step AS prev
 			JOIN step AS prev2 ON prev2.to_point_id = prev.from_point_id
+			JOIN cipher ON cipher.point_id = prev2.from_point_id
 			WHERE prev.to_point_id = ?
 		", $cipher["point_id"]) != 0;
 	}
@@ -110,7 +111,8 @@ class CipherRepo extends PointRepo {
 			SELECT COUNT(*)
 			FROM step AS prev
 			JOIN step AS prev2 ON prev2.to_point_id = prev.from_point_id
-			JOIN progress ON point_id = prev2.from_point_id
+			JOIN cipher ON cipher.point_id = prev2.from_point_id
+			JOIN progress ON progress.point_id = cipher.point_id
 			WHERE team_id = ? AND prev.to_point_id = ?
 		", $teamId, $cipher["point_id"]) != 0;
 	}

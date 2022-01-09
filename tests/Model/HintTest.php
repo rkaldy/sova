@@ -49,8 +49,8 @@ class HintTest extends GameTestBase {
 
 	function testApplyNoPrevious() {
 		$this->db->execute("INSERT INTO hint (team_id, unihint_id, cipher_id) VALUES (1, 2, NULL)");
-		$resp = $this->hint->apply("S3a");
-		$this->assertEquals(new Text("cipher.no-previous-cipher", "S3a"), $resp);
+		$resp = $this->hint->apply("S4a");
+		$this->assertEquals(new Text("cipher.no-previous-cipher", "S4a"), $resp);
 	}
 
 	function testApplyNoPreviousLoc() {
@@ -62,8 +62,8 @@ class HintTest extends GameTestBase {
 
 	function testApplyUnknownCipher() {
 		$this->db->execute("INSERT INTO hint (team_id, unihint_id, cipher_id) VALUES (1, 2, NULL)");
-		$resp = $this->hint->apply("S4");
-		$this->assertEquals(new Text("cipher.unknown", "S4"), $resp);
+		$resp = $this->hint->apply("S5");
+		$this->assertEquals(new Text("cipher.unknown", "S5"), $resp);
 	}
 	
 	function testApplyNoHint() {

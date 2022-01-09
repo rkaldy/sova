@@ -38,7 +38,7 @@ class ProgressRepo extends RepoBase {
 		return $this->db->aquery("
 			SELECT 
 				team.name, 
-				IFNULL(DATE_FORMAT(last_loc.finish_time, '%H:%i:%s'), '-') AS finish_time, 
+				IFNULL(DATE_FORMAT(finish.time, '%H:%i:%s'), '-') AS finish_time, 
 				IFNULL(ciphers.count, 0) AS solved, 
 				IFNULL(DATE_FORMAT(last_cipher.time, '%H:%i:%s'), '-') AS last_cipher_time, 
 				IFNULL(last_loc.name, '-') AS last_loc
@@ -62,17 +62,22 @@ class ProgressRepo extends RepoBase {
 				WHERE rank = 1
 			) last_cipher ON last_cipher.team_id = team.team_id
 			LEFT JOIN (
-				SELECT team_id, name, time, IF(ISNULL(value), NULL, time) AS finish_time FROM (
-					SELECT team_id, point.name, time, settings.value, ROW_NUMBER() OVER (PARTITION BY team_id ORDER BY time DESC) AS rank
+				SELECT team_id, name FROM (
+					SELECT team_id, point.name, time, ROW_NUMBER() OVER (PARTITION BY team_id ORDER BY time DESC) AS rank
 					FROM progress
 					NATURAL JOIN point
 					NATURAL JOIN loc
-					LEFT JOIN settings ON settings.game_id = point.game_id AND settings.name = 'locFinish' AND settings.value = loc.point_id
-					WHERE point.game_id = :game_id
+					WHERE game_id = :game_id
 				) loctimes
 				WHERE rank = 1
 			) last_loc ON last_loc.team_id = team.team_id
-			ORDER BY -last_loc.finish_time DESC, ciphers.count DESC, last_cipher.time, team.team_id	
+			LEFT JOIN (
+				SELECT team_id, progress.time
+				FROM settings
+				JOIN progress ON progress.point_id = settings.value
+				WHERE settings.game_id = :game_id AND settings.name = 'locFinish'
+			) finish ON finish.team_id = team.team_id
+			ORDER BY -finish.time DESC, ciphers.count DESC, last_cipher.time, team.team_id	
 		", ["game_id" => $gameId]);
 	}
 }

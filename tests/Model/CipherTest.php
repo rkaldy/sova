@@ -17,9 +17,9 @@ class CipherTest extends GameTestBase {
 	}
 
 	function testCheckSomePreviousCipherSolved() {
-		$cipher = $this->cipherRepo->get(14);
+		$cipher = $this->cipherRepo->get(15);
 		$this->assertFalse($this->cipher->isReachable($cipher));
-		$this->progressRepo->create(1, 13);
+		$this->progressRepo->create(1, 14);
 		$this->assertTrue($this->cipher->isReachable($cipher));
 	}
 

@@ -20,18 +20,36 @@ class LocRepo extends PointRepo {
 			LEFT JOIN step AS next ON next.from_point_id = loc.point_id
 			WHERE loc.point_id = ?
 		", $id);
-		$this->flattenPrevNext($loc);
+		self::flattenPrevNext($loc);
 		return $loc;
 	}
 
 	public function list($gameId) {
-		return $this->db->aquery("
-			SELECT loc.point_id, name, description, end_time, code FROM loc
+		$locs = $this->db->aquery("
+			SELECT loc.*, point.name, code,
+			  GROUP_CONCAT(DISTINCT next.point_id ORDER BY next.point_id SEPARATOR ',') AS next			
+			FROM loc
 			NATURAL JOIN point
 			NATURAL JOIN code
+			LEFT JOIN step ON step.from_point_id = loc.point_id
+			LEFT JOIN loc next ON next.point_id = step.to_point_id
 			WHERE point.game_id = ? 
+			GROUP BY loc.point_id
 			ORDER BY name
 		", $gameId);
+		foreach ($locs as &$loc) {
+			self::flattenPrevNext($loc);
+		};
+		return $locs;
+	}
+
+	protected function addNextLocs(array &$loc) {
+		$this->db->execute("DELETE FROM step WHERE from_point_id = :point_id AND EXISTS (SELECT 1 FROM loc WHERE point_id = step.to_point_id)", $loc);
+		if (isset($loc["next"])) {
+			foreach ($loc["next"] as $next) {
+				$this->db->execute("INSERT INTO step (from_point_id, to_point_id) VALUES (?, ?)", array($loc["point_id"], $next), true);
+			}
+		}
 	}
 
 	function create(array &$loc) {
@@ -40,6 +58,7 @@ class LocRepo extends PointRepo {
 			$loc["point_id"] = $this->db->lastInsertId();
 			$this->db->execute("INSERT INTO loc (point_id, description, end_time) VALUES (:point_id, :description, :end_time)", $loc, true);
 			$this->db->execute("INSERT INTO code (game_id, code, point_id) VALUES (:game_id, :code, :point_id)", $loc, true);
+			$this->addNextLocs($loc);
 		} catch (DBException $ex) {
 			$this->db->execute("DELETE FROM point WHERE point_id = :point_id", $loc);
 			throw $ex;
@@ -50,6 +69,7 @@ class LocRepo extends PointRepo {
 		$this->db->execute("UPDATE point SET name = :name WHERE point_id = :point_id", $loc);
 		$this->db->execute("UPDATE loc SET description = :description, end_time = :end_time WHERE point_id = :point_id", $loc);
 		$this->db->execute("UPDATE code SET code = :code WHERE point_id = :point_id", $loc);
+		$this->addNextLocs($loc);
 	}
 
 	function delete(array $loc) {
@@ -63,21 +83,21 @@ class LocRepo extends PointRepo {
 
 	public function previousPointsVisited(int $teamId, int $locId) {
 		return $this->db->equery("
-			SELECT COUNT(*) FROM loc
-			JOIN step ON loc.point_id = step.to_point_id
+			SELECT COUNT(*) FROM step
 			JOIN progress ON progress.point_id = step.from_point_id
-			WHERE team_id = ? AND loc.point_id = ?
+			WHERE team_id = ? AND step.to_point_id = ?
 		", $teamId, $locId) != 0;
 	}
 	
-	public function getNextCiphers(int $locId) {
+	public function getNextPoints(int $locId) {
 		return $this->db->aquery("
-			SELECT point.*, cipher.*, code.code 
+			SELECT point.*, loc.*, cipher.*, code.code, ISNULL(loc.point_id) AS is_cipher
 			FROM point
-			NATURAL JOIN cipher
-			NATURAL JOIN code
+			LEFT JOIN cipher ON point.point_id = cipher.point_id
+			LEFT JOIN loc ON point.point_id = loc.point_id
+			JOIN code ON point.point_id = code.point_id
 			JOIN step ON step.to_point_id = point.point_id
-			WHERE from_point_id = ?
+			WHERE step.from_point_id = ?
 		", $locId);
 	}
 

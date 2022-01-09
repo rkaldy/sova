@@ -1277,7 +1277,6 @@
 
             var $row = item ? this.rowByItem(item) : this._editingRow;
             editedItem = editedItem || this._getValidatedEditedItem();
-			console.log(editedItem);
 
             if(!editedItem)
                 return;
@@ -1295,7 +1294,6 @@
                 updatingItemIndex = this._itemIndex(updatingItem),
                 updatedItem = $.extend(false, {}, updatingItem, editedItem);
 
-            console.log(updatedItem);
 			var args = this._callEventHandler(this.onItemUpdating, {
                 row: $updatingRow,
                 item: updatedItem,

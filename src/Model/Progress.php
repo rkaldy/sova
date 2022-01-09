@@ -7,7 +7,7 @@ class Progress extends ModelBase {
 		return $this->repo->create(Team::current(), $obj["point_id"]);
 	}
 
-	public function getRank(array &$obj) {
+	public function getRank(array $obj) {
 		$rank = $this->repo->rankAtPoint(Team::current(), $obj["point_id"]);
 		$firstTeam = $this->repo->firstTeamAtPoint($obj["point_id"]);
 		return [$rank, $firstTeam["name"], $firstTeam["time"]];

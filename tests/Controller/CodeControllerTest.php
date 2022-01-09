@@ -83,14 +83,14 @@ class CodeControllerTest extends GameTestBase {
 	}
 
 	function testDeletePendingHints() {
-		$this->progressRepo->create(1, 13);
-		$this->assertEquals("Dostali jste se na stanoviště Turniket. Jste tu 1. První tu byl tým Parta Nic v ".$this->dbNow().".", CodeController::process("medved"));
+		$this->progressRepo->create(1, 14);
+		$this->assertEquals("Dostali jste se na stanoviště 4. Jste tu 1. První tu byl tým Parta Nic v ".$this->dbNow().".", CodeController::process("tabulka"));
 		$this->assertEquals([
-			"Přišel čas na nápovědu k šifře S3a: Křižovatka, železnice, Suchý.",
-			"Přišel čas na nápovědu k šifře S3b: Jedničky a nuly.",
-			"Přišel čas na řešení šifry S3a: KALENDAR"
+			"Přišel čas na nápovědu k šifře S4a: Křižovatka, železnice, Suchý.",
+			"Přišel čas na nápovědu k šifře S4b: Jedničky a nuly.",
+			"Přišel čas na řešení šifry S4a: KALENDAR"
 		], $this->getFutureMessages());
-		$this->assertEquals("Úspěšně jste vyluštili šifru S3b. Jste 1. První ji vyluštil tým Parta Nic v ".$this->dbNow().". Poloha dalšího stanoviště je: Kóta 1019 nad Pražskou boudou.", CodeController::process("skluzavka"));
+		$this->assertEquals("Úspěšně jste vyluštili šifru S4b. Jste 1. První ji vyluštil tým Parta Nic v ".$this->dbNow().". Poloha dalšího stanoviště je: Kóta 1019 nad Pražskou boudou.", CodeController::process("skluzavka"));
 		$this->assertEmpty($this->getFutureMessages());
 	}
 
@@ -124,7 +124,7 @@ class CodeControllerTest extends GameTestBase {
 		}
 		return $ranks;
 	}
-
+ 
 	function testRankTotal() {
 		$this->db->execute("INSERT INTO team (team_id, game_id, name) VALUES (3, 1, 'abpopa')");
 		
@@ -187,24 +187,26 @@ class CodeControllerTest extends GameTestBase {
 			["name" => "abpopa", "solved" => 3, "last_loc" => "Turniket", "finish_time" => "-"],
 			["name" => "Parta Nic", "solved" => 2, "last_loc" => "Start", "finish_time" => "-"],
 		], self::stripTimes($this->progressRepo->rankTotal(1)));
-		
+
+		$this->sendCode(3, "priboj");
 		$this->sendCode(3, "kalendar");
 		$this->sendCode(3, "skluzavka");
 		$this->sendCode(1, "kobliha");
+		$this->sendCode(1, "priboj");
 		$this->sendCode(1, "skluzavka");
 		$this->sendCode(1, "salvej");
 		$this->assertEquals([
-			["name" => "abpopa", "solved" => 5, "last_loc" => "Turniket", "finish_time" => "-"],
-			["name" => "Parta Nic", "solved" => 4, "last_loc" => "Cíl", "finish_time" => "-"],
+			["name" => "abpopa", "solved" => 6, "last_loc" => "4", "finish_time" => "-"],
+			["name" => "Parta Nic", "solved" => 5, "last_loc" => "Cíl", "finish_time" => "-"],
 			["name" => "Redwool", "solved" => 3, "last_loc" => "1a", "finish_time" => "-"],
 		], self::stripTimes($this->progressRepo->rankTotal(1)));
 
 		$settings = new Settings();
-		$settings->set(["locFinish" => 5, "locVisitMandatory" => true]);
+		$settings->set(["locFinish" => 7, "locVisitMandatory" => true]);
 		$settings->load();
 		$this->assertEquals([
-			["name" => "Parta Nic", "solved" => 4, "last_loc" => "Cíl", "finish_time" => "+"],
-			["name" => "abpopa", "solved" => 5, "last_loc" => "Turniket", "finish_time" => "-"],
+			["name" => "Parta Nic", "solved" => 5, "last_loc" => "Cíl", "finish_time" => "+"],
+			["name" => "abpopa", "solved" => 6, "last_loc" => "4", "finish_time" => "-"],
 			["name" => "Redwool", "solved" => 3, "last_loc" => "1a", "finish_time" => "-"],
 		], self::stripTimes($this->progressRepo->rankTotal(1)));
 	}

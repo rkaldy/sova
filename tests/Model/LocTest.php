@@ -29,9 +29,9 @@ class LocTest extends GameTestBase {
 	}
 	
 	function testCheckPreviousMultipleCiphers() {
-		$this->assertFalse($this->loc->checkPreviousPointsVisited(5));
-		$this->progressRepo->create(1, 14);
-		$this->assertTrue($this->loc->checkPreviousPointsVisited(5));
+		$this->assertFalse($this->loc->checkPreviousPointsVisited(7));
+		$this->progressRepo->create(1, 15);
+		$this->assertTrue($this->loc->checkPreviousPointsVisited(7));
 	}
 
 	
@@ -48,7 +48,17 @@ class LocTest extends GameTestBase {
 
 	function testVisit() {
 		$loc = $this->locRepo->get(1);
-		$this->assertEquals(new Text("loc.visited", "Start", 1, "Parta Nic", $this->dbNow()), $this->loc->visit($loc, "KYBL"));
+		$this->assertEquals([new Text("loc.visited", "Start", 1, "Parta Nic", $this->dbNow())], $this->loc->visit($loc, "KYBL"));
 		$messages = $this->db->aquery("SELECT direction, text FROM message WHERE team_id = 1 ORDER BY time");
+	}
+
+	function testNextLoc() {
+		$this->progressRepo->create(1, 13);
+		$loc = $this->locRepo->get(4);
+		$this->assertEquals([
+			new Text("loc.visited", "Turniket", 1, "Parta Nic", $this->dbNow()),
+			new Text("loc.next", "Kolínská bouda")
+		], $this->loc->visit($loc, "MEDVED")
+		);
 	}
 }
