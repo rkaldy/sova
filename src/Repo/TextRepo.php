@@ -7,7 +7,7 @@ class TextRepo extends RepoBase {
 		return $this->db->aquery("SELECT text_id, code, text FROM text WHERE game_id = ?", $gameId);
 	}
 
-	public function create(array $gameId) {
+	public function update(array $text) {
 		$this->db->execute("UPDATE text SET text = :text WHERE text_id = :text_id", $text);
 	}
 
