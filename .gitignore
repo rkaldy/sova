@@ -8,3 +8,6 @@ package-lock.json
 config.php*
 !config.php.sample
 deploy
+MIGRATE
+TODO
+emulator.php

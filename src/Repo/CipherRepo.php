@@ -145,4 +145,12 @@ class CipherRepo extends PointRepo {
 				WHERE step1.from_point_id = ?
 			)", [$teamId, $cipher["point_id"]]);
 	}
+
+	public function solvedCipherCount(int $teamId) {
+		return $this->db->equery("
+			SELECT COUNT(*) FROM progress
+			JOIN cipher ON cipher.point_id = progress.point_id
+			WHERE team_id = ?
+		", $teamId);
+	}
 }

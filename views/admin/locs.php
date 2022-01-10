@@ -15,6 +15,7 @@ $(function() {
 			{ name: "name", title: "Název", type: "text", width: 20 , validate: "required" },
 			{ name: "description", title: "Popis", type: "textarea", width: 80 },
 			{ name: "code", title: "Vstupní kód", type: "text", width: 20, validate: codeValidator },
+			{ name: "solved_cipher_count", title: "Počet vyřešených šifer", type: "number", width: 15 },
 			{ name: "end_time", title: "Deadline", type: "datetime", width: 30 },
 			{ name: "next", title: "Následující stanoviště", type: "multiselect", width: 30, items: locs, valueField: "point_id", textField: "name", longTextField: "description" },
 			{ type: "control", width: 5 }
@@ -37,6 +38,10 @@ $(function() {
   <tr>
     <th>Vstupní kód</th>
     <td>Kód, který týmy zadají do Sovy po příchodu na stanoviště. Necháte-li prázdný, vygeneruje se náhodné slovo.</td>
+  </tr>
+  <tr>
+    <th>Počet vyřešených šifer</th>
+    <td>Jakmile kterýkoliv tým vyluští daný počet šifer, Sova mu odešle polohu tohoto stanoviště. Typické použití pro cílové stanoviště.</td>
   </tr>
   <tr>
     <th>Deadline</th>

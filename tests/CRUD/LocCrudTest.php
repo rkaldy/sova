@@ -17,9 +17,9 @@ class LocCrudTest extends CrudTestBase {
 	function testCreate() {
 		$loc = $this->create(array("name" => "Turniket", "code" => "ovce"));
 		$this->assertEquals(array(
-			array("point_id" => 1, "name" => "1a", "description" => null, "end_time" => null, "code" => "PRALINKA"),
-			array("point_id" => 2, "name" => "1b", "description" => null, "end_time" => null, "code" => "KYBL"),
-			array("point_id" => $loc["point_id"], "name" => "Turniket", "description" => null, "end_time" => null, "code" => "OVCE")
+			array("point_id" => 1, "name" => "1a", "description" => null, "solved_cipher_count" => null, "end_time" => null, "code" => "PRALINKA", "prev" => [], "next" => []),
+			array("point_id" => 2, "name" => "1b", "description" => null, "solved_cipher_count" => null, "end_time" => null, "code" => "KYBL", "prev" => [], "next" => []),
+			array("point_id" => $loc["point_id"], "name" => "Turniket", "description" => null, "solved_cipher_count" => null, "end_time" => null, "code" => "OVCE", "prev" => [], "next" => [])
 		), $this->list());
 		$this->assertEquals(3, $this->db->equery("SELECT COUNT(*) FROM point"));
 		$this->assertEquals(3, $this->db->equery("SELECT COUNT(*) FROM loc"));
@@ -34,8 +34,8 @@ class LocCrudTest extends CrudTestBase {
 			$this->assertEquals(1062, $ex->getCode());
 		}
 		$this->assertEquals(array(
-			array("point_id" => 1, "name" => "1a", "description" => null, "end_time" => null, "code" => "PRALINKA"),
-			array("point_id" => 2, "name" => "1b", "description" => null, "end_time" => null, "code" => "KYBL"),
+			array("point_id" => 1, "name" => "1a", "description" => null, "solved_cipher_count" => null, "end_time" => null, "code" => "PRALINKA", "prev" => [], "next" => []),
+			array("point_id" => 2, "name" => "1b", "description" => null, "solved_cipher_count" => null, "end_time" => null, "code" => "KYBL", "prev" => [], "next" => []),
 		), $this->list());
 		$this->assertEquals(2, $this->db->equery("SELECT COUNT(*) FROM point"));
 		$this->assertEquals(2, $this->db->equery("SELECT COUNT(*) FROM loc"));
@@ -45,15 +45,15 @@ class LocCrudTest extends CrudTestBase {
 	function testUpdate() {
 		$this->update(array("point_id" => 2, "name" => "Turniket", "code" => "VEDRO"));
 		$this->assertEquals(array(
-			array("point_id" => 1, "name" => "1a", "description" => null, "end_time" => null, "code" => "PRALINKA"),
-			array("point_id" => 2, "name" => "Turniket", "description" => null, "end_time" => null, "code" => "VEDRO")
+			array("point_id" => 1, "name" => "1a", "description" => null, "solved_cipher_count" => null, "end_time" => null, "code" => "PRALINKA", "prev" => [], "next" => []),
+			array("point_id" => 2, "name" => "Turniket", "description" => null, "solved_cipher_count" => null, "end_time" => null, "code" => "VEDRO", "prev" => [], "next" => [])
 		), $this->list());
 	}
 	
 	function testDelete() {
 		$this->delete(array("point_id" => 2));
 		$this->assertEquals(array(
-			array("point_id" => 1, "name" => "1a", "description" => null, "end_time" => null, "code" => "PRALINKA")
+			array("point_id" => 1, "name" => "1a", "description" => null, "solved_cipher_count" => null, "end_time" => null, "code" => "PRALINKA", "prev" => [], "next" => [])
 		), $this->list());
 		$this->assertEquals(1, $this->db->equery("SELECT COUNT(*) FROM point"));
 		$this->assertEquals(1, $this->db->equery("SELECT COUNT(*) FROM loc"));

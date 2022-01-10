@@ -14,6 +14,9 @@ class CipherTest extends GameTestBase {
 		parent::setUp();
 		$this->cipher = new Cipher();
 		$this->cipherRepo = new CipherRepo();
+
+		$this->db->execute("INSERT INTO point (point_id, game_id, name) VALUES (20, 1, 'Váza')");
+		$this->db->execute("INSERT INTO loc (point_id, description, solved_cipher_count) VALUES (20, 'Vrchol Sněžky', 2)");
 	}
 
 	function testCheckSomePreviousCipherSolved() {
@@ -54,9 +57,22 @@ class CipherTest extends GameTestBase {
 	function testSolve() {
 		$cipher = $this->cipherRepo->get(11);
 		$this->assertEquals([
-			new Text("cipher.solved", "S1a", 1, "Parta Nic", $this->dbNow()), 
+			new Text("cipher.solved", "S1a", 1, "Parta Nic", $this->dbNow(), 1), 
 			new Text("loc.next", "Vrchol Bílé hory")
 		], $this->cipher->solve($cipher, "ABERACE"));
 	}
 
+	function testSolvedCipherCount() {
+		$cipher = $this->cipherRepo->get(11);
+		$this->assertEquals([
+			new Text("cipher.solved", "S1a", 1, "Parta Nic", $this->dbNow(), 1), 
+			new Text("loc.next", "Vrchol Bílé hory")
+		], $this->cipher->solve($cipher, "ABERACE"));
+		$cipher = $this->cipherRepo->get(12);
+		$this->assertEquals([
+			new Text("cipher.solved", "S1b", 1, "Parta Nic", $this->dbNow(), 2), 
+			new Text("loc.next", "Vrchol Černé hory"),
+			new Text("loc.by-solved-ciphers", "Váza", "Vrchol Sněžky")
+		], $this->cipher->solve($cipher, "ZABRADLI"));
+	}
 }

@@ -11,7 +11,7 @@ class LocRepo extends PointRepo {
 
 	public function get(int $id) {
 		$loc = $this->db->squery("
-			SELECT loc.point_id, name, description, end_time, 
+			SELECT loc.*, point.name,
 			  GROUP_CONCAT(DISTINCT prev.from_point_id ORDER BY prev.from_point_id SEPARATOR ',') AS prev,
 			  GROUP_CONCAT(DISTINCT next.to_point_id ORDER BY next.to_point_id SEPARATOR ',') AS next
 			FROM loc 
@@ -56,7 +56,7 @@ class LocRepo extends PointRepo {
 		try {
 			$this->db->execute("INSERT INTO point (game_id, name) VALUES (:game_id, :name)", $loc, true);
 			$loc["point_id"] = $this->db->lastInsertId();
-			$this->db->execute("INSERT INTO loc (point_id, description, end_time) VALUES (:point_id, :description, :end_time)", $loc, true);
+			$this->db->execute("INSERT INTO loc (point_id, description, solved_cipher_count, end_time) VALUES (:point_id, :description, :solved_cipher_count, :end_time)", $loc, true);
 			$this->db->execute("INSERT INTO code (game_id, code, point_id) VALUES (:game_id, :code, :point_id)", $loc, true);
 			$this->addNextLocs($loc);
 		} catch (DBException $ex) {
@@ -67,7 +67,7 @@ class LocRepo extends PointRepo {
 
 	function update(array $loc) {
 		$this->db->execute("UPDATE point SET name = :name WHERE point_id = :point_id", $loc);
-		$this->db->execute("UPDATE loc SET description = :description, end_time = :end_time WHERE point_id = :point_id", $loc);
+		$this->db->execute("UPDATE loc SET description = :description, solved_cipher_count = :solved_cipher_count, end_time = :end_time WHERE point_id = :point_id", $loc);
 		$this->db->execute("UPDATE code SET code = :code WHERE point_id = :point_id", $loc);
 		$this->addNextLocs($loc);
 	}
@@ -107,6 +107,15 @@ class LocRepo extends PointRepo {
 			LEFT JOIN progress ON step.from_point_id = progress.point_id AND progress.team_id = ?
 			WHERE step.to_point_id = ? AND progress.team_id IS NULL
 		", $teamId, $cipherId) == 0;
+	}
+
+	public function getBySolvedCipherCount(int $gameId, int $solved) {
+		return $this->db->aquery("
+			SELECT point.name, loc.*
+			FROM loc
+			NATURAL JOIN point
+			WHERE game_id = ? AND solved_cipher_count = ?
+		", $gameId, $solved);
 	}
 }
 

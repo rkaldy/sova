@@ -11,14 +11,17 @@ class Cipher extends ModelBase {
 		(new Code())->prepare($cipher["code"]);
 	}
 
-	public function checkSomePreviousCipherSolved(array $cipher) {
-	}
-
 	public function isReachable(array $cipher) {
 		if (Settings::isLocVisitMandatory()) {
 			return $this->repo->previousLocsVisited(Team::current(), $cipher);
 		} else {
 			return !$this->repo->hasPreviousCiphers($cipher) || $this->repo->previousCiphersSolved(Team::current(), $cipher);
+		}
+	}
+
+	public function checkSolvedCipherCount(array &$ret, int $solved) {
+		foreach ((new LocRepo())->getBySolvedCipherCount(Game::current(), $solved) as $loc) {
+			$ret[] = new Text("loc.by-solved-ciphers", $loc["name"], $loc["description"]);
 		}
 	}
 
@@ -39,10 +42,13 @@ class Cipher extends ModelBase {
 
 		$this->repo->deletePendingHintsForParallelCiphers(Team::current(), $cipher);
 
+		$solved = $this->repo->solvedCipherCount(Team::current());
 		list($rank, $firstTeam, $firstTime) = $progress->getRank($cipher);
-		$ret = [new Text("cipher.solved", $cipher["name"], $rank, $firstTeam, $firstTime)];
+		$ret = [new Text("cipher.solved", $cipher["name"], $rank, $firstTeam, $firstTime, $solved)];
 
 		Loc::buildNextLocMessage($ret, $this->repo->getNextLocs($cipher));
+		$this->checkSolvedCipherCount($ret, $solved);
+
 		return $ret;
 	}
 }
