@@ -2,6 +2,7 @@
 namespace Sova;
 
 use Sova\Repo\ProgressRepo;
+use Sova\Model\Progress;
 
 class GameTestBase extends TestBase {
 
@@ -63,6 +64,7 @@ class GameTestBase extends TestBase {
 		$this->db->execute("INSERT INTO step (from_point_id, to_point_id) VALUES (1, 11), (1, 12), (11, 2), (12, 3), (2, 13), (3, 13), (13, 4), (4, 5), (5, 14), (14, 6), (6, 15), (6, 16), (15, 7), (16, 7)");
 
 		$this->progressRepo = new ProgressRepo();
+		Progress::resetFakeTime();
 		$_SESSION["team_id"] = 1;
 	}
 }

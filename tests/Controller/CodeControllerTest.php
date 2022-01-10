@@ -5,6 +5,7 @@ use Sova\GameTestBase;
 use Sova\Model\Team;
 use Sova\Model\Message;
 use Sova\Model\Settings;
+use Sova\Model\Progress;
 use Sova\Repo\ProgressRepo;
 
 class CodeControllerTest extends GameTestBase {
@@ -13,15 +14,11 @@ class CodeControllerTest extends GameTestBase {
 
 	function setUp(): void {
 		parent::setUp();
-		$this->db->exec("ALTER TABLE progress CHANGE `time` `time` DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP");
-		$this->db->exec("ALTER TABLE message CHANGE `time` `time` DATETIME(6) NOT NULL DEFAULT CURRENT_TIMESTAMP");
 		$this->progressRepo = new ProgressRepo();
 	}
 
 	function tearDown(): void {
 		parent::tearDown();
-		$this->db->exec("ALTER TABLE progress CHANGE `time` `time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP");
-		$this->db->exec("ALTER TABLE message CHANGE `time` `time` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP");
 	}
 
 	function getFutureMessages() {
@@ -97,21 +94,20 @@ class CodeControllerTest extends GameTestBase {
 
 	private function sendCode(int $teamId, string $code) {
 		$_SESSION["team_id"] = $teamId;
+		Progress::addFakeTime(1);
 		return CodeController::process($code);
 	}
 
 	function testRank() {
 		$this->db->execute("INSERT INTO team (team_id, game_id, name) VALUES (3, 1, 'abpopa')");
 
-		$now = $this->dbNow();
-        $this->assertEquals("Dostali jste se na stanoviště Start. Jste tu 1. První tu byl tým Parta Nic v $now.", $this->sendCode(1, "pralinka"));
-        $this->assertEquals("Dostali jste se na stanoviště Start. Jste tu 2. První tu byl tým Parta Nic v $now.", $this->sendCode(3, "pralinka"));
-        $this->assertEquals("Dostali jste se na stanoviště Start. Jste tu 3. První tu byl tým Parta Nic v $now.", $this->sendCode(2, "pralinka"));
+        $this->assertEquals("Dostali jste se na stanoviště Start. Jste tu 1. První tu byl tým Parta Nic v {$this->dbNow(1)}.", $this->sendCode(1, "pralinka"));
+        $this->assertEquals("Dostali jste se na stanoviště Start. Jste tu 2. První tu byl tým Parta Nic v {$this->dbNow(1)}.", $this->sendCode(3, "pralinka"));
+        $this->assertEquals("Dostali jste se na stanoviště Start. Jste tu 3. První tu byl tým Parta Nic v {$this->dbNow(1)}.", $this->sendCode(2, "pralinka"));
 		
-		$now = $this->dbNow();
-		$this->assertEquals("Úspěšně jste vyluštili šifru S1a. Jste 1. První ji vyluštil tým Redwool v $now. Poloha dalšího stanoviště je: Vrchol Bílé hory.", $this->sendCode(2, "aberace"));
-		$this->assertEquals("Úspěšně jste vyluštili šifru S1a. Jste 2. První ji vyluštil tým Redwool v $now. Poloha dalšího stanoviště je: Vrchol Bílé hory.", $this->sendCode(1, "aberace"));
-		$this->assertEquals("Úspěšně jste vyluštili šifru S1a. Jste 3. První ji vyluštil tým Redwool v $now. Poloha dalšího stanoviště je: Vrchol Bílé hory.", $this->sendCode(3, "aberace"));
+		$this->assertEquals("Úspěšně jste vyluštili šifru S1a. Jste 1. První ji vyluštil tým Redwool v {$this->dbNow(4)}. Poloha dalšího stanoviště je: Vrchol Bílé hory.", $this->sendCode(2, "aberace"));
+		$this->assertEquals("Úspěšně jste vyluštili šifru S1a. Jste 2. První ji vyluštil tým Redwool v {$this->dbNow(4)}. Poloha dalšího stanoviště je: Vrchol Bílé hory.", $this->sendCode(1, "aberace"));
+		$this->assertEquals("Úspěšně jste vyluštili šifru S1a. Jste 3. První ji vyluštil tým Redwool v {$this->dbNow(4)}. Poloha dalšího stanoviště je: Vrchol Bílé hory.", $this->sendCode(3, "aberace"));
 	}
 
 

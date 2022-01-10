@@ -5,9 +5,9 @@ use Sova\DBException;
 
 class ProgressRepo extends RepoBase {
 
-	public function create(int $teamId, int $pointId) {
+	public function create(int $teamId, int $pointId, $timeOffset = 0) {
 		try {
-			$this->db->execute("INSERT INTO progress (team_id, point_id) values (?, ?)", [$teamId, $pointId]);
+			$this->db->execute("INSERT INTO progress (team_id, point_id, time) values (?, ?, DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL ? MINUTE))", [$teamId, $pointId, $timeOffset]);
 			return true;
 		} catch (DBException $ex) {
 			if ($ex->getCode() == 1062) {

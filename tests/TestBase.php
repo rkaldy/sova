@@ -28,7 +28,7 @@ class TestBase extends TestCase {
 		$_SESSION = array();
 	}
 
-	function dbNow() {
-		return $this->db->equery("SELECT DATE_FORMAT(NOW(), '%H:%i') FROM DUAL");
+	function dbNow($offset = 0) {
+		return $this->db->equery("SELECT DATE_FORMAT(DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL ? MINUTE), '%H:%i') FROM DUAL", $offset);
 	}
 }
