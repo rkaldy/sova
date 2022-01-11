@@ -27,7 +27,7 @@ class Loc extends ModelBase {
 		} else if (count($next) > 1) {
 			$nextLocs = [];
 			foreach ($next as $loc) {
-				$nextLocs[] = $loc["description"];
+				$nextLocs[] = $loc["name"] . "/" . $loc["description"];
 			}
 			$ret[] = new Text("loc.next.multi", join("; ", $nextLocs));
 		}
