@@ -1,5 +1,5 @@
 <?php
-namespace Sova\Controller
+namespace Sova\Controller;
 
 use Sova\Request;
 use Sova\Response;
@@ -15,7 +15,7 @@ class StatController {
 			return (new Redirect("login"))->buildResponse();
 		}
 
-		array $stats = $this->buildStats($req->params["type"]);
+		$stats = $this->buildStats($req->params["type"]);
 		$resp = new Response(200, $this->toCSV($stats));
 		$resp->addHeader("Content-Type", "text/csv");
 		return $resp;

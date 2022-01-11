@@ -48,7 +48,7 @@ class CodeControllerTest extends GameTestBase {
 	}
 
 	function testVisitLoc() {
-		$this->assertEquals("Dostali jste se na stanoviště Start. Jste tu 1. První tu byl tým Parta Nic v ".$this->dbNow().".", CodeController::process("pralinka"));
+		$this->assertEquals("Vítejte na stanovišti Start. Jste tu 1. První tu byl tým Parta Nic v ".$this->dbNow().".", CodeController::process("pralinka"));
 		$this->assertEquals("Tento kód stanoviště jste již zadali.", CodeController::process("pralinka"));
 	}
 
@@ -71,23 +71,23 @@ class CodeControllerTest extends GameTestBase {
 	function testUnavailableCipher() {
 		$this->assertEquals("Neznámý kód: KOBLIHA", CodeController::process("kobliha"));
 		$this->progressRepo->create(1, 12);
-		$this->assertEquals("Úspěšně jste vyluštili šifru S2. Jste 1. První ji vyluštil tým Parta Nic v ".$this->dbNow().". Poloha dalšího stanoviště je: Pardubické boudy, hledej orga.", CodeController::process("kobliha"));
+		$this->assertEquals("Úspěšně jste vyluštili šifru S2. Jste 1. První ji vyluštil tým Parta Nic v ".$this->dbNow().". Máte vyluštěno 2 šifer. Poloha dalšího stanoviště je: Pardubické boudy, hledej orga.", CodeController::process("kobliha"));
 	}
 
 	function testSolveCipher() {
-		$this->assertEquals("Úspěšně jste vyluštili šifru S1a. Jste 1. První ji vyluštil tým Parta Nic v ".$this->dbNow().". Poloha dalšího stanoviště je: Vrchol Bílé hory.", CodeController::process("aberace"));
+		$this->assertEquals("Úspěšně jste vyluštili šifru S1a. Jste 1. První ji vyluštil tým Parta Nic v ".$this->dbNow().". Máte vyluštěno 1 šifer. Poloha dalšího stanoviště je: Vrchol Bílé hory.", CodeController::process("aberace"));
 		$this->assertEquals("Toto řešení šifry jste již zadali.", CodeController::process("aberace"));
 	}
 
 	function testDeletePendingHints() {
 		$this->progressRepo->create(1, 14);
-		$this->assertEquals("Dostali jste se na stanoviště 4. Jste tu 1. První tu byl tým Parta Nic v ".$this->dbNow().".", CodeController::process("tabulka"));
+		$this->assertEquals("Vítejte na stanovišti 4. Jste tu 1. První tu byl tým Parta Nic v ".$this->dbNow().".", CodeController::process("tabulka"));
 		$this->assertEquals([
 			"Přišel čas na nápovědu k šifře S4a: Křižovatka, železnice, Suchý.",
 			"Přišel čas na nápovědu k šifře S4b: Jedničky a nuly.",
 			"Přišel čas na řešení šifry S4a: KALENDAR"
 		], $this->getFutureMessages());
-		$this->assertEquals("Úspěšně jste vyluštili šifru S4b. Jste 1. První ji vyluštil tým Parta Nic v ".$this->dbNow().". Poloha dalšího stanoviště je: Kóta 1019 nad Pražskou boudou.", CodeController::process("skluzavka"));
+		$this->assertEquals("Úspěšně jste vyluštili šifru S4b. Jste 1. První ji vyluštil tým Parta Nic v ".$this->dbNow().". Máte vyluštěno 2 šifer. Poloha dalšího stanoviště je: Kóta 1019 nad Pražskou boudou.", CodeController::process("skluzavka"));
 		$this->assertEmpty($this->getFutureMessages());
 	}
 
@@ -101,13 +101,13 @@ class CodeControllerTest extends GameTestBase {
 	function testRank() {
 		$this->db->execute("INSERT INTO team (team_id, game_id, name) VALUES (3, 1, 'abpopa')");
 
-        $this->assertEquals("Dostali jste se na stanoviště Start. Jste tu 1. První tu byl tým Parta Nic v {$this->dbNow(1)}.", $this->sendCode(1, "pralinka"));
-        $this->assertEquals("Dostali jste se na stanoviště Start. Jste tu 2. První tu byl tým Parta Nic v {$this->dbNow(1)}.", $this->sendCode(3, "pralinka"));
-        $this->assertEquals("Dostali jste se na stanoviště Start. Jste tu 3. První tu byl tým Parta Nic v {$this->dbNow(1)}.", $this->sendCode(2, "pralinka"));
+        $this->assertEquals("Vítejte na stanovišti Start. Jste tu 1. První tu byl tým Parta Nic v {$this->dbNow(1)}.", $this->sendCode(1, "pralinka"));
+        $this->assertEquals("Vítejte na stanovišti Start. Jste tu 2. První tu byl tým Parta Nic v {$this->dbNow(1)}.", $this->sendCode(3, "pralinka"));
+        $this->assertEquals("Vítejte na stanovišti Start. Jste tu 3. První tu byl tým Parta Nic v {$this->dbNow(1)}.", $this->sendCode(2, "pralinka"));
 		
-		$this->assertEquals("Úspěšně jste vyluštili šifru S1a. Jste 1. První ji vyluštil tým Redwool v {$this->dbNow(4)}. Poloha dalšího stanoviště je: Vrchol Bílé hory.", $this->sendCode(2, "aberace"));
-		$this->assertEquals("Úspěšně jste vyluštili šifru S1a. Jste 2. První ji vyluštil tým Redwool v {$this->dbNow(4)}. Poloha dalšího stanoviště je: Vrchol Bílé hory.", $this->sendCode(1, "aberace"));
-		$this->assertEquals("Úspěšně jste vyluštili šifru S1a. Jste 3. První ji vyluštil tým Redwool v {$this->dbNow(4)}. Poloha dalšího stanoviště je: Vrchol Bílé hory.", $this->sendCode(3, "aberace"));
+		$this->assertEquals("Úspěšně jste vyluštili šifru S1a. Jste 1. První ji vyluštil tým Redwool v {$this->dbNow(4)}. Máte vyluštěno 1 šifer. Poloha dalšího stanoviště je: Vrchol Bílé hory.", $this->sendCode(2, "aberace"));
+		$this->assertEquals("Úspěšně jste vyluštili šifru S1a. Jste 2. První ji vyluštil tým Redwool v {$this->dbNow(4)}. Máte vyluštěno 1 šifer. Poloha dalšího stanoviště je: Vrchol Bílé hory.", $this->sendCode(1, "aberace"));
+		$this->assertEquals("Úspěšně jste vyluštili šifru S1a. Jste 3. První ji vyluštil tým Redwool v {$this->dbNow(4)}. Máte vyluštěno 1 šifer. Poloha dalšího stanoviště je: Vrchol Bílé hory.", $this->sendCode(3, "aberace"));
 	}
 
 
