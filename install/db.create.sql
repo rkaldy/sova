@@ -61,6 +61,7 @@ CREATE TABLE hint (
 CREATE TABLE loc (
   point_id int(11) NOT NULL,
   description varchar(500) COLLATE utf8mb4_czech_ci DEFAULT NULL,
+  solved_cipher_count int(11) DEFAULT NULL,
   end_time datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
 
