@@ -157,7 +157,7 @@ ALTER TABLE message
 
 ALTER TABLE `point`
   ADD PRIMARY KEY (point_id,game_id) USING BTREE,
-  ADD UNIQUE KEY name (game_id,name);
+  ADD KEY name (game_id,name);
 
 ALTER TABLE progress
   ADD PRIMARY KEY (team_id,point_id),

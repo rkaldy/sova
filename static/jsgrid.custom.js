@@ -25,7 +25,7 @@ ajaxErrorHandler = function(jqXHR) {
 			if ("code" in resp) {
 				switch (resp.code) {
 					case 1451: alert('Pokoušíte se smazat řádek, na nějž se odkazuje řádek v jiné tabulce.'); break;
-					case 1062: alert('Kódy i čísla stanovišť/šifer musí být v rámci hry unikátní.'); break;
+					case 1062: alert('Kódy musí být v rámci hry unikátní.'); break;
 					default: alert('Databázová chyba:\n' + resp.error); break;
 				}
 			} else {
