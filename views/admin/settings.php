@@ -6,6 +6,24 @@
 <table>
   <tr>
     <th>
+      <label for="gameStart">
+		Začátek hry<br>
+        <small>Čas od kdy Sova začne přijímat kódy stanovišť a šifer</small>
+      </label>
+    </th>
+	<td><input type="text" id="gameStart" name="gameStart" value="<?php echo $gameStart ?>"></td>
+  </tr>
+  <tr>
+    <th>
+      <label for="gameEnd">
+		Konec hry<br>
+        <small>Čas do kdy Sova bude přijímat kódy stanovišť a šifer</small>
+      </label>
+    </th>
+	<td><input type="text" id="gameEnd" name="gameEnd" value="<?php echo $gameEnd ?>"></td>
+  </tr>
+  <tr>
+    <th>
       <label for="locVisitMandatory">
 	    Povinné kódy místa<br>
   	    <small>Je-li zaškrtnuto, týmu musí odeslat kód stanoviště po příchodu na něj, jinak Sova nepřijme řešení šifry na tomto stanovišti.<br>
@@ -33,3 +51,8 @@
   </tr>
 </table>
 </form>
+
+<script type="text/javascript">
+  jQuery("#gameStart").datetimepicker({"format": "Y-m-d H:i:s"});
+  jQuery("#gameEnd").datetimepicker({"format": "Y-m-d H:i:s"});
+</script>

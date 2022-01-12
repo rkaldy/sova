@@ -1,3 +1,5 @@
+<?php if ($gameState == \Sova\Model\Game::CURRENT) { ?>
+
 <p><?php if (isset($response)) echo $response; ?></p>
 
 <p>Aktuálně máte <?php echo $hintCount ?> nevyužitých nápověd.</p>
@@ -10,3 +12,10 @@
     <input type="submit" value="Odeslat">
   </p>
 </form>
+
+<?php } else if ($gameState == \Sova\Model\Game::FUTURE) { ?>
+<p>Hra ještě nezačala.</p>
+<?php } else if ($gameState == \Sova\Model\Game::PAST) { ?>
+<p>Hra již skončila.</p>
+<?php } ?>
+

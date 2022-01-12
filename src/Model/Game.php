@@ -24,14 +24,20 @@ class Game extends ModelBase {
 		return $this->repo->getOwned(User::current());
     }
 
-    public function getStatus() {
-        $game = $this->repo->get(self::current());
-    }
-
-
     public function getIdByName(string $name) {
         return $this->repo->getIdByName($name, User::current());
-    }
+	}
+
+	public static function state() {
+		$now = time();
+		if (Settings::isset("gameStartTimestamp") && $now < Settings::value("gameStartTimestamp")) {
+			return self::FUTURE;
+		} else if (Settings::isset("gameEndTimestamp") && $now > Settings::value("gameEndTimestamp")) {
+			return self::PAST;
+		} else {
+			return self::CURRENT;
+		}
+	}
 
 	public static function selected() 	 { return isset($_SESSION["game_id"]); }
 	public static function current() 	 { return $_SESSION["game_id"]; }

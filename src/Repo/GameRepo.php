@@ -8,7 +8,7 @@ class GameRepo extends RepoBase {
 	}
 
 	public function getOwned(int $ownerId) {
-		return $this->db->aquery("SELECT game_id, name FROM game WHERE owner_id = ? ORDER BY start_time DESC", $ownerId);
+		return $this->db->aquery("SELECT game_id, name FROM game WHERE owner_id = ? ORDER BY name", $ownerId);
 	}
 
 	public function getIdByName(string $name, int $ownerId) {
@@ -16,18 +16,18 @@ class GameRepo extends RepoBase {
 	}
 
 	public function list() {
-		return $this->db->aquery("SELECT * FROM game ORDER BY start_time DESC");
+		return $this->db->aquery("SELECT * FROM game ORDER BY name");
 	}
 
 	public function create(array &$game) {
-		$this->db->execute("INSERT INTO game (owner_id, name, start_time, end_time) VALUES (:owner_id, :name, :start_time, :end_time)", $game, true);
+		$this->db->execute("INSERT INTO game (owner_id, name) VALUES (:owner_id, :name)", $game, true);
 		$game["game_id"] = $this->db->lastInsertId();
 		$this->db->execute("INSERT INTO text (game_id, code, text) SELECT ?, code, text FROM text WHERE game_id IS NULL", $game["game_id"]);
 		$this->db->execute("INSERT INTO settings (game_id) VALUES (?)", $game["game_id"]);
 	}
 
 	public function update(array $game) {
-		$this->db->execute("UPDATE game SET owner_id = :owner_id, name = :name, start_time = :start_time, end_time = :end_time WHERE game_id = :game_id", $game);
+		$this->db->execute("UPDATE game SET owner_id = :owner_id, name = :name WHERE game_id = :game_id", $game);
 	}
 
 	public function delete(array $game) {

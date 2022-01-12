@@ -44,9 +44,7 @@ CREATE TABLE `code` (
 CREATE TABLE game (
   game_id int(11) NOT NULL,
   owner_id int(11) NOT NULL,
-  name varchar(100) COLLATE utf8mb4_czech_ci NOT NULL,
-  start_time datetime NOT NULL,
-  end_time datetime NOT NULL
+  name varchar(100) COLLATE utf8mb4_czech_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
 
 CREATE TABLE hint (

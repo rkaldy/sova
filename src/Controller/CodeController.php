@@ -8,10 +8,16 @@ use Sova\Model\Hint;
 use Sova\Model\Game;
 use Sova\Model\Message;
 use Sova\Model\Text;
+use Sova\HttpException;
+
 
 class CodeController {
 
 	public static function process($request) {
+		if (Game::state() != Game::CURRENT) {
+			throw new HttpException(403);
+		}
+
 		$code = Code::polish($request);
 		$message = new Message();
 		$message->sendToSova($code);

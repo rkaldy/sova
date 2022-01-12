@@ -5,6 +5,7 @@ require __DIR__ . "/../install/load.php";
 
 const DEVELOPMENT = true;
 error_reporting(E_ALL | E_STRICT);
+date_default_timezone_set("Europe/Prague");
 
 $pdo = new PDO("mysql:host=".DB_HOST, DB_USER, DB_PASS);
 

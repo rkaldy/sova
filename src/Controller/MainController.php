@@ -4,6 +4,7 @@ namespace Sova\Controller;
 use Sova\Request;
 use Sova\Response;
 use Sova\View;
+use Sova\HttpException;
 use Sova\Model\Team;
 use Sova\Model\Game;
 use Sova\Model\Code;
@@ -11,6 +12,7 @@ use Sova\Model\Hint;
 use Sova\Model\Message;
 use Sova\Model\Progress;
 use Sova\Model\Text;
+
 
 class MainController {
 
@@ -33,6 +35,7 @@ class MainController {
 		}
 
 		$view->addField("action", $action);
+		$view->addField("gameState", Game::state());
 		if (Team::logged()) {
 			$view->addField("team", Team::currentName());
 			$view->addField("game", Game::currentName());
@@ -46,7 +49,7 @@ class MainController {
 	public function login($params, $data) {
 		if (isset($data["team_id"])) {
 			if ((new Team())->login((int)$data["team_id"], $data["pswd"])) {
-				return new View("main/code");
+				return $this->code([], []);
 			} else {
 				return new View("main/login", ["flash" => "Špatné číslo týmu nebo heslo"]);
 			}
@@ -76,6 +79,9 @@ class MainController {
 	public function applyhint($params, $data) {
 		$hint = new Hint();
 		if (isset($data["cipher"])) {
+			if (Game::state() != Game::CURRENT) {
+				throw new HttpException(403);
+			}
 			$cipherName = Code::polish($data["cipher"]);
 			$message = new Message();
 			$message->sendToSova((new Text("hint.request", $cipherName))->format());

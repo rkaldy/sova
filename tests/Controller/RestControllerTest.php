@@ -52,7 +52,7 @@ class RestControllerTest extends TestBase {
 	}
 
 	function testGeneralDatabaseError() {
-		list($status, $data) = $this->rest("POST", "game", ["name" => "game3", "owner_id" => 99, "start_time" => "2020-01-01", "end_time" => "bad"]);
+		list($status, $data) = $this->rest("POST", "game", ["name" => "game3", "owner_id" => "NotANumber"]);
 		$this->assertEquals(422, $status);
 	}
 
@@ -72,8 +72,8 @@ class RestControllerTest extends TestBase {
 		$this->assertEquals(200, $status);
 		$this->assertEquals(2, $_SESSION["user_id"]);
 		$this->assertEquals([
-			["game_id" => 2, "name" => "game2", "owner_id" => 2, "start_time" => "2020-02-01 00:00:00", "end_time" => "2020-02-02 00:00:00"],
-			["game_id" => 1, "name" => "game1", "owner_id" => 2, "start_time" => "2020-01-01 00:00:00", "end_time" => "2020-01-02 00:00:00"]
+			["game_id" => 1, "name" => "game1", "owner_id" => 2],
+			["game_id" => 2, "name" => "game2", "owner_id" => 2]
 		], $data);
 	}
 
@@ -116,12 +116,12 @@ class RestControllerTest extends TestBase {
 		$this->assertEquals(["game_id" => 1, "owner_id" => 2, "name" => "game1"], $data);
 		list($status, $data) = $this->rest("GET", "game");
 		$this->assertEquals([
-			["game_id" => 2, "owner_id" => 2, "name" => "game2", "start_time" => "2020-02-01 00:00:00", "end_time" => "2020-02-02 00:00:00"]
+			["game_id" => 2, "owner_id" => 2, "name" => "game2"]
 		], $data);
 	}
 
 	function testFKViolation() {
-		list($status, $data) = $this->rest("POST", "game", ["name" => "game3", "owner_id" => 99, "start_time" => "2020-01-01", "end_time" => "2020-02-01"]);
+		list($status, $data) = $this->rest("POST", "game", ["name" => "game3", "owner_id" => 99]);
 		$this->assertEquals(422, $status);
 		$this->assertEquals(1452, $data["code"]);
 	}

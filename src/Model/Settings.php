@@ -13,9 +13,15 @@ class Settings extends ModelBase {
 	}
 
 	public function get() {
-		$fields = $this->repo->get(Game::current());
-		$fields["locs"] = $this->locRepo->list(Game::current());
-		return $fields;
+		$settings = $this->repo->get(Game::current());
+		$settings["locs"] = $this->locRepo->list(Game::current());
+		if (isset($settings["gameStart"])) {
+			$settings["gameStartTimestamp"] = strtotime($settings["gameStart"]);
+		}
+		if (isset($settings["gameEnd"])) {
+			$settings["gameEndTimestamp"] = strtotime($settings["gameEnd"]);
+		}
+		return $settings;
 	}
 
 	public function set($settings) {
@@ -29,11 +35,20 @@ class Settings extends ModelBase {
 		return "Nastavení bylo uloženo";
 	}
 
+	public static function isset(string $key) {
+		return isset($_SESSION["settings"][$key]);
+	}
+
+	public static function value(string $key) {
+		return $_SESSION["settings"][$key];
+	}
+
 
 	public function load() {
 		$_SESSION["settings"] = $this->get();
 	}
 
 	public static function isLocVisitMandatory() 	{ return $_SESSION["settings"]["locVisitMandatory"]; }
+	public static function showRank()			 	{ return $_SESSION["settings"]["showRank"]; }
 	public static function getFinish()				{ return $_SESSION["settings"]["locFinish"]; }
 }
