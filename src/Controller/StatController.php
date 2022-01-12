@@ -6,6 +6,7 @@ use Sova\Response;
 use Sova\Redirect;
 use Sova\Model\User;
 use Sova\Model\Statistics;
+use Sova\HttpException;
 
 
 class StatController {
@@ -14,10 +15,15 @@ class StatController {
 		if (!User::logged()) {
 			return (new Redirect("login"))->buildResponse();
 		}
+		if (!isset($req->params["type"])) {
+			throw new HttpException(400, "No stats type defined");
+		}
 
-		$stats = $this->buildStats($req->params["type"]);
+		$type = $req->params["type"];
+		$stats = $this->buildStats($type);
 		$resp = new Response(200, $this->toCSV($stats));
 		$resp->addHeader("Content-Type", "text/csv");
+		$resp->addHeader("Content-Disposition", "attachment; filename=\"stat-$type.csv\"");
 		return $resp;
 	}
 

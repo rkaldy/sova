@@ -17,6 +17,7 @@ if ($superuser) {
 		"rank" => "Pořadí",
 		"messages" => "Zprávy",
 		"broadcast" => "Zpráva týmům",
+		"stats" => "Statistiky",
 		"settings" => "Nastavení",
 		"logout" => "Logout"
 	);

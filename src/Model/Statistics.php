@@ -2,6 +2,8 @@
 namespace Sova\Model;
 
 use Sova\Repo\StatisticsRepo;
+use Sova\Repo\ProgressRepo;
+
 
 class Statistics {
 
@@ -13,7 +15,7 @@ class Statistics {
 
 	public function rank() {
 		return array_merge(
-			[["Tým", "Čas v cíli", "Počet vyluštěných šifer", "Čas poslední vyluštěné šifry", "Poslední navštívené stanoviště"]],
+			[["Tým", "Příchod do cíle", "Počet vyluštěných šifer", "Čas poslední vyluštěné šifry", "Poslední navštívené stanoviště"]],
 			(new ProgressRepo())->rankTotal(Game::current())
 		);
 	}
@@ -22,6 +24,13 @@ class Statistics {
 		return array_merge(
 			[["Šifra", "Tým", "Doba luštění"]],
 			$this->repo->ciphers(Game::current())
+		);
+	}
+
+	public function hints() {
+		return array_merge(
+			[["Šifra", "Vyluštili", "Vyluštili s nápovědou", "Vyluštili s postupem","Nevyluštili"]],
+			$this->repo->hints(Game::current())
 		);
 	}
 }

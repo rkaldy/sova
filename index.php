@@ -14,7 +14,8 @@ session_start();
 $app = new Application();
 $app->setBaseUrl(BASE_PATH);
 
-$app->addRoute("/admin", \Sova\Controller\AdminController::class, true)
+$app->addRoute("/admin/stat", \Sova\Controller\StatController::class)
+	->addRoute("/admin", \Sova\Controller\AdminController::class, true)
     ->addRoute("/api", \Sova\Controller\RestController::class)
     ->addRoute("/", \Sova\Controller\MainController::class);
 

@@ -16,25 +16,28 @@ use Sova\Repo\LocRepo;
 
 class AdminController {
 
-	const ACTIONS_SU = array("game", "user");
+	const ACTIONS_SU = ["game", "user"];
+	const PAGES = ["users", "games", "locs", "ciphers", "unihints", "teams", "graph", "texts", "messages", "stats"];
 
 	public function process(Request $req, array $path): Response {
 		$action = empty($path) ? "login" : $path[0];
 
-		if (!method_exists($this, $action)) {
-			$view = new View("error", array("error" => "Neznámá akce: '$action'"));
-		} else if ($action != 'login' && !User::logged()) {
+		if ($action != 'login' && !User::logged()) {
 			$view = new View("admin/login");
 		} else if ($action != 'login' && $action != 'logout' && !User::super() && !Game::selected()) {
 			$view = new View("admin/login");
 		} else if (in_array($action, self::ACTIONS_SU) && !User::super()) {
 			$view = new View("error", "Nedostatečná práva k akci '$action'");
-		} else {
+		} else if (in_array($action, self::PAGES)) {
+			$view = new View("admin/$action");
+		} else if (method_exists($this, $action)) {
 			$args = array_merge($req->params, $req->data);
 			$view = $this->$action($args);
 			if ($view instanceof Redirect) {
 				return $view->buildResponse();
 			}
+		} else {
+			$view = new View("error", array("error" => "Neznámá akce: '$action'"));
 		}
 	
 		$view->addField("action", $action);
@@ -86,17 +89,6 @@ class AdminController {
 		User::logout();
 		return new View("admin/login");
 	}
-
-
-	public function users($args) 	{ return new View("admin/users"); }
-	public function games($args) 	{ return new View("admin/games"); }
-	public function locs($args)		{ return new View("admin/locs"); }
-	public function ciphers($args)	{ return new View("admin/ciphers"); }
-	public function unihints($args)	{ return new View("admin/unihints"); }
-	public function teams($args)	{ return new View("admin/teams"); }
-	public function graph($args)	{ return new View("admin/graph"); }
-	public function texts($args)	{ return new View("admin/texts"); }
-	public function messages($args)	{ return new View("admin/messages"); }
 
 
 	public function broadcast($args) {
