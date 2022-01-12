@@ -1,2 +1,0 @@
-locVisitMandatory;0
-locFinish;\N

@@ -23,7 +23,7 @@ class GameRepo extends RepoBase {
 		$this->db->execute("INSERT INTO game (owner_id, name, start_time, end_time) VALUES (:owner_id, :name, :start_time, :end_time)", $game, true);
 		$game["game_id"] = $this->db->lastInsertId();
 		$this->db->execute("INSERT INTO text (game_id, code, text) SELECT ?, code, text FROM text WHERE game_id IS NULL", $game["game_id"]);
-		$this->db->execute("INSERT INTO settings (game_id, name, value) SELECT ?, name, value FROM settings WHERE game_id IS NULL", $game["game_id"]);
+		$this->db->execute("INSERT INTO settings (game_id) VALUES (?)", $game["game_id"]);
 	}
 
 	public function update(array $game) {

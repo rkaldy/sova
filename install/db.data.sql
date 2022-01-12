@@ -13,7 +13,7 @@ SET time_zone = "+00:00";
 
 INSERT INTO game VALUES (1, 2, 'Testovací hra', '2020-01-01', '2020-01-02');
 INSERT INTO text (game_id, code, text) SELECT 1, code, text FROM text WHERE game_id IS NULL;
-INSERT INTO settings (game_id, name, value) SELECT 1, name, value FROM settings WHERE game_id IS NULL;
+INSERT INTO settings (game_id, gameStart, gameEnd, locVisitMandatory, locFinal, showRank) VALUES (1, NULL, NULL, 0, NULL, 1);
 
 INSERT INTO team (team_id, game_id, name) VALUE (1, 1, 'Parta Nic');
 INSERT INTO team (team_id, game_id, name) VALUE (2, 1, 'Redwool');

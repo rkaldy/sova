@@ -87,10 +87,12 @@ CREATE TABLE progress (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
 
 CREATE TABLE settings (
-  settings_id int(11) NOT NULL,
-  game_id int(11) DEFAULT NULL,
-  name varchar(50) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
-  value int(11) DEFAULT NULL
+  game_id int(11) NOT NULL,
+  gameStart timestamp NULL DEFAULT NULL,
+  gameEnd timestamp NULL DEFAULT NULL,
+  locVisitMandatory tinyint(4) NOT NULL DEFAULT 0,
+  locFinish int(11) DEFAULT NULL,
+  showRank tinyint(4) NOT NULL DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE step (
@@ -165,8 +167,7 @@ ALTER TABLE progress
   ADD KEY point_id (point_id);
 
 ALTER TABLE settings
-  ADD PRIMARY KEY (settings_id),
-  ADD UNIQUE KEY name (game_id,name);
+  ADD PRIMARY KEY (game_id);
 
 ALTER TABLE step
   ADD PRIMARY KEY (from_point_id,to_point_id) USING BTREE,
@@ -202,9 +203,6 @@ ALTER TABLE message
 
 ALTER TABLE `point`
   MODIFY point_id int(11) NOT NULL AUTO_INCREMENT;
-
-ALTER TABLE settings
-  MODIFY settings_id int(11) NOT NULL AUTO_INCREMENT;
 
 ALTER TABLE team
   MODIFY team_id int(11) NOT NULL AUTO_INCREMENT;

@@ -80,7 +80,6 @@ else {
 			$stmt->execute(array(1, $_POST["su_login"], password_hash($_POST["su_pswd"], PASSWORD_BCRYPT)));
 			loadInfile($pdo, __DIR__."/wordlist.txt", "wordlist", ["word"]);
 			loadInfile($pdo, __DIR__."/texts.txt", "text", ["code", "text"]);
-			loadInfile($pdo, __DIR__."/settings.txt", "settings", ["name", "value"]);
 ?>
 	<p>Hotovo. Přejděte do <a href="../admin">administrace</a>.</p>
 <?php

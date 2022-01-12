@@ -74,8 +74,8 @@ class ProgressRepo extends RepoBase {
 			LEFT JOIN (
 				SELECT team_id, progress.time
 				FROM settings
-				JOIN progress ON progress.point_id = settings.value
-				WHERE settings.game_id = :game_id AND settings.name = 'locFinish'
+				JOIN progress ON progress.point_id = settings.locFinish
+				WHERE settings.game_id = :game_id
 			) finish ON finish.team_id = team.team_id
 			ORDER BY -finish.time DESC, ciphers.count DESC, last_cipher.time, team.team_id	
 		", ["game_id" => $gameId]);

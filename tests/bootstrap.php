@@ -16,7 +16,6 @@ if (CREATE_DB) {
 	$pdo->exec(file_get_contents(__DIR__."/../install/db.create.sql"));
 	loadInfile($pdo, __DIR__."/../install/wordlist.txt", "wordlist", ["word"]);
 	loadInfile($pdo, __DIR__."/../install/texts.txt", "text", ["code", "text"]);
-	loadInfile($pdo, __DIR__."/../install/settings.txt", "settings", ["name", "value"]);
 	echo "done\n";
 } else {
 	echo "Preparing database...";
