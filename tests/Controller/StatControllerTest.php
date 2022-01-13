@@ -69,8 +69,8 @@ class StatControllerTest extends GameTestBase {
         Progress::addFakeTime(4);
         $this->sendCode(1, "S2", true);
 
-        $this->assertEquals(
-            "Šifra,Tým,Doba luštění,\nS1a,Parta Nic,00:10:00,\nS1b,Redwool,00:15:00,\nS1b,Parta Nic,00:16:00,\nS1b,abpopa,00:17:00,\nS2,Parta Nic,00:04:00,\n",
+        $this->assertRegExp(
+            "/Šifra,Tým,Doba luštění\nS1a,Parta Nic,00:10:0[01]\nS1b,Redwool,00:15:0[01]\nS1b,Parta Nic,00:16:0[01]\nS1b,abpopa,00:17:0[01]\nS2,Parta Nic,00:04:0[01]\n/",
             $this->getStats("ciphers")
         );
 	}

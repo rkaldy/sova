@@ -38,10 +38,7 @@ class StatController {
 	public function toCSV(array $data) {
 		$output = "";
 		foreach ($data as $row) {
-			foreach ($row as $field) {
-				$output .= "$field,";
-			}
-			$output .= "\n";
+			$output .= join(",", $row) . "\n";
 		}
 		return $output;
 	}
