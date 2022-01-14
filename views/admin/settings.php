@@ -34,6 +34,15 @@
   </tr>
   <tr>
     <th>
+      <label for="showRank">
+	    Zobrazovat pořadí<br>
+  	    <small>Je-li zaškrtnuto, Sova po odeslání kódu šifry či stanoviště pošle zpátky i pořadí týmu na daném místě a celkově.</small>
+	  </label>
+    </th>
+    <td><input type="checkbox" name="showRank" <?php if ($showRank) echo 'checked="checked"' ?>></td>
+  </tr>
+  <tr>
+    <th>
       <label for="locFinish">Cílové stanoviště</label>
     </th>
     <td>

@@ -1,24 +1,33 @@
 <?php
-$menu = [
-	"code" => "Zadej kód",
-	"applyhint" => "Použít nápovědu",
-	"messages" => "Historie zpráv",
-	"rank" => "Pořadí",
-	"logout" => "Logout"
-];
+if (isset($team)) {
+	$menu = [
+		"code" => "Zadej kód",
+		"applyhint" => "Použít nápovědu",
+		"messages" => "Historie zpráv"
+	];
+	if ($showRank) {
+		$menu["rank"] = "Pořadí";
+	}
+	$menu["logout"] = "Logout";
+}
 ?>
 <!doctype html>
 <html lang="cs">
   <head>
     <title>Sova 2.0</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="static/sova.css">
+    <link rel="stylesheet" href="static/mobile.css">
     <link rel="icon" href="static/favicon.png" sizes="32x32" type="image/png">
   </head>
   <body>
 
     <header>
       <div id="logo">
-        <img src="static/owl.png" height="50">
+        <img src="static/owl.png">
+      </div>
+	  <div id="menubtn" <?php if (!isset($team)) { echo 'style="display:none"'; } ?>>
+        <img src="static/menu.png">
       </div>
       <div id="title">
         <h1>
@@ -33,7 +42,7 @@ if (isset($team)) {
         <div id="user">
 <?php 
 if (isset($team)) {
-    echo "tým: $team";
+    echo $team;
 } else {
     echo '<small>nepřihlášený</small>';
 }
@@ -41,10 +50,10 @@ if (isset($team)) {
         </div>
       </div>
       <div id="time">
-        <small>Čas vytvoření stránky</small><br>
+        <small>Čas vytvoření stránky</small>
 <?php
 $now = new DateTime('now');
-echo $now->format('j.n.Y H:i:s');
+echo $now->format('j.n.Y H:i:s');
 ?>
       </div>
       <div class="clear"></div>
@@ -52,15 +61,15 @@ echo $now->format('j.n.Y H:i:s');
 
 <?php
 if (isset($team)) {
-	echo "<nav>";
-	foreach ($menu as $act => $label) {
-		echo "<a";
-		if ($act == $action) {
-			echo ' class="selected"';
-		}
-		echo " href=\"$act\">$label</a>";
-	}
-	echo "</nav>";
+    echo '<nav id="nav">';
+    foreach ($menu as $act => $label) {
+        echo "<a";
+        if ($act == $action) {
+            echo ' class="selected"';
+        }
+        echo " href=\"$act\">$label</a>";
+    }
+    echo "</nav>";
 } 
 ?>
 
@@ -68,11 +77,6 @@ if (isset($team)) {
 <?php echo $_contents; ?>
     </div>
 
-    <script type="text/javascript">
-	  elems = document.getElementsByClassName("focused");
-	  if (elems.length != 0) {
-		  elems[0].focus();
-	  }
-    </script>
+    <script src="static/sova.js"></script>
   </body>
 </html>

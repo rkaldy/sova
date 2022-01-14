@@ -1,9 +1,14 @@
 /* General */
 
+@viewport {
+  width: device-width ;
+  zoom: 1.0 ;
+}
+
 body {
 	font-family: sans-serif;
-	font-weight: lighter;
 	font-size: 11pt;
+	font-weight: lighter;
 	color: #808080;
 }
 
@@ -28,28 +33,40 @@ header {
 	background-color: #203060;
 	color: white;
 	border-radius: 0ex 0ex 1.5ex 1.5ex;
+	padding: 0.3ex;
 }
 
 h1 {
-	font-size: 16pt;
+	font-size: 18pt;
 	font-weight: lighter;
-	margin: 0.1ex;
+	margin: 0;
 }
 
 #logo {
 	float: left;
-	padding: 0.3ex 2ex;
+	padding: 0.5ex 2ex;
+}
+
+#logo img {
+	height: 50px;
+}
+
+#menubtn img {
+	height: 50px;
 }
 
 #title {
 	float: left;
-	margin: 0.5ex 1ex
+	padding: 0.4ex 1ex;
+	margin: 0;
 }
 
 #time {
 	float: right;
+	width: 10em;
 	font-size: 14pt;
-	margin: 0.6ex 2ex;
+	padding: 0.5ex 2ex;
+	margin: 0;
 }
 
 #time small {
@@ -57,9 +74,9 @@ h1 {
 }
 
 #user {
+	padding-top: 0.2ex;
 	font-size: 14pt;
 	font-weight: lighter;
-	margin: 0.1ex;
 }
 
 #user small {
@@ -72,6 +89,10 @@ h1 {
 
 #section {
 	color: #d0d0f0;
+}
+
+#menubtn {
+	display: none;
 }
 
 
@@ -157,8 +178,6 @@ thead  {
 }
 
 tr.alt-row, tr.jsgrid-alt-row {	background-color: #e0e0e0; }
-tr.from-team { background-color: white; }
-tr.to-team { background-color: #e0e0e0; }
 
 
 td {
@@ -186,4 +205,21 @@ a.pgbutton:hover {
 span.pgbutton {
 	background: #808080;
 	color: white;
+}
+
+
+/* Messages */
+
+.message {
+	padding: 0.5ex 1ex;
+	margin: 0.2ex;
+	border-radius: 3px;
+	line-height: 1.5;
+}
+
+.to-team { background-color: white; }
+.from-team { background-color: #e0e0e0; }
+
+.message .time {
+	font-weight: bold;
 }
