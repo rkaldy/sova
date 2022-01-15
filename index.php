@@ -9,6 +9,7 @@ if (DEVELOPMENT) {
 	ini_set('display_errors', 1);
 }
 
+session_set_cookie_params(3600*3);
 session_start();
 
 $app = new Application();
