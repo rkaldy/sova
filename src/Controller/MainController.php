@@ -12,6 +12,7 @@ use Sova\Model\Hint;
 use Sova\Model\Message;
 use Sova\Model\Progress;
 use Sova\Model\Text;
+use Sova\Model\Settings;
 
 
 class MainController {
@@ -39,6 +40,7 @@ class MainController {
 		if (Team::logged()) {
 			$view->addField("team", Team::currentName());
 			$view->addField("game", Game::currentName());
+		    $view->addField("showRank", Settings::value("showRank"));
 		}
 
 		$output = $view->render("main-layout");
@@ -96,7 +98,7 @@ class MainController {
 
 	public function messages($params, $data) {
 		$page = isset($params["page"]) ? $params["page"] : 1;
-		list($messages, $count) = (new Message())->listForTeam(($page - 1) * 20, 20);
+		list($messages, $count) = (new Message())->listForTeam(($page - 1) * 15, 15);
 		return new View("main/messages", ["messages" => $messages, "totalCount" => $count, "page" => $page]);
 	}
 

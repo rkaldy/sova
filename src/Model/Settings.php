@@ -30,7 +30,8 @@ class Settings extends ModelBase {
 				return "Chyba: Neznámé číslo stanoviště";
 			}
 		}
-		$settings["locVisitMandatory"] = (int)($settings["locVisitMandatory"] == "on");
+		$settings["locVisitMandatory"] = (int)isset($settings["locVisitMandatory"]);
+		$settings["showRank"] = (int)isset($settings["showRank"]);
 		$this->repo->set(Game::current(), $settings);
 		return "Nastavení bylo uloženo";
 	}

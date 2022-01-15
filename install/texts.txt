@@ -1,5 +1,6 @@
 code.unknown;Neznámý kód: %s
 loc.visited;Vítejte na stanovišti %s. Jste tu %s. První tu byl tým %s v %s.
+loc.visited.no-rank;Vítejte na stanovišti %s.
 loc.already;Tento kód stanoviště jste již zadali.
 loc.next;Poloha dalšího stanoviště je: %s.
 loc.next.multi;Polohy dalších stanovišť jsou: %s.
@@ -7,7 +8,8 @@ loc.by-solved-ciphers;Vyluštili jste dostatek šifer pro otevření stanovišt�
 cipher.unknown;Neznámé číslo šifry: %s
 cipher.no-previous-cipher;Na šifru %s jste se ještě nemohli dostat, protože jste nevyluštili předchozí šifru.
 cipher.no-previous-loc;Na šifru %s jste se ještě nemohli dostat, protože jste nezadali kód jejího stanoviště.
-cipher.solved;Úspěšně jste vyluštili šifru %s. Jste %s. První ji vyluštil tým %s v %s. Máte vyluštěno %s šifer.
+cipher.solved;Úspěšně jste vyluštili šifru %s. Jste %s. První ji vyluštil tým %s v %s. Máte vyluštěno celkem %s šifer.
+cipher.solved.no-rank;Úspěšně jste vyluštili šifru %s. Máte vyluštěno celkem %s šifer.
 cipher.already;Toto řešení šifry jste již zadali.
 cipher.hint;Přišel čas na nápovědu k šifře %s: %s.
 cipher.solution;Přišel čas na řešení šifry %s: %s

@@ -55,9 +55,13 @@ class Loc extends ModelBase {
 				$nextLocs[] = $point;
 			}
 		}
-		
-		list($rank, $firstTeam, $firstTime) = $progress->getRank($loc);
-		$ret = [new Text("loc.visited", $loc["name"], $rank, $firstTeam, $firstTime)];
+
+		if (Settings::showRank()) {		
+			list($rank, $firstTeam, $firstTime) = $progress->getRank($loc);
+			$ret = [new Text("loc.visited", $loc["name"], $rank, $firstTeam, $firstTime)];
+		} else {
+			$ret = [new Text("loc.visited.no-rank", $loc["name"])];
+		}
 
 		Loc::buildNextLocMessage($ret, $nextLocs);
 		return $ret;
