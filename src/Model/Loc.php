@@ -21,16 +21,17 @@ class Loc extends ModelBase {
 	}
 
 
-	public static function buildNextLocMessage(array &$ret, array $next) {
-		if (count($next) == 1) {
-			$ret[] = new Text("loc.next", $next[0]["description"]);
-		} else if (count($next) > 1) {
-			$nextLocs = [];
-			foreach ($next as $loc) {
-				$nextLocs[] = $loc["name"] . "/" . $loc["description"];
+	public static function getDescription(array $loc): string {
+		$desc = $loc["description"];
+		if (isset($loc["coord_lat"]) && isset($loc["coord_lon"])) {
+			$coord = "{$loc["coord_lat"]}N {$loc["coord_lon"]}E";
+			if (!empty(Settings::value("linkMapyCz"))) {
+				$desc .= ', <a href="https://mapy.cz/'.Settings::value("linkMapyCz")."?x={$loc["coord_lon"]}&y={$loc["coord_lat"]}&z=15\">$coord</a>";
+			} else {
+				$desc .= ", $coord";
 			}
-			$ret[] = new Text("loc.next.multi", join("; ", $nextLocs));
 		}
+		return $desc;
 	}
 
 
@@ -44,26 +45,24 @@ class Loc extends ModelBase {
 			return new Text("loc.already");
 		}
 		
-		$hint = new Hint();
-		$nextLocs = [];
-		foreach ($this->repo->getNextPoints($loc["point_id"]) as $point) {
-			if ($point["is_cipher"]) {
-				if ($this->repo->visitedAllLocsWithCipher(Team::current(), $point["point_id"])) {
-					$hint->amend($point);
-				}
-			} else {
-				$nextLocs[] = $point;
-			}
-		}
-
 		if (Settings::showRank()) {		
 			list($rank, $firstTeam, $firstTime) = $progress->getRank($loc);
 			$ret = [new Text("loc.visited", $loc["name"], $rank, $firstTeam, $firstTime)];
 		} else {
 			$ret = [new Text("loc.visited.no-rank", $loc["name"])];
 		}
+		
+		$hint = new Hint();
+		foreach ($this->repo->getNextPoints($loc["point_id"]) as $point) {
+			if ($point["is_cipher"]) {
+				if ($this->repo->visitedAllLocsWithCipher(Team::current(), $point["point_id"])) {
+					$hint->amend($point);
+				}
+			} else {
+				$ret[] = new Text("loc.next", $point["name"], self::getDescription($point));
+			}
+		}
 
-		Loc::buildNextLocMessage($ret, $nextLocs);
 		return $ret;
 	}
 }

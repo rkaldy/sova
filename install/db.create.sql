@@ -59,6 +59,8 @@ CREATE TABLE hint (
 CREATE TABLE loc (
   point_id int(11) NOT NULL,
   description varchar(500) COLLATE utf8mb4_czech_ci DEFAULT NULL,
+  coord_lat decimal(10, 7) NULL,
+  coord_lon decimal(10, 7) NULL,
   solved_cipher_count int(11) DEFAULT NULL,
   end_time datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
@@ -90,7 +92,8 @@ CREATE TABLE settings (
   gameEnd timestamp NULL DEFAULT NULL,
   locVisitMandatory tinyint(4) NOT NULL DEFAULT 0,
   locFinish int(11) DEFAULT NULL,
-  showRank tinyint(4) NOT NULL DEFAULT 1
+  showRank tinyint(4) NOT NULL DEFAULT 1,
+  linkMapyCz VARCHAR(20) NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE step (

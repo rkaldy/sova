@@ -56,7 +56,7 @@ class LocRepo extends PointRepo {
 		try {
 			$this->db->execute("INSERT INTO point (game_id, name) VALUES (:game_id, :name)", $loc, true);
 			$loc["point_id"] = $this->db->lastInsertId();
-			$this->db->execute("INSERT INTO loc (point_id, description, solved_cipher_count, end_time) VALUES (:point_id, :description, :solved_cipher_count, :end_time)", $loc, true);
+			$this->db->execute("INSERT INTO loc (point_id, description, coord_lat, coord_lon, solved_cipher_count, end_time) VALUES (:point_id, :description, :coord_lat, :coord_lon, :solved_cipher_count, :end_time)", $loc, true);
 			$this->db->execute("INSERT INTO code (game_id, code, point_id) VALUES (:game_id, :code, :point_id)", $loc, true);
 			$this->addNextLocs($loc);
 		} catch (DBException $ex) {
@@ -67,7 +67,7 @@ class LocRepo extends PointRepo {
 
 	function update(array $loc) {
 		$this->db->execute("UPDATE point SET name = :name WHERE point_id = :point_id", $loc);
-		$this->db->execute("UPDATE loc SET description = :description, solved_cipher_count = :solved_cipher_count, end_time = :end_time WHERE point_id = :point_id", $loc);
+		$this->db->execute("UPDATE loc SET description = :description, coord_lat = :coord_lat, coord_lon = :coord_lon, solved_cipher_count = :solved_cipher_count, end_time = :end_time WHERE point_id = :point_id", $loc);
 		$this->db->execute("UPDATE code SET code = :code WHERE point_id = :point_id", $loc);
 		$this->addNextLocs($loc);
 	}

@@ -50,6 +50,6 @@ class Settings extends ModelBase {
 	}
 
 	public static function isLocVisitMandatory() 	{ return $_SESSION["settings"]["locVisitMandatory"]; }
-	public static function showRank()			 	{ return $_SESSION["settings"]["showRank"]; }
 	public static function getFinish()				{ return $_SESSION["settings"]["locFinish"]; }
+	public static function showRank()			 	{ return $_SESSION["settings"]["showRank"]; }
 }

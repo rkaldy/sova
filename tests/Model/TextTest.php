@@ -6,15 +6,15 @@ use Sova\TestBase;
 class TextTest extends TestBase {
 
 	function testFormat() {
-		$text = new Text("loc.next", "Vrchol Černé hory");
-		$this->assertEquals("Poloha dalšího stanoviště je: Vrchol Černé hory.", $text->format());
+		$text = new Text("loc.next", 3, "na vrcholu Černé hory");
+		$this->assertEquals("Další stanoviště 3 se nachází na vrcholu Černé hory.", $text->format());
 	}
 
 	function testCustomFormat() {
-		$this->db->execute("UPDATE text SET text = 'Poloha další šifry: %s' WHERE game_id = 2 AND code = 'loc.next'"); 
-		$text = new Text("loc.next", "Vrchol Černé hory");
-		$this->assertEquals("Poloha dalšího stanoviště je: Vrchol Černé hory.", $text->format());
+		$this->db->execute("UPDATE text SET text = 'Poloha další šifry %s je %s.' WHERE game_id = 1 AND code = 'loc.next'"); 
+		$text = new Text("loc.next", 3, "na vrcholu Černé hory");
+		$this->assertEquals("Poloha další šifry 3 je na vrcholu Černé hory.", $text->format());
 		$_SESSION["game_id"] = 2;
-		$this->assertEquals("Poloha další šifry: Vrchol Černé hory", $text->format());
+		$this->assertEquals("Další stanoviště 3 se nachází na vrcholu Černé hory.", $text->format());
 	}
 }

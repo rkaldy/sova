@@ -1,8 +1,8 @@
 <?php if ($gameState == \Sova\Model\Game::CURRENT) { ?>
 
-<p><?php if (isset($response)) echo $response; ?></p>
+<p id="response"><?php if (isset($response)) echo $response; ?></p>
 
-<p>Aktuálně máte <?php echo $hintCount ?> nevyužitých nápověd.</p>
+<p id="hintcount">Aktuálně máte <?php echo $hintCount ?> nevyužitých nápověd.</p>
 
 <h3>Zadejte číslo šifry, ke které chcete nápovědu</h3>
 

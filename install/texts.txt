@@ -2,8 +2,7 @@ code.unknown;Neznámý kód: %s
 loc.visited;Vítejte na stanovišti %s. Jste tu %s. První tu byl tým %s v %s.
 loc.visited.no-rank;Vítejte na stanovišti %s.
 loc.already;Tento kód stanoviště jste již zadali.
-loc.next;Poloha dalšího stanoviště je: %s.
-loc.next.multi;Polohy dalších stanovišť jsou: %s.
+loc.next;Další stanoviště %s se nachází %s.
 loc.by-solved-ciphers;Vyluštili jste dostatek šifer pro otevření stanoviště %s: %s.
 cipher.unknown;Neznámé číslo šifry: %s
 cipher.no-previous-cipher;Na šifru %s jste se ještě nemohli dostat, protože jste nevyluštili předchozí šifru.

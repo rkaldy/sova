@@ -72,7 +72,7 @@ class MainController {
 		} else if (isset($params["code"])) {
 			$response = CodeController::process($params["code"]);
 		} else {
-			$response = null;
+			$response = [];
 		}
 		return new View("main/code", ["response" => $response]);
 	}	

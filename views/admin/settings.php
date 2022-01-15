@@ -55,6 +55,21 @@
     </td>
   </tr>
   <tr>
+    <th>
+	  <label for="linkMapyCz">
+		Odkaz na mapy.cz<br>
+        <small>Má-li stanoviště zadané souřadnice, zobrazí se týmům jako odkaz na mapy.cz</small>
+      </label>
+    </th>
+    <td>
+      <select name="linkMapyCz">
+        <option value="">-</option>
+        <option value="turisticka">Turistická</option>
+        <option value="zimni">Zimní</option>
+      </select>
+    </td>
+  </tr>
+  <tr>
     <th></th>
 	<td><input type="submit" value="Uložit"></td>
   </tr>

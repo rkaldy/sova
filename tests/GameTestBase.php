@@ -8,6 +8,11 @@ class GameTestBase extends TestBase {
 
 	protected $progressRepo;
 
+/* 
+ * (Start)--> S1a -> (1a) --> S2 -> (Turniket) -> (3) -> S3 -> (4) --> S4a --> (Cíl)
+ *        \-> S1b -> (1b) -/                                       \-> S4b -/
+ */
+
 	function setUp(): void {
 		parent::setUp();
 
@@ -22,12 +27,12 @@ class GameTestBase extends TestBase {
 		$this->db->execute("INSERT INTO point (point_id, game_id, name) VALUES (6, 1, '4')");
 		$this->db->execute("INSERT INTO point (point_id, game_id, name) VALUES (7, 1, 'Cíl')");
 		$this->db->execute("INSERT INTO loc (point_id, description) VALUES (1, '')");
-		$this->db->execute("INSERT INTO loc (point_id, description) VALUES (2, 'Vrchol Bílé hory')");
-		$this->db->execute("INSERT INTO loc (point_id, description) VALUES (3, 'Vrchol Černé hory')");
-		$this->db->execute("INSERT INTO loc (point_id, description) VALUES (4, 'Pardubické boudy, hledej orga')");
-		$this->db->execute("INSERT INTO loc (point_id, description) VALUES (5, 'Kolínská bouda')");
-		$this->db->execute("INSERT INTO loc (point_id, description) VALUES (6, 'Pražská bouda')");
-		$this->db->execute("INSERT INTO loc (point_id, description) VALUES (7, 'Kóta 1019 nad Pražskou boudou')");
+		$this->db->execute("INSERT INTO loc (point_id, description) VALUES (2, 'na vrcholu Bílé hory')");
+		$this->db->execute("INSERT INTO loc (point_id, description) VALUES (3, 'na vrcholu Černé hory')");
+		$this->db->execute("INSERT INTO loc (point_id, description) VALUES (4, 'na Pardubických boudách, hledej orga')");
+		$this->db->execute("INSERT INTO loc (point_id, description) VALUES (5, 'na Kolínské boudě')");
+		$this->db->execute("INSERT INTO loc (point_id, description) VALUES (6, 'na Pražské boudě')");
+		$this->db->execute("INSERT INTO loc (point_id, description) VALUES (7, 'na kótě 1019 nad Pražskou boudou')");
 		
 		$this->db->execute("INSERT INTO code (game_id, point_id, code) VALUES (1, 1, 'PRALINKA')");
 		$this->db->execute("INSERT INTO code (game_id, point_id, code) VALUES (1, 2, 'KYBL')");

@@ -1,6 +1,6 @@
 <?php if ($gameState == \Sova\Model\Game::CURRENT) { ?>
 
-<p><?php if (isset($response)) echo $response; ?></p>
+<p id="response"><?php echo join("<br>", $response) ?></p>
 
 <h3>Zadej kód</h3>
 <form method="POST" action="code">

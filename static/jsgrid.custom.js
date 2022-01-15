@@ -14,6 +14,14 @@ codeValidatorReq = {
 	}
 };
 
+coordValidator = {
+	validator: "pattern",
+	param: "[0-9]*\\.?[0-9]*",
+	message: function() {
+		return "Zadejte desetinné číslo s desetinnou tečkou";
+	}
+};
+
 
 ajaxErrorHandler = function(jqXHR) {
 	var resp = JSON.parse(jqXHR.responseText);

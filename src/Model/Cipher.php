@@ -43,15 +43,18 @@ class Cipher extends ModelBase {
 		$this->repo->deletePendingHintsForParallelCiphers(Team::current(), $cipher);
 
 		$solved = $this->repo->solvedCipherCount(Team::current());
-
+		
 		if (Settings::showRank()) {
 			list($rank, $firstTeam, $firstTime) = $progress->getRank($cipher);
 			$ret = [new Text("cipher.solved", $cipher["name"], $rank, $firstTeam, $firstTime, $solved)];
 		} else {
 			$ret = [new Text("cipher.solved.no-rank", $cipher["name"], $solved)];
 		}
-
-		Loc::buildNextLocMessage($ret, $this->repo->getNextLocs($cipher));
+		
+		foreach ($this->repo->getNextLocs($cipher) as $loc) {
+			$ret[] = new Text("loc.next", $loc["name"], Loc::getDescription($loc));
+		}
+		
 		$this->checkSolvedCipherCount($ret, $solved);
 
 		return $ret;

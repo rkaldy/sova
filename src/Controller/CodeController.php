@@ -47,18 +47,15 @@ class CodeController {
 			$response = new Text("code.unknown", $code);
 		}
 
-		if (is_array($response)) {
-			$responseStr = "";
-			foreach ($response as $resp) {
-				if (!empty($responseStr)) {
-					$responseStr .= " ";
-				}
-				$responseStr .= $resp->format();				
-			}
-		} else {
-			$responseStr = $response->format();
+		if (!is_array($response)) {
+			$response = [$response];
 		}
-		$message->sendToTeam($responseStr);
+		$responseStr = [];
+		foreach ($response as $resp) {
+			$str = $resp->format();	
+			$responseStr[] = $str;
+			$message->sendToTeam($str);
+		}
 		return $responseStr;
 	}
 }
