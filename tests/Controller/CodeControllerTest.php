@@ -10,8 +10,6 @@ use Sova\Repo\ProgressRepo;
 
 class CodeControllerTest extends GameTestBase {
 
-	protected $progresRepo;
-
 	function setUp(): void {
 		parent::setUp();
 		$this->progressRepo = new ProgressRepo();
@@ -55,6 +53,13 @@ class CodeControllerTest extends GameTestBase {
 	function testVisitLocNoRank() {
 		$_SESSION["settings"]["showRank"] = 0;
 		$this->assertEquals(["Vítejte na stanovišti Start."], CodeController::process("pralinka"));
+	}
+
+	function testVisitFinishNoRank() {
+		$_SESSION["settings"]["locFinish"] = 3;
+		$_SESSION["settings"]["showRank"] = 0;
+		CodeController::process("zabradli");
+		$this->assertEquals(["Gratulujeme, jste v cíli!"], CodeController::process("podnos"));
 	}
 
 	function testTimeHints() {
@@ -245,9 +250,9 @@ class CodeControllerTest extends GameTestBase {
 			["name" => "Redwool", "solved" => 3, "last_loc" => "1a", "finish_time" => "-"],
 		], self::stripTimes($this->progressRepo->rankTotal(1)));
 
-		$settings = new Settings();
-		$settings->set(["locFinish" => 7, "locVisitMandatory" => true]);
-		$settings->load();
+        $settings = new Settings();
+        $settings->set(["locFinish" => 7, "locVisitMandatory" => true]);
+        $settings->load();
 		$this->assertEquals([
 			["name" => "Parta Nic", "solved" => 5, "last_loc" => "Cíl", "finish_time" => "+"],
 			["name" => "abpopa", "solved" => 6, "last_loc" => "4", "finish_time" => "-"],

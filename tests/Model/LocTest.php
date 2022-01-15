@@ -43,13 +43,12 @@ class LocTest extends GameTestBase {
 	function testVisitAlready() {
 		$loc = $this->locRepo->get(1);
 		$this->progressRepo->create(1, 1);
-		$this->assertEquals(new Text("loc.already"), $this->loc->visit($loc, "KYBL"));
+		$this->assertEquals(new Text("loc.already"), $this->loc->visit($loc, "PRALINKA"));
 	}
 
 	function testVisit() {
 		$loc = $this->locRepo->get(1);
-		$this->assertEquals([new Text("loc.visited", "Start", 1, "Parta Nic", $this->dbNow())], $this->loc->visit($loc, "KYBL"));
-		$messages = $this->db->aquery("SELECT direction, text FROM message WHERE team_id = 1 ORDER BY time");
+		$this->assertEquals([new Text("loc.visited", "Start", 1, "Parta Nic", $this->dbNow())], $this->loc->visit($loc, "PRALINKA"));
 	}
 
 	function testNextLoc() {
@@ -70,5 +69,15 @@ class LocTest extends GameTestBase {
 		$this->assertEquals("na severním pólu, 90N 0E", Loc::getDescription($loc));
 		$_SESSION["settings"]["linkMapyCz"] = "zimni";
 		$this->assertEquals('na severním pólu, <a href="https://mapy.cz/zimni?x=0&y=90&z=15">90N 0E</a>', Loc::getDescription($loc));
+	}
+
+	function testFinish() {
+		$_SESSION["settings"]["locFinish"] = 3;
+		$this->progressRepo->create(1, 11);
+		$this->progressRepo->create(1, 12);
+		$loc = $this->locRepo->get(2);
+		$this->assertEquals([new Text("loc.visited", "1a", 1, "Parta Nic", $this->dbNow())], $this->loc->visit($loc, "KYBL"));
+		$loc = $this->locRepo->get(3);
+		$this->assertEquals([new Text("loc.finish.visited", "1b", 1, "Parta Nic", $this->dbNow())], $this->loc->visit($loc, "PODNOS"));
 	}
 }

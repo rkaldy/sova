@@ -35,6 +35,11 @@ class Loc extends ModelBase {
 	}
 
 
+	public function isFinish(array $loc) {
+		return $loc["point_id"] == Settings::value("locFinish");
+	}
+
+
 	public function visit(array $loc, string $code) {
 		if (!$this->checkPreviousPointsVisited($loc["point_id"])) {
 			return new Text("code.unknown", $code);
@@ -44,12 +49,13 @@ class Loc extends ModelBase {
 		if (!$progress->create($loc)) {
 			return new Text("loc.already");
 		}
-		
+
+		$finish = $this->isFinish($loc) ? ".finish" : "";
 		if (Settings::showRank()) {		
 			list($rank, $firstTeam, $firstTime) = $progress->getRank($loc);
-			$ret = [new Text("loc.visited", $loc["name"], $rank, $firstTeam, $firstTime)];
+			$ret = [new Text("loc$finish.visited", $loc["name"], $rank, $firstTeam, $firstTime)];
 		} else {
-			$ret = [new Text("loc.visited.no-rank", $loc["name"])];
+			$ret = [new Text("loc$finish.visited.no-rank", $loc["name"])];
 		}
 		
 		$hint = new Hint();
