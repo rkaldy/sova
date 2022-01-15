@@ -51,7 +51,7 @@ class Cipher extends ModelBase {
 			$ret = [new Text("cipher.solved.no-rank", $cipher["name"], $solved)];
 		}
 		
-		foreach ($this->repo->getNextLocs($cipher) as $loc) {
+		foreach ($this->repo->getNextLocsNotVisited(Team::current(), $cipher) as $loc) {
 			$ret[] = new Text("loc.next", $loc["name"], Loc::getDescription($loc));
 		}
 		

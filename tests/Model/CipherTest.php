@@ -75,4 +75,12 @@ class CipherTest extends GameTestBase {
 			new Text("loc.by-solved-ciphers", "Váza", "na vrcholu Sněžky")
 		], $this->cipher->solve($cipher, "ZABRADLI"));
 	}
+
+	function testSolvedNextLocAlreadyVisited() {
+		$this->progressRepo->create(1, 2);
+		$cipher = $this->cipherRepo->get(11);
+		$this->assertEquals([
+			new Text("cipher.solved", "S1a", 1, "Parta Nic", $this->dbNow(), 1) 
+		], $this->cipher->solve($cipher, "ABERACE"));
+	}
 }

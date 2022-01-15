@@ -125,14 +125,15 @@ class CipherRepo extends PointRepo {
 		", $teamId, $cipher["point_id"]) == 0;
 	}
 
-	public function getNextLocs(array $cipher) {
+	public function getNextLocsNotVisited(int $teamId, array $cipher) {
 		return $this->db->aquery("
 			SELECT point.*, loc.*
 			FROM point 
 			NATURAL JOIN loc
 			JOIN step ON step.to_point_id = loc.point_id
-			WHERE step.from_point_id = ?
-		", $cipher["point_id"]);
+			LEFT JOIN progress ON progress.point_id = loc.point_id AND progress.team_id = ?
+			WHERE step.from_point_id = ? AND progress.point_id IS NULL
+		", $teamId, $cipher["point_id"]);
 	}
 
 	public function deletePendingHintsForParallelCiphers(int $teamId, array $cipher) {
