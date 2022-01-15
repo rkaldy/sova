@@ -22,7 +22,8 @@ class Message extends ModelBase {
 	public function listForTeam($from = 0, $limit = 999999) {
 		$messages = $this->repo->listForTeam(Team::current(), $from, $limit);
 		$this->addDirectionStr($messages);
-		return $messages;
+		$count = $this->repo->countForTeam(Team::current());
+		return [$messages, $count];
 	}
 
 

@@ -54,7 +54,8 @@ class MessageTest extends TestBase {
 
 	function testListForTeam() {
 		$this->message->broadcast([1, 2], "Konec hry");
-		$messages = $this->message->listForTeam();
+		list($messages, $count) = $this->message->listForTeam();
+		$this->assertEquals(1, $count);
 		$this->assertEquals([
 			["direction" => Message::TO_TEAM, "direction_str" => "out", "text" => "Konec hry"]
 		], self::stripTimes($messages));
