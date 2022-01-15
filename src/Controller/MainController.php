@@ -3,6 +3,7 @@ namespace Sova\Controller;
 
 use Sova\Request;
 use Sova\Response;
+use Sova\Redirect;
 use Sova\View;
 use Sova\HttpException;
 use Sova\Model\Team;
@@ -35,6 +36,9 @@ class MainController {
 			$view = $this->$action($req->params, $req->data);
 		}
 
+		if ($view instanceof Redirect) {
+			return $view->buildResponse();
+		}
 		$view->addField("action", $action);
 		$view->addField("gameState", Game::state());
 		if (Team::logged()) {
@@ -51,7 +55,7 @@ class MainController {
 	public function login($params, $data) {
 		if (isset($data["team_id"])) {
 			if ((new Team())->login((int)$data["team_id"], $data["pswd"])) {
-				return $this->code([], []);
+				return new Redirect("code");
 			} else {
 				return new View("main/login", ["flash" => "Špatné číslo týmu nebo heslo"]);
 			}
@@ -62,7 +66,7 @@ class MainController {
 
 	public function logout($params, $data) {
 		Team::logout();
-		return new View("main/login");
+		return new Redirect("login");
 	}
 
 

@@ -4,7 +4,7 @@
 if (isset($flash)) echo "<p id=\"flash\">$flash</p>";
 ?>
 
-<p>Zadejte přihlašovací údaje, které vám přišly mailem.</p>
+<p>Zadejte přihlašovací údaje vašeho týmu:</p>
 
 <form method="post" action="login">
   <table>
