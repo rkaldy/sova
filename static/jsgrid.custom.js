@@ -14,6 +14,14 @@ codeValidatorReq = {
 	}
 };
 
+integerValidator = {
+	validator: "pattern",
+	param: "[0-9]*",
+	message: function() {
+		return "Zadejte celé číslo";
+	}
+};
+
 coordValidator = {
 	validator: "pattern",
 	param: "[0-9]*\\.?[0-9]*",

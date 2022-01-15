@@ -21,8 +21,8 @@ $(function() {
 			{ name: "name_int", title: "Interní název", type: "text", width: 30  },
 			{ name: "code", title: "Řešení", type: "text", width: 20, validate: codeValidatorReq },
 			{ name: "hint", title: "Nápověda", type: "textarea", width: 40 },
-			{ name: "hint_timeout", title: "Čas odeslání nápovědy", type: "number", width: 15 },
-			{ name: "solution_timeout", title: "Čas odeslání řešení", type: "number", width: 15 },
+			{ name: "hint_timeout", title: "Čas odeslání nápovědy", type: "text", width: 15, validate: integerValidator },
+			{ name: "solution_timeout", title: "Čas odeslání řešení", type: "text", width: 15, validate: integerValidator },
 			{ name: "prev", title: "Umístění šifry", type: "multiselect", width: 30, items: locs, valueField: "point_id", textField: "name", longTextField: longText },
 			{ name: "next", title: "Následující stanoviště", type: "multiselect", width: 30, items: locs, valueField: "point_id", textField: "name", longTextField: longText },
 			{ type: "control", width: 5 }
