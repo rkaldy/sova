@@ -32,6 +32,7 @@ class Settings extends ModelBase {
 		}
 		$settings["locVisitMandatory"] = (int)isset($settings["locVisitMandatory"]);
 		$settings["showRank"] = (int)isset($settings["showRank"]);
+		$settings["deleteParallelHints"] = (int)isset($settings["deleteParallelHints"]);
 		$this->repo->set(Game::current(), $settings);
 		return "Nastavení bylo uloženo";
 	}

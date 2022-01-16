@@ -93,7 +93,8 @@ CREATE TABLE settings (
   locVisitMandatory tinyint(4) NOT NULL DEFAULT 0,
   locFinish int(11) DEFAULT NULL,
   showRank tinyint(4) NOT NULL DEFAULT 1,
-  linkMapyCz VARCHAR(20) NULL DEFAULT NULL
+  linkMapyCz VARCHAR(20) NULL DEFAULT NULL,
+  deleteParallelHints tinyint(4) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE step (

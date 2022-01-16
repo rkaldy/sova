@@ -43,6 +43,15 @@
   </tr>
   <tr>
     <th>
+      <label for="deleteParallelHints">
+	    Rušit časové nápovědy na paralelních šifrách?<br>
+  	    <small>Vyřešíte-li šifru, zruší se tím časové nápovědy na všech paralelních šifrách (tj. šifrách vedoucích na stejné stanoviště jako právě vyluštěná šifra)</small>
+	  </label>
+    </th>
+    <td><input type="checkbox" name="deleteParallelHints" <?php if ($deleteParallelHints) echo 'checked="checked"' ?>></td>
+  </tr>
+  <tr>
+    <th>
       <label for="locFinish">Cílové stanoviště</label>
     </th>
     <td>

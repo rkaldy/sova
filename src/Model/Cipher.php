@@ -40,7 +40,11 @@ class Cipher extends ModelBase {
 			$progress->create($loc);
 		}
 
-		$this->repo->deletePendingHintsForParallelCiphers(Team::current(), $cipher);
+		if (Settings::value("deleteParallelHints")) {
+			$this->repo->deletePendingHintsForParallelCiphers(Team::current(), $cipher);
+		} else {
+			$this->repo->deletePendingHints(Team::current(), $cipher);
+		}
 
 		$solved = $this->repo->solvedCipherCount(Team::current());
 		

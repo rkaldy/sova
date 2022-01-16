@@ -124,6 +124,25 @@ class CodeControllerTest extends GameTestBase {
 			"Úspěšně jste vyluštili šifru S4b. Jste 1. První ji vyluštil tým Parta Nic v ".$this->dbNow().". Máte vyluštěno celkem 2 šifer.",
 			"Další stanoviště Cíl se nachází na kótě 1019 nad Pražskou boudou."
 		], CodeController::process("skluzavka"));
+		$this->assertEquals([
+			"Přišel čas na nápovědu k šifře S4a: Křižovatka, železnice, Suchý.",
+			"Přišel čas na řešení šifry S4a: KALENDAR"
+		], $this->getFutureMessages());
+	}
+
+	function testDeleteParallelPendingHints() {
+		$_SESSION["settings"]["deleteParallelHints"] = 1;
+		$this->progressRepo->create(1, 14);
+		$this->assertEquals(["Vítejte na stanovišti 4. Jste tu 1. První tu byl tým Parta Nic v ".$this->dbNow()."."], CodeController::process("tabulka"));
+		$this->assertEquals([
+			"Přišel čas na nápovědu k šifře S4a: Křižovatka, železnice, Suchý.",
+			"Přišel čas na nápovědu k šifře S4b: Jedničky a nuly.",
+			"Přišel čas na řešení šifry S4a: KALENDAR"
+		], $this->getFutureMessages());
+		$this->assertEquals([
+			"Úspěšně jste vyluštili šifru S4b. Jste 1. První ji vyluštil tým Parta Nic v ".$this->dbNow().". Máte vyluštěno celkem 2 šifer.",
+			"Další stanoviště Cíl se nachází na kótě 1019 nad Pražskou boudou."
+		], CodeController::process("skluzavka"));
 		$this->assertEmpty($this->getFutureMessages());
 	}
 

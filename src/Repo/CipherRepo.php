@@ -136,6 +136,10 @@ class CipherRepo extends PointRepo {
 		", $teamId, $cipher["point_id"]);
 	}
 
+	public function deletePendingHints(int $teamId, array $cipher) {
+		$this->db->execute("DELETE FROM hint WHERE team_id = ? AND time > NOW() AND cipher_id = ?", [$teamId, $cipher["point_id"]]);
+	}
+
 	public function deletePendingHintsForParallelCiphers(int $teamId, array $cipher) {
 		$this->db->execute("
 			DELETE FROM hint 
