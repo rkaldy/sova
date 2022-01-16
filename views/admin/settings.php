@@ -72,9 +72,14 @@
     </th>
     <td>
       <select name="linkMapyCz">
-        <option value="">-</option>
-        <option value="turisticka">Turistická</option>
-        <option value="zimni">Zimní</option>
+<?php
+$mapTypes = ["" => "-", "turisticka" => "Turistická", "zimni" => "Zimní"];
+foreach ($mapTypes as $key => $value) {
+	echo "<option value=\"$key\"";
+	if ($key == $linkMapyCz) echo ' selected="selected"';
+	echo ">$value</option>";
+}
+?>
       </select>
     </td>
   </tr>
