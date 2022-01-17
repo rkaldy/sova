@@ -33,4 +33,19 @@ class Statistics {
 			$this->repo->hints(Game::current())
 		);
 	}
+
+	public function zakys() {
+		$progress = (new ProgressRepo())->progress(Game::current());
+		$times = [];
+		for ($i = 1; $i < count($progress); $i++) {
+			$prog = $progress[$i];
+			$prev = $progress[$i-1];
+			if ($prog["team_id"] == $prev["team_id"] && !$prog["is_loc"]) {
+				$timediff = $prog["time_sec"] - $prev["time_sec"];
+				$times[] = [$prog["team_name"], $prog["point_name"], (int)$timediff];
+			}
+		}
+		usort($times, function($a, $b) { return -($a[2] <=> $b[2]); });
+		return array_merge([["Tým", "Vyluštěná šifra", "Čas"]], array_slice($times, 0, 10));
+	}
 }
