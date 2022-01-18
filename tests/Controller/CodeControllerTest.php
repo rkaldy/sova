@@ -29,8 +29,14 @@ class CodeControllerTest extends GameTestBase {
 	}
 
 
+	function testInvalidCode() {
+		$this->assertEquals(["Kód musí být jednoslovné podstatné jméno."], CodeController::process(""));
+		$this->assertEquals(["Kód musí být jednoslovné podstatné jméno."], CodeController::process("f*cky0u"));
+	}
+
 	function testBadCode() {
 		$this->assertEquals(["Neznámý kód: BAD"], CodeController::process("bad"));
+		$this->assertEquals(["Neznámý kód: BAD"], CodeController::process("báď"));
 	}
 
 	function testAddHint() {

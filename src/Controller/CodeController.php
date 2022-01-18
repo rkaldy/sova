@@ -19,6 +19,9 @@ class CodeController {
 		}
 
 		$code = Code::polish($request);
+		if (!Code::valid($code)) {
+			return [(new Text("code.invalid"))->format()];
+		}
 		$message = new Message();
 		$message->sendToSova($code);
 

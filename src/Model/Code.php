@@ -13,7 +13,11 @@ class Code {
 	}
 
 	public static function polish($code) {
-		return strtoupper(trim($code));
+		return strtoupper(iconv("utf-8", "ascii//TRANSLIT", trim($code)));
+	}
+
+	public static function valid($code) {
+		return preg_match("/^[A-Z]+$/", $code);
 	}
 
 	public function prepare(?string &$code) {

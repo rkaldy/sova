@@ -1,4 +1,5 @@
 code.unknown;Neznámý kód: %s
+code.invalid;Kód musí být jednoslovné podstatné jméno.
 loc.visited;Vítejte na stanovišti %s. Jste tu %s. První tu byl tým %s v %s.
 loc.visited.no-rank;Vítejte na stanovišti %s.
 loc.finish.visited;Gratulujeme, jste v cíli! Jste tu %s. První tu byl tým %s v %s.
