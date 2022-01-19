@@ -8,6 +8,7 @@ package-lock.json
 config.php*
 !config.php.sample
 deploy
+addtxt
 *.sql
 TODO
 emulator.php

@@ -17,6 +17,10 @@ class ProgressRepo extends RepoBase {
 		}
 	}
 
+	public function isDone(int $teamId, int $pointId) {
+		return $this->db->equery("SELECT 1 FROM progress WHERE team_id = ? AND point_id = ?", $teamId, $pointId) != 0;
+	}
+
 	public function rankAtPoint(int $teamId, int $pointId) {
 		return $this->db->equery("
 			SELECT rank FROM

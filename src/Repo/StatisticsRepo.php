@@ -1,5 +1,3 @@
-d
-a
 <?php
 namespace Sova\Repo;
 

@@ -3,6 +3,7 @@ namespace Sova\Model;
 
 use Sova\Repo\HintRepo;
 use Sova\Repo\CipherRepo;
+use Sova\Repo\ProgressRepo;
 
 class Hint extends ModelBase {
 
@@ -25,17 +26,21 @@ class Hint extends ModelBase {
 		$cipher = (new CipherRepo())->getByName($cipherName, Game::current());
 		if (!isset($cipher)) {
 			return new Text("cipher.unknown", $cipherName);
+		} else if (empty($cipher["hint"])) {
+			return new Text("hint.no-hint");
 		}
 
 		$hint = $this->repo->getUnusedHint(Team::current());
 		if ($hint == null) {
-			return new Text("hint.apply.no-hint");
+			return new Text("hint.apply.no-unihint");
 		}
 		$hint["cipher_id"] = $cipher["point_id"];
 		$hint["type"] = self::NORMAL;
 
 		if ($this->repo->alreadyApplied($hint)) {
 			return new Text("hint.apply.already", $cipher["name"]);
+		} else if ((new ProgressRepo())->isDone(Team::current(), $cipher["point_id"])) {
+			return new Text("hint.apply.solved", $cipher["name"]);
 		} else if (!(new Cipher())->isReachable($cipher)) {
 			if (Settings::isLocVisitMandatory()) {
 				return new Text("cipher.no-previous-loc", $cipher["name"]);

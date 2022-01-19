@@ -65,10 +65,22 @@ class HintTest extends GameTestBase {
 		$resp = $this->hint->apply("S5");
 		$this->assertEquals(new Text("cipher.unknown", "S5"), $resp);
 	}
-	
+
 	function testApplyNoHint() {
+		$resp = $this->hint->apply("S3");
+		$this->assertEquals(new Text("hint.no-hint"), $resp);
+	}
+	
+	function testApplyNoUnihint() {
 		$resp = $this->hint->apply("S1b");
-		$this->assertEquals(new Text("hint.apply.no-hint"), $resp);
+		$this->assertEquals(new Text("hint.apply.no-unihint"), $resp);
+	}
+
+	function testApplyAlreadySolved() {
+		$this->db->execute("INSERT INTO hint (team_id, unihint_id, cipher_id) VALUES (1, 2, NULL)");
+		$this->progressRepo->create(1, 11);
+		$resp = $this->hint->apply("S1a");
+		$this->assertEquals(new Text("hint.apply.solved", "S1a"), $resp);
 	}
 
 
