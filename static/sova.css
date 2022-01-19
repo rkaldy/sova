@@ -217,8 +217,8 @@ span.pgbutton {
 	line-height: 1.5;
 }
 
-.to-team { background-color: white; }
-.from-team { background-color: #e0e0e0; }
+.to-team { background-color: white !important; }
+.from-team { background-color: #e0e0e0 !important; }
 
 .message .time {
 	font-weight: bold;
