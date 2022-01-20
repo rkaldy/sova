@@ -219,6 +219,7 @@ span.pgbutton {
 
 .to-team { background-color: white !important; }
 .from-team { background-color: #e0e0e0 !important; }
+.async { font-weight: bold }
 
 .message .time {
 	font-weight: bold;
