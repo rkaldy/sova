@@ -20,7 +20,10 @@ class RestHandler {
 								$from = ($params["page"] - 1) * $params["pageSize"];
 								$limit = $params["pageSize"];
 								$data = $model->list($from, $limit);
-								return ["data" => $data, "itemsCount" => count($data)];
+								return [
+									"data" => $model->list($from, $limit),
+									"itemsCount" => $model->count()
+								];
 							} else {
 								return $model->list();
 							}

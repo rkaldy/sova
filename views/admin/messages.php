@@ -1,3 +1,4 @@
+<div id="pagerContainer"></div>
 <div id="grid"></div>
 
 <script>
@@ -8,9 +9,9 @@ $(function() {
 		inserting: false,
 		editing: false,
 		paging: true,
-		pageLoading: true,
 		pageIndex: 1,
 		pageSize: 20,
+		pagerContainer: $("#pagerContainer"),
 		rowClass: function(item, index) {
 			return item.direction == 1 ? "from-team" : "to-team";
 		},
@@ -22,6 +23,11 @@ $(function() {
 			{ name: "text", title: "Zpráva", type: "text", width: 50 },
 		]
 	});
+});
+
+$("#pager").on("change", function() {
+    var page = parseInt($(this).val(), 10);
+    $("#grid").jsGrid("openPage", page);
 });
 </script>
 
