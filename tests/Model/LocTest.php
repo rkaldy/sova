@@ -68,7 +68,7 @@ class LocTest extends GameTestBase {
 	    $loc["coord_lon"] = "0";
 		$this->assertEquals("na severním pólu, 90N 0E", Loc::getDescription($loc));
 		$_SESSION["settings"]["linkMapyCz"] = "zimni";
-		$this->assertEquals('na severním pólu, <a href="https://mapy.cz/zimni?x=0&y=90&z=15">90N 0E</a>', Loc::getDescription($loc));
+		$this->assertEquals('na severním pólu, <a href="https://mapy.cz/zimni?q=90N%200E">90N 0E</a>', Loc::getDescription($loc));
 	}
 
 	function testFinish() {

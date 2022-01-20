@@ -26,7 +26,7 @@ class Loc extends ModelBase {
 		if (isset($loc["coord_lat"]) && isset($loc["coord_lon"])) {
 			$coord = "{$loc["coord_lat"]}N {$loc["coord_lon"]}E";
 			if (!empty(Settings::value("linkMapyCz"))) {
-				$desc .= ', <a href="https://mapy.cz/'.Settings::value("linkMapyCz")."?x={$loc["coord_lon"]}&y={$loc["coord_lat"]}&z=15\">$coord</a>";
+				$desc .= ', <a href="https://mapy.cz/'.Settings::value("linkMapyCz")."?q={$loc["coord_lat"]}N%20{$loc["coord_lon"]}E\">$coord</a>";
 			} else {
 				$desc .= ", $coord";
 			}

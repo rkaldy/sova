@@ -114,7 +114,7 @@ class CodeControllerTest extends GameTestBase {
 		$_SESSION["settings"]["linkMapyCz"] = "turisticka";
 		$this->assertEquals([
 			"Úspěšně jste vyluštili šifru S1a. Jste 1. První ji vyluštil tým Parta Nic v ".$this->dbNow().". Máte vyluštěno celkem 1 šifer.",
-			'Další stanoviště 1a se nachází na vrcholu Bílé hory, <a href="https://mapy.cz/turisticka?x=14.3200000&y=50.0800000&z=15">50.0800000N 14.3200000E</a>.'
+			'Další stanoviště 1a se nachází na vrcholu Bílé hory, <a href="https://mapy.cz/turisticka?q=50.0800000N%2014.3200000E">50.0800000N 14.3200000E</a>.'
 		], CodeController::process("aberace"));
 	}
 
