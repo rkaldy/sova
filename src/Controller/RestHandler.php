@@ -4,6 +4,7 @@ namespace Sova\Controller;
 use Sova\HttpException;
 use Sova\Model\Game;
 use Sova\Model\Graph;
+use Sova\Model\Message;
 
 
 class RestHandler {
@@ -42,5 +43,10 @@ class RestHandler {
 	public function graph(array $args): array {
 		list($vertices, $edges) = (new Graph())->build();
 		return ["vertices" => $vertices, "edges" => $edges];
+	}
+
+
+	public function messages_recent(array $args): array {
+		return (new Message())->recent($args["since"]);
 	}
 }

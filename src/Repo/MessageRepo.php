@@ -39,6 +39,10 @@ class MessageRepo extends RepoBase {
 		return $this->db->equery("SELECT COUNT(*) FROM message WHERE team_id = ? AND time <= NOW()", $teamId);
 	}
 
+	public function recent($teamId, $since) {
+		return $this->db->query("SELECT text FROM message WHERE team_id = ? AND time >= ? AND async = 1 ORDER BY time", [$teamId, $since]);
+	}
+
 	public function create(array $message) {
 		if (isset($message["time"])) {
 			$message["async"] = 1;
@@ -55,4 +59,5 @@ class MessageRepo extends RepoBase {
 			$stmt->execute([$team_id, self::TO_TEAM, 1, $message]);
 		}
 	}
+
 }

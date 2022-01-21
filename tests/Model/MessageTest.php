@@ -61,6 +61,12 @@ class MessageTest extends TestBase {
 		], self::stripTimes($messages));
 	}
 
+	function testRecent() {
+		$this->assertEquals([], $this->message->recent("2000-01-01 00:00:00"));
+		$this->message->broadcast([1, 2], "Ahoj");
+		$this->assertEquals(["Ahoj"], $this->message->recent("2000-01-01 00:00:00"));
+	}
+
 	function testREST() {
 		$this->message->sendToSova("Ahoj");
 		$this->message->sendToTeam("Nazdar");

@@ -3,7 +3,8 @@ if (isset($team)) {
 	$menu = [
 		"code" => "Zadej kód",
 		"applyhint" => "Použít nápovědu",
-		"messages" => "Historie zpráv"
+		"messages" => "Historie zpráv",
+		"settings" => "Nastavení"
 	];
 	if ($showRank) {
 		$menu["rank"] = "Pořadí";
@@ -18,9 +19,11 @@ if (isset($team)) {
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="static/sova.css">
     <link rel="stylesheet" href="static/mobile.css">
-    <link rel="icon" href="static/favicon.png" sizes="32x32" type="image/png">
+	<link rel="icon" href="static/favicon.png" sizes="32x32" type="image/png">
   </head>
   <body>
+    <script src="static/date.format.js"></script>
+    <script src="static/notif.js"></script>
 
     <header>
       <div id="logo">
@@ -75,7 +78,12 @@ if (isset($team)) {
 
     <div id="contents">
 <?php echo $_contents; ?>
-    </div>
+	</div>
+
+	<div id="notif-window" onclick="closeNotifWindow(this)">
+      <div id="notif-title">Nová zpráva</div>
+      <div id="notif-text"></div>
+	</div>
 
     <script src="static/sova.js"></script>
   </body>

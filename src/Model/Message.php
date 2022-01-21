@@ -1,6 +1,8 @@
 <?php
 namespace Sova\Model;
 
+use PDO;
+
 class Message extends ModelBase {
 	
 	public const FROM_TEAM = 1;
@@ -28,6 +30,15 @@ class Message extends ModelBase {
 		$this->addDirectionStr($messages);
 		$count = $this->repo->countForTeam(Team::current());
 		return [$messages, $count];
+	}
+
+	public function recent(string $since) {
+		$ret = [];
+		$messages = $this->repo->recent(Team::current(), $since);
+		while ($row = $messages->fetch(PDO::FETCH_NUM)) {
+			$ret[] = $row[0];
+		}
+		return $ret;
 	}
 
 

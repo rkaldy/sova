@@ -7,6 +7,7 @@ use Sova\DBException;
 use Sova\HttpException;
 use Sova\PHPException;
 use Sova\Model\User;
+use Sova\Model\Team;
 use Sova\Model\Game;
 
 
@@ -71,7 +72,7 @@ class RestController {
 
 
 	public function authenticate() {
-		if (!User::logged()) {
+		if (!User::logged() && !Team::logged()) {
 			if (empty($_SERVER["HTTP_AUTHORIZATION"])) {
 				throw new HttpException(401, "Unauthorized");
 			}

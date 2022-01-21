@@ -110,4 +110,9 @@ class MainController {
 	public function rank($params, $data) {
 		return new View("main/rank", ["teams" => (new Progress())->rankTotal()]);
 	}
+
+
+	public function settings($params, $data) {
+		return new View("main/settings", []);
+	}
 }

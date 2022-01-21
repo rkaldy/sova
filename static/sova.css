@@ -224,3 +224,31 @@ span.pgbutton {
 .message .time {
 	font-weight: bold;
 }
+
+
+/* Notifications */
+
+#notif-window {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	margin-left: -10em;
+	margin-top: -2.5em;
+	width: 20em;
+	height: 5em;
+	background-color: white;
+	border: solid 3px #003d5b;
+	display: none;
+}
+
+#notif-title {
+	background-color: #003d5b;
+	color: white;
+	font-weight: bold;
+	padding: 0.1ex;
+	text-align: center;
+}
+
+#notif-text {
+	padding: 1ex;
+}
