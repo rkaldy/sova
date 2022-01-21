@@ -8,10 +8,10 @@ use Sova\Redirect;
 use Sova\Model\User;
 use Sova\Model\Game;
 use Sova\Model\Team;
+use Sova\Model\Loc;
 use Sova\Model\Message;
 use Sova\Model\Progress;
 use Sova\Model\Settings;
-use Sova\Repo\LocRepo;
 
 
 class AdminController {
@@ -105,6 +105,14 @@ class AdminController {
 
 	public function rank($args) {
 		return new View("main/rank", ["teams" => (new Progress())->rankTotal()]);
+	}
+
+	public function progress() {
+		list($progress, $maxSolved) = (new Progress())->teamStatus();
+		return new View("admin/progress", [
+			"progress" => $progress,
+			"maxSolved" => $maxSolved
+		]);
 	}
 
 	public function settings($args) {

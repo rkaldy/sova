@@ -1,6 +1,8 @@
 <?php
 namespace Sova\Model;
 
+use Sova\Repo\LocRepo;
+
 class Progress extends ModelBase {
 
 	protected static $fakeTimeOffset = 0;
@@ -17,6 +19,30 @@ class Progress extends ModelBase {
 
 	public function rankTotal() {
 		return $this->repo->rankTotal(Game::current());
+	}
+
+	public function teamStatus() {
+		$locs = (new LocRepo())->listSimple(Game::current());
+		$status = $this->repo->teamStatus(Game::current());
+		$ret = [];
+		foreach ($locs as $loc) {
+			$teams = [];
+			foreach ($status as $stat) {
+				if ($stat["point_id"] == $loc["point_id"]) {
+					$teams[] = $stat;
+				}
+			}
+			$loc["teams"] = $teams;
+			$ret[] = $loc;
+		}
+
+		$maxSolved = 0;
+		foreach ($status as $stat) {
+			if ($stat["solved"] > $maxSolved) {
+				$maxSolved = $stat["solved"];
+			}
+		}
+		return [$ret, $maxSolved];
 	}
 
 	public static function addFakeTime($minutes) {

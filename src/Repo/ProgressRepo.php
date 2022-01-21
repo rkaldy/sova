@@ -39,7 +39,7 @@ class ProgressRepo extends RepoBase {
 	}
 
 	public function rankTotal(int $gameId) {
-		return $this->db->aquery("
+/*		return $this->db->aquery("
 			SELECT 
 				team.name, 
 				IFNULL(DATE_FORMAT(finish.time, '%H:%i:%s'), '-') AS finish_time, 
@@ -82,6 +82,30 @@ class ProgressRepo extends RepoBase {
 				WHERE settings.game_id = :game_id
 			) finish ON finish.team_id = team.team_id
 			ORDER BY -finish.time DESC, ciphers.count DESC, last_cipher.time, team.team_id	
+		", ["game_id" => $gameId]);	*/
+		return $this->db->aquery("
+			SELECT 
+				team.name, 
+				IFNULL(DATE_FORMAT(finish.time, '%H:%i:%s'), '-') AS finish_time, 
+				IFNULL(ciphers.count, 0) AS solved,
+				0 as last_cipher_time,
+				'' as last_loc
+			FROM team
+			LEFT JOIN (
+				SELECT team_id, COUNT(cipher.point_id) AS count 
+				FROM progress
+				NATURAL JOIN point
+				NATURAL JOIN cipher
+				WHERE game_id = :game_id
+				GROUP BY team_id
+			) ciphers ON ciphers.team_id = team.team_id
+			LEFT JOIN (
+				SELECT team_id, progress.time
+				FROM settings
+				JOIN progress ON progress.point_id = settings.locFinish
+				WHERE settings.game_id = :game_id
+			) finish ON finish.team_id = team.team_id
+			ORDER BY -finish.time DESC, ciphers.count DESC, team.team_id	
 		", ["game_id" => $gameId]);
 	}
 
@@ -92,8 +116,34 @@ class ProgressRepo extends RepoBase {
 			JOIN team ON team.team_id = progress.team_id
 			JOIN point ON point.point_id = progress.point_id
 			LEFT JOIN cipher ON cipher.point_id = progress.point_id
-			WHERE team.game_id = 1
+			WHERE team.game_id = :game_id
 			ORDER BY team.team_id, progress.time
 		");
 	}
+
+	public function teamStatus(int $gameId) {
+		return $this->db->aquery("
+			SELECT point_id, team.name AS team_name, time, time >=DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL 1 MINUTE) AS recent, ciphers.solved
+			FROM progress
+			NATURAL JOIN team
+			NATURAL JOIN (
+			    SELECT team_id, max(time) as time
+			    FROM progress 
+			    NATURAL JOIN point
+			    NATURAL JOIN loc
+			    WHERE game_id = :game_id
+				GROUP BY team_id
+			) last
+			NATURAL JOIN (
+				SELECT team_id, count(*) as solved
+				FROM progress
+			    NATURAL JOIN point
+			    NATURAL JOIN cipher
+			 	WHERE game_id = :game_id
+			    GROUP BY team_id
+			) ciphers
+			ORDER BY point_id, time
+		", ["game_id" => $gameId]);
+	}
+
 }

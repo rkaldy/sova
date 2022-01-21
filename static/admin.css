@@ -142,3 +142,51 @@ select, .jsgrid-edit-row select {
 	margin-right: 0.5ex;
 	padding-right: 1em;
 }
+
+
+/* Progress */
+
+#progress {
+	border-collapse: separate;
+	border-spacing: 2ex;
+}
+
+#progress td {
+	padding: 0;
+	border: solid 3px #003d5b;
+	vertical-align: top;
+}
+
+#progress .locname {
+	margin: 0;
+	padding 0.5ex;
+	text-align: center;
+	font-weight: bold;
+	background-color: #003d5b;
+	color: white;
+}
+
+#progress table {
+	margin: 1ex;
+}
+
+#progress table tr.recent {
+	background-color: #ffff80;
+}
+
+#progress table th {
+	border: none;
+	padding: 0.2ex 1ex;
+	text-align: left;
+	font-weight: bold;
+}
+
+#progress table td {
+	border: none;
+	padding: 0.2ex 1ex;
+}
+
+#progress .maxSolved {
+	font-weight: bold;
+	color: #c04040;
+}

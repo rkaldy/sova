@@ -43,6 +43,15 @@ class LocRepo extends PointRepo {
 		return $locs;
 	}
 
+	public function listSimple($gameId) {
+		return $this->db->aquery("
+			SELECT point_id, name
+			FROM point
+			NATURAL JOIN loc
+			WHERE game_id = ?
+		", $gameId);
+	}
+
 	protected function addNextLocs(array &$loc) {
 		$this->db->execute("DELETE FROM step WHERE from_point_id = :point_id AND EXISTS (SELECT 1 FROM loc WHERE point_id = step.to_point_id)", $loc);
 		if (isset($loc["next"])) {
