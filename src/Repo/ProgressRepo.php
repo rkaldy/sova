@@ -86,7 +86,7 @@ class ProgressRepo extends RepoBase {
 
     public function teamStatus(int $gameId) {
         return $this->db->aquery("
-            SELECT point_id, team.name AS team_name, DATE_FORMAT(time, '%H:%i:%s') AS time, time >=DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL 1 MINUTE) AS recent, ciphers.solved
+            SELECT point_id, team.name AS team_name, DATE_FORMAT(time, '%H:%i:%s') AS time, time >=DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL 1 MINUTE) AS recent, IF(ciphers.solved IS NULL, 0, ciphers.solved) AS solved
             FROM progress
             NATURAL JOIN team
             NATURAL JOIN (
@@ -97,14 +97,14 @@ class ProgressRepo extends RepoBase {
                 WHERE game_id = :game_id
                 GROUP BY team_id
             ) last
-            NATURAL JOIN (
+            LEFT JOIN (
                 SELECT team_id, count(*) as solved
                 FROM progress
                 NATURAL JOIN point
                 NATURAL JOIN cipher
                  WHERE game_id = :game_id
                 GROUP BY team_id
-            ) ciphers
+            ) ciphers ON ciphers.team_id = team.team_id
             ORDER BY point_id, time
         ", ["game_id" => $gameId]);
     }
