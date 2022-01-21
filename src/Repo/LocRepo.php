@@ -27,7 +27,7 @@ class LocRepo extends PointRepo {
 	public function list($gameId) {
 		$locs = $this->db->aquery("
 			SELECT loc.*, point.name, code,
-			  GROUP_CONCAT(DISTINCT next.point_id ORDER BY next.point_id SEPARATOR ',') AS next			
+			  GROUP_CONCAT(DISTINCT next.point_id ORDER BY next.order_id, name SEPARATOR ',') AS next			
 			FROM loc
 			NATURAL JOIN point
 			NATURAL JOIN code
@@ -35,7 +35,7 @@ class LocRepo extends PointRepo {
 			LEFT JOIN loc next ON next.point_id = step.to_point_id
 			WHERE point.game_id = ? 
 			GROUP BY loc.point_id
-			ORDER BY name
+			ORDER BY order_id, name
 		", $gameId);
 		foreach ($locs as &$loc) {
 			self::flattenPrevNext($loc);
@@ -49,6 +49,7 @@ class LocRepo extends PointRepo {
 			FROM point
 			NATURAL JOIN loc
 			WHERE game_id = ?
+            ORDER BY order_id, name
 		", $gameId);
 	}
 
@@ -65,7 +66,7 @@ class LocRepo extends PointRepo {
 		try {
 			$this->db->execute("INSERT INTO point (game_id, name) VALUES (:game_id, :name)", $loc, true);
 			$loc["point_id"] = $this->db->lastInsertId();
-			$this->db->execute("INSERT INTO loc (point_id, description, coord_lat, coord_lon, solved_cipher_count, end_time) VALUES (:point_id, :description, :coord_lat, :coord_lon, :solved_cipher_count, :end_time)", $loc, true);
+			$this->db->execute("INSERT INTO loc (point_id, description, order_id, coord_lat, coord_lon, solved_cipher_count, end_time) VALUES (:point_id, :description, :order_id, :coord_lat, :coord_lon, :solved_cipher_count, :end_time)", $loc, true);
 			$this->db->execute("INSERT INTO code (game_id, code, point_id) VALUES (:game_id, :code, :point_id)", $loc, true);
 			$this->addNextLocs($loc);
 		} catch (DBException $ex) {
@@ -76,7 +77,7 @@ class LocRepo extends PointRepo {
 
 	function update(array $loc) {
 		$this->db->execute("UPDATE point SET name = :name WHERE point_id = :point_id", $loc);
-		$this->db->execute("UPDATE loc SET description = :description, coord_lat = :coord_lat, coord_lon = :coord_lon, solved_cipher_count = :solved_cipher_count, end_time = :end_time WHERE point_id = :point_id", $loc);
+		$this->db->execute("UPDATE loc SET description = :description, order_id = :order_id, coord_lat = :coord_lat, coord_lon = :coord_lon, solved_cipher_count = :solved_cipher_count, end_time = :end_time WHERE point_id = :point_id", $loc);
 		$this->db->execute("UPDATE code SET code = :code WHERE point_id = :point_id", $loc);
 		$this->addNextLocs($loc);
 	}

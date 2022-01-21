@@ -89,7 +89,7 @@ class ProgressRepo extends RepoBase {
 				IFNULL(DATE_FORMAT(finish.time, '%H:%i:%s'), '-') AS finish_time, 
 				IFNULL(ciphers.count, 0) AS solved,
 				0 as last_cipher_time,
-				'' as last_loc
+				'-' as last_loc
 			FROM team
 			LEFT JOIN (
 				SELECT team_id, COUNT(cipher.point_id) AS count 

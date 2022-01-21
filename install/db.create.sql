@@ -59,6 +59,7 @@ CREATE TABLE hint (
 CREATE TABLE loc (
   point_id int(11) NOT NULL,
   description varchar(500) COLLATE utf8mb4_czech_ci DEFAULT NULL,
+  order_id int(11) NULL,
   coord_lat decimal(10, 7) NULL,
   coord_lon decimal(10, 7) NULL,
   solved_cipher_count int(11) DEFAULT NULL,
@@ -70,6 +71,7 @@ CREATE TABLE message (
   team_id int(11) NOT NULL,
   hint_id int(11) DEFAULT NULL,
   direction tinyint(1) NOT NULL,
+  async tinyint(1) NOT NULL DEFAULT 0,
   time datetime NOT NULL DEFAULT current_timestamp(),
   text varchar(500) COLLATE utf8mb4_czech_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;

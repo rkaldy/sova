@@ -14,6 +14,7 @@ $(function() {
 		[
 			{ name: "name", title: "Název", type: "text", width: 20 , validate: "required" },
 			{ name: "description", title: "Popis", type: "textarea", width: 80 },
+			{ name: "order_id", title: "Pořadí", type: "text", width: 10 },
 			{ name: "coord_lat", title: "Souřadnice (N)", type: "text", width: 20, validate: coordValidator },
 			{ name: "coord_lon", title: "Souřadnice (E)", type: "text", width: 20, validate: coordValidator },
 			{ name: "code", title: "Vstupní kód", type: "text", width: 20, validate: codeValidator },
@@ -39,7 +40,12 @@ $(function() {
   </tr>
   <tr>
     <th>Souřadnice</th>
-    <td>Severní a východní souřadnice stanoviště, ve stupních jako desetinná čísla. <i>(nepovinné, ale bez nich Sova nevygeneruje odkaz na mapy.cz)</i></td>
+	<td>Severní a východní souřadnice stanoviště, ve stupních jako desetinná čísla. <i>(nepovinné, ale bez nich Sova nevygeneruje odkaz na mapy.cz)</i></td>
+  </tr>
+  <tr>
+    <th>Pořadí</th>
+    <td>Číslo, podle nějž se budou řadit stanoviště v tabulkách a seznamech <i>(nepovinné)</i></td>
+  </tr>
   <tr>
     <th>Vstupní kód</th>
     <td>Kód, který týmy zadají do Sovy po příchodu na stanoviště. Necháte-li prázdný, vygeneruje se náhodné slovo.</td>
