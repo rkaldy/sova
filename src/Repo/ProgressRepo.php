@@ -5,145 +5,108 @@ use Sova\DBException;
 
 class ProgressRepo extends RepoBase {
 
-	public function create(int $teamId, int $pointId, $timeOffset = 0) {
-		try {
-			$this->db->execute("INSERT INTO progress (team_id, point_id, time) values (?, ?, DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL ? MINUTE))", [$teamId, $pointId, $timeOffset]);
-			return true;
-		} catch (DBException $ex) {
-			if ($ex->getCode() == 1062) {
-				return false;
-			}
-			throw $ex;
-		}
-	}
+    public function create(int $teamId, int $pointId, $timeOffset = 0) {
+        try {
+            $this->db->execute("INSERT INTO progress (team_id, point_id, time) values (?, ?, DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL ? MINUTE))", [$teamId, $pointId, $timeOffset]);
+            return true;
+        } catch (DBException $ex) {
+            if ($ex->getCode() == 1062) {
+                return false;
+            }
+            throw $ex;
+        }
+    }
 
-	public function isDone(int $teamId, int $pointId) {
-		return $this->db->equery("SELECT 1 FROM progress WHERE team_id = ? AND point_id = ?", $teamId, $pointId) != 0;
-	}
+    public function isDone(int $teamId, int $pointId) {
+        return $this->db->equery("SELECT 1 FROM progress WHERE team_id = ? AND point_id = ?", $teamId, $pointId) != 0;
+    }
 
-	public function rankAtPoint(int $teamId, int $pointId) {
-		return $this->db->equery("
-			SELECT rank FROM
-			  (SELECT team_id, ROW_NUMBER() OVER (ORDER BY time) AS rank FROM progress WHERE point_id = ?) rank_table
-			WHERE team_id = ?
-		", $pointId, $teamId);
-	}
+    public function rankAtPoint(int $teamId, int $pointId) {
+        return $this->db->equery("
+            SELECT rank FROM
+              (SELECT team_id, ROW_NUMBER() OVER (ORDER BY time) AS rank FROM progress WHERE point_id = ?) rank_table
+            WHERE team_id = ?
+        ", $pointId, $teamId);
+    }
 
-	public function firstTeamAtPoint(int $pointId) {
-		return $this->db->squery("
-			SELECT name, DATE_FORMAT(time, '%H:%i') AS time FROM progress
-			JOIN team ON team.team_id = progress.team_id
-			WHERE point_id = ?
-			ORDER BY progress.time LIMIT 1
-		", $pointId);
-	}
+    public function firstTeamAtPoint(int $pointId) {
+        return $this->db->squery("
+            SELECT name, DATE_FORMAT(time, '%H:%i') AS time FROM progress
+            JOIN team ON team.team_id = progress.team_id
+            WHERE point_id = ?
+            ORDER BY progress.time LIMIT 1
+        ", $pointId);
+    }
 
-	public function rankTotal(int $gameId) {
-/*		return $this->db->aquery("
-			SELECT 
-				team.name, 
-				IFNULL(DATE_FORMAT(finish.time, '%H:%i:%s'), '-') AS finish_time, 
-				IFNULL(ciphers.count, 0) AS solved, 
-				IFNULL(DATE_FORMAT(last_cipher.time, '%H:%i:%s'), '-') AS last_cipher_time, 
-				IFNULL(last_loc.name, '-') AS last_loc
-			FROM team
-			LEFT JOIN (
-				SELECT team_id, COUNT(cipher.point_id) AS count 
-				FROM progress
-				NATURAL JOIN point
-				NATURAL JOIN cipher
-				WHERE game_id = :game_id
-				GROUP BY team_id
-			) ciphers ON ciphers.team_id = team.team_id
-			LEFT JOIN (
-				SELECT team_id, time FROM (
-					SELECT team_id, time, ROW_NUMBER() OVER (PARTITION BY team_id ORDER BY time DESC) AS rank
-					FROM progress
-					NATURAL JOIN point
-					NATURAL JOIN cipher
-					WHERE game_id = :game_id
-				) loctimes
-				WHERE rank = 1
-			) last_cipher ON last_cipher.team_id = team.team_id
-			LEFT JOIN (
-				SELECT team_id, name FROM (
-					SELECT team_id, point.name, time, ROW_NUMBER() OVER (PARTITION BY team_id ORDER BY time DESC) AS rank
-					FROM progress
-					NATURAL JOIN point
-					NATURAL JOIN loc
-					WHERE game_id = :game_id
-				) loctimes
-				WHERE rank = 1
-			) last_loc ON last_loc.team_id = team.team_id
-			LEFT JOIN (
-				SELECT team_id, progress.time
-				FROM settings
-				JOIN progress ON progress.point_id = settings.locFinish
-				WHERE settings.game_id = :game_id
-			) finish ON finish.team_id = team.team_id
-			ORDER BY -finish.time DESC, ciphers.count DESC, last_cipher.time, team.team_id	
-		", ["game_id" => $gameId]);	*/
-		return $this->db->aquery("
-			SELECT 
-				team.name, 
-				IFNULL(DATE_FORMAT(finish.time, '%H:%i:%s'), '-') AS finish_time, 
-				IFNULL(ciphers.count, 0) AS solved,
-				0 as last_cipher_time,
-				'-' as last_loc
-			FROM team
-			LEFT JOIN (
-				SELECT team_id, COUNT(cipher.point_id) AS count 
-				FROM progress
-				NATURAL JOIN point
-				NATURAL JOIN cipher
-				WHERE game_id = :game_id
-				GROUP BY team_id
-			) ciphers ON ciphers.team_id = team.team_id
-			LEFT JOIN (
-				SELECT team_id, progress.time
-				FROM settings
-				JOIN progress ON progress.point_id = settings.locFinish
-				WHERE settings.game_id = :game_id
-			) finish ON finish.team_id = team.team_id
-			ORDER BY -finish.time DESC, ciphers.count DESC, team.team_id	
-		", ["game_id" => $gameId]);
-	}
+    public function rankTotal(int $gameId) {
+        return $this->db->aquery("
+            SELECT 
+                team.name, 
+                IFNULL(DATE_FORMAT(finish.time, '%H:%i:%s'), '-') AS finish_time, 
+                IFNULL(ciphers.count, 0) AS solved,
+                IFNULL(DATE_FORMAT(last_cipher.time, '%H:%i:%s'), '-') AS last_cipher_time
+            FROM team
+            LEFT JOIN (
+                SELECT team_id, COUNT(cipher.point_id) AS count 
+                FROM progress
+                NATURAL JOIN point
+                NATURAL JOIN cipher
+                WHERE game_id = :game_id
+                GROUP BY team_id
+            ) ciphers ON ciphers.team_id = team.team_id
+            LEFT JOIN (
+                SELECT team_id, MAX(time) as time
+                FROM progress
+                NATURAL JOIN point
+                NATURAL JOIN cipher
+                WHERE game_id = :game_id
+                GROUP BY team_id
+            ) last_cipher ON last_cipher.team_id = team.team_id
+            LEFT JOIN (
+                SELECT team_id, progress.time
+                FROM settings
+                JOIN progress ON progress.point_id = settings.locFinish
+                WHERE settings.game_id = :game_id
+            ) finish ON finish.team_id = team.team_id
+            ORDER BY -finish.time DESC, ciphers.count DESC, last_cipher.time
+        ", ["game_id" => $gameId]);
+    }
 
-	public function progress(int $gameId) {
-		return $this->db->aquery("
-			SELECT team.team_id, team.name AS team_name, point.name AS point_name, progress.time, UNIX_TIMESTAMP(progress.time) as time_sec, ISNULL(cipher.point_id) AS is_loc
-			FROM progress
-			JOIN team ON team.team_id = progress.team_id
-			JOIN point ON point.point_id = progress.point_id
-			LEFT JOIN cipher ON cipher.point_id = progress.point_id
-			WHERE team.game_id = :game_id
-			ORDER BY team.team_id, progress.time
-		");
-	}
+    public function progress(int $gameId) {
+        return $this->db->aquery("
+            SELECT team.team_id, team.name AS team_name, point.name AS point_name, progress.time, UNIX_TIMESTAMP(progress.time) as time_sec, ISNULL(cipher.point_id) AS is_loc
+            FROM progress
+            JOIN team ON team.team_id = progress.team_id
+            JOIN point ON point.point_id = progress.point_id
+            LEFT JOIN cipher ON cipher.point_id = progress.point_id
+            WHERE team.game_id = :game_id
+            ORDER BY team.team_id, progress.time
+        ");
+    }
 
-	public function teamStatus(int $gameId) {
-		return $this->db->aquery("
-			SELECT point_id, team.name AS team_name, time, time >=DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL 1 MINUTE) AS recent, ciphers.solved
-			FROM progress
-			NATURAL JOIN team
-			NATURAL JOIN (
-			    SELECT team_id, max(time) as time
-			    FROM progress 
-			    NATURAL JOIN point
-			    NATURAL JOIN loc
-			    WHERE game_id = :game_id
-				GROUP BY team_id
-			) last
-			NATURAL JOIN (
-				SELECT team_id, count(*) as solved
-				FROM progress
-			    NATURAL JOIN point
-			    NATURAL JOIN cipher
-			 	WHERE game_id = :game_id
-			    GROUP BY team_id
-			) ciphers
-			ORDER BY point_id, time
-		", ["game_id" => $gameId]);
-	}
+    public function teamStatus(int $gameId) {
+        return $this->db->aquery("
+            SELECT point_id, team.name AS team_name, DATE_FORMAT(time, '%H:%i:%s') AS time, time >=DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL 1 MINUTE) AS recent, ciphers.solved
+            FROM progress
+            NATURAL JOIN team
+            NATURAL JOIN (
+                SELECT team_id, max(time) as time
+                FROM progress 
+                NATURAL JOIN point
+                NATURAL JOIN loc
+                WHERE game_id = :game_id
+                GROUP BY team_id
+            ) last
+            NATURAL JOIN (
+                SELECT team_id, count(*) as solved
+                FROM progress
+                NATURAL JOIN point
+                NATURAL JOIN cipher
+                 WHERE game_id = :game_id
+                GROUP BY team_id
+            ) ciphers
+            ORDER BY point_id, time
+        ", ["game_id" => $gameId]);
+    }
 
 }

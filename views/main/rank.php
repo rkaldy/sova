@@ -5,7 +5,6 @@
 	<td>Příchod do cíle</td>
 	<td>Vyluštěno šifer</td>
 	<td>Poslední šifra vyluštěna</td>
-	<td>Na stanovišti</td>
   </thead>
   <tbody>
 <?php for ($i = 0; $i < count($teams); $i++) { ?>
@@ -15,7 +14,6 @@
 	  <td><?php echo $teams[$i]["finish_time"] ?></td>
 	  <td><?php echo $teams[$i]["solved"] ?></td>
 	  <td><?php echo $teams[$i]["last_cipher_time"] ?></td>
-	  <td><?php echo $teams[$i]["last_loc"] ?></td>
 	</tr>
 <?php } ?>
   </tbody>

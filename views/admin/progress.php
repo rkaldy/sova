@@ -1,7 +1,7 @@
 <table id="progress">
-<?php for ($row = 0; $row < count($progress); $row += 3) { ?>
+<?php for ($row = 0; $row < count($progress); $row += 4) { ?>
   <tr>
-  <?php for ($col = 0; $col < 3; $col++) { ?>
+  <?php for ($col = 0; $col < 4; $col++) { ?>
     <td>
     <?php 
       if ($row + $col < count($progress)) {
