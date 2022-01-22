@@ -72,8 +72,12 @@ if ($superuser) {
       </div>
       <div id="user">
         <?php echo isset($user) ? "uživatel: <b>$user</b>" : "nepřihlášený" ?><br>
-        <?php echo isset($game) ? "hra: <b>$game</b>" : "" ?>
-      </div>
+        <?php echo isset($game) ? "hra: <b>$game</b>" : "" ?><br>
+        čas vytvoření stránky: <b><?php
+			$now = new DateTime('now');
+			echo $now->format('j.n.Y H:i:s');
+		?></b>
+	  </div>
       <div class="clear"></div>
     </header>
 
