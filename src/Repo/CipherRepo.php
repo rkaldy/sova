@@ -158,4 +158,20 @@ class CipherRepo extends PointRepo {
 			WHERE team_id = ?
 		", $teamId);
 	}
+
+	public function teamCipherStatus(int $teamId) {
+		return $this->db->aquery("
+			SELECT cipher_point.name, IFNULL(DATE_FORMAT(solved.time, '%H:%i:%s'), '-') AS time, IF(ISNULL(MAX(hint_id)) , '-', cipher.hint ) AS hint
+			FROM progress
+			NATURAL JOIN loc
+			JOIN step ON step.from_point_id = loc.point_id
+			JOIN cipher ON cipher.point_id = step.to_point_id
+			JOIN point cipher_point ON cipher_point.point_id = cipher.point_id
+			LEFT JOIN progress solved ON solved.team_id = progress.team_id AND solved.point_id = cipher.point_id
+			LEFT JOIN hint ON hint.team_id = progress.team_id AND hint.cipher_id = cipher.point_id AND hint.time <= NOW()
+			WHERE progress.team_id = ?
+			GROUP BY cipher.point_id
+			ORDER BY loc.order_id, cipher_point.name
+		", $teamId);
+	}
 }

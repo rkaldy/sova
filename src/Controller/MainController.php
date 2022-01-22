@@ -9,6 +9,7 @@ use Sova\HttpException;
 use Sova\Model\Team;
 use Sova\Model\Game;
 use Sova\Model\Code;
+use Sova\Model\Cipher;
 use Sova\Model\Hint;
 use Sova\Model\Message;
 use Sova\Model\Progress;
@@ -106,11 +107,13 @@ class MainController {
 		return new View("main/messages", ["messages" => $messages, "totalCount" => $count, "page" => $page]);
 	}
 
-
 	public function rank($params, $data) {
 		return new View("main/rank", ["teams" => (new Progress())->rankTotal()]);
 	}
 
+	public function ciphers($params, $data) {
+		return new View("main/ciphers", ["ciphers" => (new Cipher())->teamCipherStatus()]);
+	}
 
 	public function settings($params, $data) {
 		return new View("main/settings", []);

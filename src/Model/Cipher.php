@@ -63,4 +63,8 @@ class Cipher extends ModelBase {
 
 		return $ret;
 	}
+
+	public function teamCipherStatus() {
+		return $this->repo->teamCipherStatus(Team::current());
+	}
 }
