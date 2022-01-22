@@ -108,11 +108,15 @@ class AdminController {
 	}
 
 	public function progress() {
-		list($progress, $maxSolved) = (new Progress())->teamStatus();
+		list($progress, $maxSolved) = (new Progress())->locStatus();
 		return new View("admin/progress", [
 			"progress" => $progress,
 			"maxSolved" => $maxSolved
 		]);
+	}
+
+	public function cipherStatus() {
+		return new View("admin/cipherstatus", ["progress" => (new Progress())->cipherStatus()]);
 	}
 
 	public function settings($args) {

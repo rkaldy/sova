@@ -21,9 +21,9 @@ class Progress extends ModelBase {
 		return $this->repo->rankTotal(Game::current());
 	}
 
-	public function teamStatus() {
+	public function locStatus() {
 		$locs = (new LocRepo())->listSimple(Game::current());
-		$status = $this->repo->teamStatus(Game::current());
+		$status = $this->repo->locStatus(Game::current());
 		$ret = [];
 		foreach ($locs as $loc) {
 			$teams = [];
@@ -44,6 +44,26 @@ class Progress extends ModelBase {
 		}
 		return [$ret, $maxSolved];
 	}
+
+	public function cipherStatus() {
+		$ciphers = $this->repo->cipherStatus(Game::current());
+		$ret = [];
+		$current = null;
+		foreach ($ciphers as $cipher) {
+			if ($current == null || $cipher["point_id"] != $current["point_id"]) {
+				if ($current != null) {
+					$ret[] = $current;
+				}
+				$current = ["point_id" => $cipher["point_id"], "name" => $cipher["name"], "teams" => []];
+			}
+			$current["teams"][] = ["name" => $cipher["team_name"], "time" => $cipher["time"], "recent" => $cipher["recent"]];
+		}
+		$ret[] = $current;
+		return $ret;
+	}
+
+
+
 
 	public static function addFakeTime($minutes) {
 		self::$fakeTimeOffset += $minutes;

@@ -14,6 +14,7 @@ if ($superuser) {
 		"texts" => "Texty",
 		"teams" => "Týmy",
 		"progress" => "Postup týmů",
+		"cipherstatus" => "Postup podle šifer",
 		"rank" => "Pořadí",
 		"messages" => "Zprávy",
 		"broadcast" => "Zpráva týmům",

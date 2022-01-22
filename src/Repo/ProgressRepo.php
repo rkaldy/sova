@@ -84,7 +84,7 @@ class ProgressRepo extends RepoBase {
         ");
     }
 
-    public function teamStatus(int $gameId) {
+    public function locStatus(int $gameId) {
         return $this->db->aquery("
             SELECT point_id, team.name AS team_name, DATE_FORMAT(time, '%H:%i:%s') AS time, time >=DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL 1 MINUTE) AS recent, IF(ciphers.solved IS NULL, 0, ciphers.solved) AS solved
             FROM progress
@@ -109,4 +109,15 @@ class ProgressRepo extends RepoBase {
         ", ["game_id" => $gameId]);
     }
 
+	public function cipherStatus(int $gameId) {
+		return $this->db->aquery("
+			SELECT point.point_id, point.name, team.name AS team_name, DATE_FORMAT(time, '%H:%i:%s') AS time, time >=DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL 1 MINUTE) AS recent
+            FROM progress
+            JOIN point ON point.point_id = progress.point_id
+			JOIN cipher ON cipher.point_id = point.point_id
+            JOIN team ON team.team_id = progress.team_id
+            WHERE point.game_id = ?
+	        ORDER BY point.point_id, time
+		", $gameId);
+	}
 }
