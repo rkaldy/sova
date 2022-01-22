@@ -79,9 +79,9 @@ class ProgressRepo extends RepoBase {
             JOIN team ON team.team_id = progress.team_id
             JOIN point ON point.point_id = progress.point_id
             LEFT JOIN cipher ON cipher.point_id = progress.point_id
-            WHERE team.game_id = :game_id
+            WHERE team.game_id = ?
             ORDER BY team.team_id, progress.time
-        ");
+        ", $gameId);
     }
 
     public function locStatus(int $gameId) {

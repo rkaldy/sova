@@ -42,7 +42,7 @@ class Statistics {
 			$prev = $progress[$i-1];
 			if ($prog["team_id"] == $prev["team_id"] && !$prog["is_loc"]) {
 				$timediff = $prog["time_sec"] - $prev["time_sec"];
-				$times[] = [$prog["team_name"], $prog["point_name"], (int)$timediff];
+				$times[] = [$prog["team_name"], $prev["point_name"].'→'.$prog["point_name"], gmdate("H:i:s", (int)$timediff)];
 			}
 		}
 		usort($times, function($a, $b) { return -($a[2] <=> $b[2]); });
