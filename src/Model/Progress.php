@@ -56,7 +56,7 @@ class Progress extends ModelBase {
 				}
 				$current = ["point_id" => $cipher["point_id"], "name" => $cipher["name"], "teams" => []];
 			}
-			$current["teams"][] = ["name" => $cipher["team_name"], "time" => $cipher["time"], "recent" => $cipher["recent"]];
+			$current["teams"][] = ["name" => $cipher["team_name"], "time" => $cipher["time"], "recent" => $cipher["recent"], "hint_type" => $cipher["hint_type"]];
 		}
 		$ret[] = $current;
 		return $ret;

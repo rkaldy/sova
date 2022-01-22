@@ -111,12 +111,14 @@ class ProgressRepo extends RepoBase {
 
 	public function cipherStatus(int $gameId) {
 		return $this->db->aquery("
-			SELECT point.point_id, point.name, team.name AS team_name, DATE_FORMAT(time, '%H:%i:%s') AS time, time >=DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL 1 MINUTE) AS recent
+			SELECT point.point_id, point.name, team.name AS team_name, DATE_FORMAT(progress.time, '%H:%i:%s') AS time, progress.time >=DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL 1 MINUTE) AS recent, IFNULL(MAX(hint.type), 0) AS hint_type
             FROM progress
             JOIN point ON point.point_id = progress.point_id
 			JOIN cipher ON cipher.point_id = point.point_id
             JOIN team ON team.team_id = progress.team_id
+			LEFT JOIN hint ON hint.team_id = progress.team_id AND hint.cipher_id = progress.point_id AND hint.time < progress.time
             WHERE point.game_id = ?
+			GROUP BY point.point_id, progress.team_id
 	        ORDER BY point.point_id, time
 		", $gameId);
 	}

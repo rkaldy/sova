@@ -7,10 +7,14 @@
       if ($row + $col < count($progress)) {
         $cipher = $progress[$row + $col];
     ?>
-	  <div class="locname"><?php echo $cipher["name"] ?> (<?php echo count($cipher["teams"]) ?>)</div>
+      <div class="locname"><?php echo $cipher["name"] ?> (<?php echo count($cipher["teams"]) ?>)</div>
       <table>
       <?php foreach ($cipher["teams"] as $team) {  ?>
-		<tr<?php if ($team["recent"]) echo ' class="recent"' ?>>
+        <tr<?php 
+          if ($team["recent"]) echo ' class="recent"'; 
+          else if ($team["hint_type"] == 1) echo ' class="withhint"';
+          else if ($team["hint_type"] == 2) echo ' class="withhint_absolute"';
+        ?>>
           <th><?php echo $team["name"] ?></th>
           <td><?php echo $team["time"] ?></td>
         </tr>

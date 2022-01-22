@@ -170,6 +170,14 @@ select, .jsgrid-edit-row select {
 	margin: 1ex;
 }
 
+#progress table tr.withhint {
+	background-color: #ffe0ff;
+}
+
+#progress table tr.withhint_absolute {
+	background-color: #ffb0ff;
+}
+
 #progress table tr.recent {
 	background-color: #ffff80;
 }
