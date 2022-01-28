@@ -1,43 +1,64 @@
 <?php
 namespace Sova\CRUD;
 
+use Sova\Repo\GameRepo;
 use Sova\DBException;
 
 class GameCrudTest extends CrudTestBase {
 
-	function testCreate() {
-		$newGame = $this->create(["name" => "game3", "owner_id" => "2"]);
-		$this->assertEquals(array(
-			["game_id" => 1, "owner_id" => 2, "name" => "game1"],
-			["game_id" => 2, "owner_id" => 2, "name" => "game2"],
-			["game_id" => $newGame["game_id"], "owner_id" => 2, "name" => "game3"]
-		), $this->list());
+	protected $repo;
+
+	function setUp(): void {
+		parent::setUp();
+		$this->repo = new GameRepo();
 	}
 
-	function testCreateFKViolation() {
+	function testCreate() {
+		$this->create(array("name" => "Lavina", "pswd" => "bigsecret"));
+		$this->assertCount(3, $this->list());
+		$game = $this->repo->get("Lavina");
+		$this->assertStringStartsWith("$2y$", $game["pswd"]);
+		$this->assertTrue(password_verify("bigsecret", $game["pswd"]));
+	}
+
+	function testCreateEmptyPassword() {
 		try {
-			$this->create(["name" => "game3", "owner_id" => "99"]);
-			$this->fail("Should throw DBException");
-		} catch (DBException $ex) {
-			$this->assertEquals(1452, $ex->getCode());
+			$this->create(array("name" => "Lavina", "pswd" => ""));
+			$this->fail("Should throw Exception");
+		} catch (\Exception $ex) {
+			$this->assertTrue(true);
 		}
 	}
 
 	function testUpdate() {
 		$game = $this->list()[0];
-		$game["name"] = "lavina";
+		$game["name"] = "Lavina";
+		$game["pswd"] = "bigsecret";
 		$this->update($game);
-		$this->assertEquals(array(
-			["game_id" => 2, "owner_id" => 2, "name" => "game2"],
-			["game_id" => 1, "owner_id" => 2, "name" => "lavina"]
-		), $this->list());
+		$this->assertEquals([
+			["game_id" => "2", "name" => "game2"],
+			["game_id" => "1", "name" => "Lavina"]
+		], $this->list());
+		$game = $this->repo->get("Lavina");
+		$this->assertStringStartsWith("$2y$", $game["pswd"]);
+		$this->assertTrue(password_verify("bigsecret", $game["pswd"]));
+	}
+
+	function testUpdateEmptyPassword() {
+		$game = $this->list()[0];
+		$game["name"] = "Lavina";
+		$game["pswd"] = "";
+		$this->update($game);
+		$game = $this->repo->get("Lavina");
+		$this->assertTrue(password_verify("samara", $game["pswd"]));
 	}
 
 	function testDelete() {
-		$game = $this->list()[0];
-		$this->delete($game);
-		$this->assertEquals(array(
-			["game_id" => 2, "owner_id" => 2, "name" => "game2"]
-		), $this->list());
+		$this->db->execute("INSERT INTO game VALUES (3, 'Lavina', 'bigsecret')");
+		$this->delete(array("game_id" => 3));
+		$this->assertEquals([
+			["game_id" => "1", "name" => "game1"],
+			["game_id" => "2", "name" => "game2"]
+		], $this->list());
 	}
 }

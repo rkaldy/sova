@@ -6,17 +6,12 @@ use Sova\Response;
 use Sova\DBException;
 use Sova\HttpException;
 use Sova\PHPException;
-use Sova\Model\User;
 use Sova\Model\Team;
 use Sova\Model\Game;
 
 
 class RestController {
 
-	const RES_SU_READ = ["user"];
-	const RES_SU_WRITE = ["game", "user"];
-
-	
 	public function process(Request $req, array $path): Response {
 		try {
 			if (empty($path)) {
@@ -26,7 +21,6 @@ class RestController {
 
 			$this->authenticate();
 			$this->authorize($resource, $req->method);
-            $this->setGame($req);
 
 			$handler = new RestHandler();
 			if ($req->method == "GET" && method_exists($handler, $resource)) {
@@ -50,12 +44,12 @@ class RestController {
 		}
 		catch (PHPException $ex) {
 			$status = 500;
-			$ret = ["error" => $ex->getMessage(), "file" => $ex->getFile(), "line" => $ex->getLine()];
+			$ret = ["error" => $ex->getMessage(), "file" => $ex->getFile(), "line" => $ex->getLine(), "trace" => $ex->getTraceAsString()];
 		}
 		catch (\Throwable $ex) {
 			$status = 500;
 			if (DEVELOPMENT) {
-			    $ret = ["error" => $ex->getMessage(), "file" => $ex->getFile(), "line" => $ex->getLine()];
+			    $ret = ["error" => $ex->getMessage(), "file" => $ex->getFile(), "line" => $ex->getLine(), "trace" => $ex->getTraceAsString()];
 			} else {
                 $ret = ["error" => "Internal server error" ];
             }
@@ -72,12 +66,12 @@ class RestController {
 
 
 	public function authenticate() {
-		if (!User::logged() && !Team::logged()) {
+		if (!Game::selected() && !Team::logged() && !Game::superuser()) {
 			if (empty($_SERVER["HTTP_AUTHORIZATION"])) {
-				throw new HttpException(401, "Unauthorized");
+				throw new HttpException(401, "Unauthenticated");
 			}
 			list($user, $password) = explode(":", base64_decode(substr($_SERVER["HTTP_AUTHORIZATION"], 6)));
-			if (!(new User())->login($user, $password)) {
+			if (!(new Game())->login($user, $password)) {
 				throw new HttpException(401, "Authentication failed");
 			}
 		}
@@ -85,30 +79,8 @@ class RestController {
 
 
 	public function authorize(string $resource, string $method) {
-		if (User::super()) {
-			return;
-		}
-		if ($method == "GET") {
-			if (in_array($resource, self::RES_SU_READ)) {
-				throw new HttpException(403);
-			}
-		} else {
-			if (in_array($resource, self::RES_SU_WRITE)) {
-				throw new HttpException(403);
-			}
+		if ($resource == "game" && $method != "GET" && !Game::superuser()) {
+			throw new HttpException(403);
 		}
 	}
-
-
-    public function setGame(Request $req) {
-        if (isset($req->params["game_id"])) {
-            $_SESSION["game_id"] = $req->params["game_id"];
-        } else if (isset($req->params["game"])) {
-            $gameId = (new Game())->getIdByName($req->params["game"]);
-            if (!isset($gameId)) {
-                throw new HttpException(400, "Unknown game: " . $req->params["game"]);
-            }
-            $_SESSION["game_id"] = $gameId;
-        }
-    }
 }

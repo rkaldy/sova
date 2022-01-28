@@ -10,10 +10,9 @@ class TestBase extends TestCase {
 
 	function setUp(): void {
 		$this->db = DB::get();
-		$this->db->execute("INSERT INTO user VALUES (1, 'admin', ?)", password_hash("nimda", PASSWORD_BCRYPT, array("cost" => 4)));
-		$this->db->execute("INSERT INTO user VALUES (2, 'user', ?)", password_hash("swordfish", PASSWORD_BCRYPT, array("cost" => 4)));
-		$this->db->execute("INSERT INTO game VALUES (1, 2, 'game1')");
-		$this->db->execute("INSERT INTO game VALUES (2, 2, 'game2')");
+		$this->db->execute("INSERT INTO superuser VALUES (?)", password_hash("nimda", PASSWORD_BCRYPT, ["cost" => 4]));
+		$this->db->execute("INSERT INTO game VALUES (1, 'game1', ?)", password_hash("samara", PASSWORD_BCRYPT, ["cost" => 4]));
+		$this->db->execute("INSERT INTO game VALUES (2, 'game2', ?)", password_hash("swordfish", PASSWORD_BCRYPT, ["cost" => 4]));
 		$this->db->execute("INSERT INTO text (game_id, code, text) SELECT 1, code, text FROM text WHERE game_id IS NULL");
 		$this->db->execute("INSERT INTO text (game_id, code, text) SELECT 2, code, text FROM text WHERE game_id IS NULL");
 		$this->db->execute("INSERT INTO settings (game_id) VALUES (1)");
@@ -24,7 +23,6 @@ class TestBase extends TestCase {
 
 	function tearDown(): void {
 		$this->db->execute("DELETE FROM game");
-		$this->db->execute("DELETE FROM user");
 		$_SESSION = array();
 	}
 

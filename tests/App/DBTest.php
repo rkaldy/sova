@@ -18,50 +18,50 @@ class DBTest extends TestCase {
 
 	function testPrepareSQLSimple() {
 		$this->db->execute(
-			"SELECT * FROM user WHERE login = ? AND pswd = ?",
-			array("joe", "secret")
+			"SELECT * FROM game WHERE name = ? AND pswd = ?",
+			["lavina", "secret"]
 		);
-		$this->assertEquals(array("joe", "secret"), $this->db->getLastParams());
+		$this->assertEquals(["lavina", "secret"], $this->db->getLastParams());
 	}
 
 	function testPrepareSQLScalarParam() {
 		$this->db->execute(
-			"SELECT * FROM user WHERE login = ?",
-			"joe"
+			"SELECT * FROM game WHERE name = ?",
+			"lavina"
 		);
-		$this->assertEquals(array("joe"), $this->db->getLastParams());
+		$this->assertEquals(["lavina"], $this->db->getLastParams());
 	}
 
 	function testPrepareSQLAssoc() {
 		$this->db->execute(
-			"SELECT * FROM user WHERE login = :login AND pswd = :pswd",
-			array("login" => "joe", "pswd" => "secret")
+			"SELECT * FROM game WHERE name = :name AND pswd = :pswd",
+			["name" => "lavina", "pswd" => "secret"]
 		);
-		$this->assertEquals(array("joe", "secret"), $this->db->getLastParams());
+		$this->assertEquals(["lavina", "secret"], $this->db->getLastParams());
 	}
 
 	function testPrepareSQLAssocMoreParams() {
 		$this->db->execute(
-			"SELECT * FROM user WHERE login = :login AND pswd = :pswd",
-			array("dummy" => 42, "login" => "joe", "pswd" => "secret")
+			"SELECT * FROM game WHERE name = :name AND pswd = :pswd",
+			["dummy" => 42, "name" => "lavina", "pswd" => "secret"]
 		);
-		$this->assertEquals(array("joe", "secret"), $this->db->getLastParams());
+		$this->assertEquals(["lavina", "secret"], $this->db->getLastParams());
 	}
 	
 	function testPrepareSQLAssocMissingParam() {
 		$this->db->execute(
-			"SELECT * FROM user WHERE login = :login AND pswd = :pswd",
-			array("login" => "joe")
+			"SELECT * FROM game WHERE name = :name AND pswd = :pswd",
+			["name" => "lavina"]
 		);
-		$this->assertEquals(array("joe", null), $this->db->getLastParams());
+		$this->assertEquals(["lavina", null], $this->db->getLastParams());
 	}
 
 	function testPrepareSQLAssocEmptyParam() {
 		$this->db->execute(
-			"SELECT * FROM user WHERE login = :login AND pswd = :pswd",
-			array("login" => "joe", "pswd" => "")
+			"SELECT * FROM game WHERE name = :name AND pswd = :pswd",
+			["name" => "lavina", "pswd" => ""]
 		);
-		$this->assertEquals(array("joe", null), $this->db->getLastParams());
+		$this->assertEquals(["lavina", null], $this->db->getLastParams());
 	}
 
 	function testExecute() {
@@ -71,15 +71,15 @@ class DBTest extends TestCase {
 				name varchar(20) NULL
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_czech_ci;
 		");
-		$this->db->execute("INSERT INTO test VALUES (?, ?)", array(1, "one"));
-		$this->db->execute("INSERT INTO test VALUES (:id, :name)", array("id" => 2, "name" => "two", "dummy" => "hello"));
-		$this->db->execute("INSERT INTO test VALUES (:id, :name)", array("id" => 3));
+		$this->db->execute("INSERT INTO test VALUES (?, ?)", [1, "one"]);
+		$this->db->execute("INSERT INTO test VALUES (:id, :name)", ["id" => 2, "name" => "two", "dummy" => "hello"]);
+		$this->db->execute("INSERT INTO test VALUES (:id, :name)", ["id" => 3]);
 		$rows = $this->db->aquery("SELECT * FROM test ORDER BY id");
 		$this->assertEquals(
 			array(
-				array("id" => "1", "name" => "one"),
-				array("id" => "2", "name" => "two"),
-				array("id" => "3", "name" => null)
+				["id" => "1", "name" => "one"],
+				["id" => "2", "name" => "two"],
+				["id" => "3", "name" => null]
 			),
 			$rows
 		);

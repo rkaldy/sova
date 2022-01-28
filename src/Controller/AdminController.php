@@ -5,7 +5,6 @@ use Sova\Request;
 use Sova\Response;
 use Sova\View;
 use Sova\Redirect;
-use Sova\Model\User;
 use Sova\Model\Game;
 use Sova\Model\Team;
 use Sova\Model\Loc;
@@ -22,11 +21,9 @@ class AdminController {
 	public function process(Request $req, array $path): Response {
 		$action = empty($path) ? "login" : $path[0];
 
-		if ($action != 'login' && !User::logged()) {
+		if ($action != 'login' && !Game::selected() && !Game::superuser()) {
 			$view = new View("admin/login");
-		} else if ($action != 'login' && $action != 'logout' && !User::super() && !Game::selected()) {
-			$view = new View("admin/login");
-		} else if (in_array($action, self::ACTIONS_SU) && !User::super()) {
+		} else if (in_array($action, self::ACTIONS_SU) && !Game::superuser()) {
 			$view = new View("error", "Nedostatečná práva k akci '$action'");
 		} else if (in_array($action, self::PAGES)) {
 			$view = new View("admin/$action");
@@ -41,10 +38,7 @@ class AdminController {
 		}
 	
 		$view->addField("action", $action);
-		$view->addField("superuser", User::super());
-		if (User::logged()) {
-			$view->addField("user", User::currentName());
-		}
+		$view->addField("superuser", Game::superuser());
 		if (Game::selected()) {
 			$view->addField("game", Game::currentName());
 		}
@@ -54,30 +48,15 @@ class AdminController {
 
 
 	public function login($args) {
-		$user = new User();
 		$game = new Game();
 		if (isset($args["login"])) {
-			if ($user->login($args["login"], $args["pswd"])) {
-				if (User::super()) {
+			if ($game->login($args["login"], $args["pswd"])) {
+				if (Game::superuser()) {
 					return new Redirect("games");
 				}
-				$games = $game->getOwnedGames();
-				if (count($games) == 0) {
-					return new View("admin/login", array("flash" => "Tento uživatel nemá nastavenou žádnou hru"));
-				} else if (count($games) == 1) {
-                    $game->setCurrentGame($games[0]["game_id"]);
-					return new Redirect("locs");
-				} else {
-					return new View("admin/selectgame", array("games" => $ret));
-				}
-			} else {
-				return new View("admin/login", array("flash" => "Špatný login nebo heslo"));
-			}
-		} else if (isset($args["game_id"])) {
-			if ($game->setCurrentGame($args["game_id"])) { 
 				return new Redirect("locs");
 			} else {
-				return new View("admin/login");
+				return new View("admin/login", array("flash" => "Špatný login nebo heslo"));
 			}
 		} else {
 			return new View("admin/login");
@@ -86,8 +65,8 @@ class AdminController {
 
 
 	public function logout($args) {
-		User::logout();
-		return new View("admin/login");
+		Game::logout();
+		return new Redirect("login");
 	}
 
 

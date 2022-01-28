@@ -4,7 +4,7 @@ namespace Sova\Controller;
 use Sova\Request;
 use Sova\Response;
 use Sova\Redirect;
-use Sova\Model\User;
+use Sova\Model\Game;
 use Sova\Model\Statistics;
 use Sova\HttpException;
 
@@ -12,7 +12,7 @@ use Sova\HttpException;
 class StatController {
 
 	public function process(Request $req, array $path): Response {
-		if (!User::logged()) {
+		if (!Game::selected()) {
 			return (new Redirect("login"))->buildResponse();
 		}
 		if (!isset($req->params["type"])) {

@@ -11,7 +11,6 @@ class RestControllerTest extends TestBase {
 
 	function setUp(): void {
 		parent::setUp();
-		$_SESSION["user_id"] = 1;
 	}
 
 	function rest(string $method, string $path, array $in = [], array $params = []): array {
@@ -23,13 +22,12 @@ class RestControllerTest extends TestBase {
 
 	
 	function testUnauthenticated() {
-		unset($_SESSION["user_id"]);
+		unset($_SESSION["game_id"]);
 		list($status, $data) = $this->rest("GET", "loc");
 		$this->assertEquals(401, $status);
 	}
 
 	function testUnauthorized() {
-		$_SESSION["user_id"] = 2;
 		list($status, $data) = $this->rest("PUT", "game");
 		$this->assertEquals(403, $status);
 	}
@@ -46,88 +44,92 @@ class RestControllerTest extends TestBase {
 	}
 
 	function testGeneralError() {
-		list($status, $data) = $this->rest("POST", "user", ["login" => "user", "pswd" => ""]);
+		$_SESSION["superuser"] = 1;
+		list($status, $data) = $this->rest("POST", "game", ["name" => "lavina", "pswd" => ""]);
 		$this->assertEquals(500, $status);
 		$this->assertFalse(isset($data["code"]));
 	}
 
 	function testGeneralDatabaseError() {
-		list($status, $data) = $this->rest("POST", "game", ["name" => "game3", "owner_id" => "NotANumber"]);
+		list($status, $data) = $this->rest("POST", "loc", ["name" => "Start", "order_id" => "NotANumber"]);
 		$this->assertEquals(422, $status);
 	}
 
 	function testBasicAuthentication() {
-		unset($_SESSION["user_id"]);
+		unset($_SESSION["game_id"]);
 		list($status, $data) = $this->rest("GET", "game", []);
 		$this->assertEquals(401, $status);
-		$this->assertFalse(isset($_SESSION["user_id"]));
+		$this->assertFalse(isset($_SESSION["game_id"]));
 		
-        $_SERVER["HTTP_AUTHORIZATION"] = "Basic ".base64_encode("user:bad");
+        $_SERVER["HTTP_AUTHORIZATION"] = "Basic ".base64_encode("game1:bad");
 		list($status, $data) = $this->rest("GET", "game", []);
 		$this->assertEquals(401, $status);
-		$this->assertFalse(isset($_SESSION["user_id"]));
+		$this->assertFalse(isset($_SESSION["game_id"]));
 
-        $_SERVER["HTTP_AUTHORIZATION"] = "Basic ".base64_encode("user:swordfish");
+        $_SERVER["HTTP_AUTHORIZATION"] = "Basic ".base64_encode("game1:samara");
 		list($status, $data) = $this->rest("GET", "game", []);
 		$this->assertEquals(200, $status);
-		$this->assertEquals(2, $_SESSION["user_id"]);
+		$this->assertEquals(1, $_SESSION["game_id"]);
 		$this->assertEquals([
-			["game_id" => 1, "name" => "game1", "owner_id" => 2],
-			["game_id" => 2, "name" => "game2", "owner_id" => 2]
+			["game_id" => 1, "name" => "game1"],
+			["game_id" => 2, "name" => "game2"]
 		], $data);
 	}
 
 	function testGET() {
-		list($status, $data) = $this->rest("GET", "user");
+		list($status, $data) = $this->rest("GET", "game");
 		$this->assertEquals(200, $status);
 		$this->assertEquals([
-			["user_id" => 1, "login" => "admin"],
-			["user_id" => 2, "login" => "user"]
+			["game_id" => 1, "name" => "game1"],
+			["game_id" => 2, "name" => "game2"]
 		], $data);
 	}
 
 	function testPUT() {
-		list($status, $data) = $this->rest("PUT", "user", ["user_id" => 2, "login" => "bigbrother"]);
+		$_SESSION["superuser"] = 1;
+		list($status, $data) = $this->rest("PUT", "game", ["game_id" => 2, "name" => "lavina"]);
 		$this->assertEquals(200, $status);
-		$this->assertEquals(["user_id" => 2, "login" => "bigbrother"], $data);
-		list($status, $data) = $this->rest("GET", "user");
+		$this->assertEquals(["game_id" => 2, "name" => "lavina"], $data);
+		list($status, $data) = $this->rest("GET", "game");
 		$this->assertEquals([
-			["user_id" => 1, "login" => "admin"],
-			["user_id" => 2, "login" => "bigbrother"]
+			["game_id" => 1, "name" => "game1"],
+			["game_id" => 2, "name" => "lavina"]
 		], $data);
 	}
 
 	function testPOST() {
-		list($status, $data) = $this->rest("POST", "user", ["login" => "bigbrother", "pswd" => "bigpass"]);
+		$_SESSION["superuser"] = 1;
+		list($status, $data) = $this->rest("POST", "game", ["name" => "lavina", "pswd" => "secret"]);
 		$this->assertEquals(200, $status);
-		$this->assertEquals("bigbrother", $data["login"]);
-		$newUserId = $data["user_id"];
-		list($status, $data) = $this->rest("GET", "user");
+		$this->assertEquals("lavina", $data["name"]);
+		$newGameId = $data["game_id"];
+		list($status, $data) = $this->rest("GET", "game");
 		$this->assertEquals([
-			["user_id" => 1, "login" => "admin"],
-			["user_id" => $newUserId, "login" => "bigbrother"],
-			["user_id" => 2, "login" => "user"]
+			["game_id" => 1, "name" => "game1"],
+			["game_id" => 2, "name" => "game2"],
+			["game_id" => $newGameId, "name" => "lavina"]
 		], $data);
 	}
 
 	function testDELETE() {
-		list($status, $data) = $this->rest("DELETE", "game", ["game_id" => 1, "owner_id" => 2, "name" => "game1"]);
+		$_SESSION["superuser"] = 1;
+		list($status, $data) = $this->rest("DELETE", "game", ["game_id" => 1, "name" => "game1"]);
 		$this->assertEquals(200, $status);
-		$this->assertEquals(["game_id" => 1, "owner_id" => 2, "name" => "game1"], $data);
+		$this->assertEquals(["game_id" => 1, "name" => "game1"], $data);
 		list($status, $data) = $this->rest("GET", "game");
 		$this->assertEquals([
-			["game_id" => 2, "owner_id" => 2, "name" => "game2"]
+			["game_id" => 2, "name" => "game2"]
 		], $data);
 	}
 
 	function testFKViolation() {
-		list($status, $data) = $this->rest("POST", "game", ["name" => "game3", "owner_id" => 99]);
+		$_SESSION["team_id"] = 99;
+		list($status, $data) = $this->rest("POST", "progress", ["point_id" => 99]);
 		$this->assertEquals(422, $status);
 		$this->assertEquals(1452, $data["code"]);
 	}
 
 	function testPKViolation() {
-		$_SESSION["user_id"] = 2;
 		$_SESSION["game_id"] = 1;
 		list($status, $data) = $this->rest("POST", "loc", ["name" => "Černá hora", "code" => "HOUBA"]);
 		$this->assertEquals(200, $status);

@@ -3,6 +3,7 @@ node_modules
 release
 *.swp
 *.log
+*.cache
 composer.lock
 package-lock.json
 config.php*

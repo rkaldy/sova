@@ -18,10 +18,10 @@ DROP TABLE IF EXISTS point;
 DROP TABLE IF EXISTS progress;
 DROP TABLE IF EXISTS settings;
 DROP TABLE IF EXISTS step;
+DROP TABLE IF EXISTS superuser;
 DROP TABLE IF EXISTS team;
 DROP TABLE IF EXISTS text;
 DROP TABLE IF EXISTS unihint;
-DROP TABLE IF EXISTS user;
 DROP TABLE IF EXISTS wordlist;
 
 
@@ -43,8 +43,8 @@ CREATE TABLE `code` (
 
 CREATE TABLE game (
   game_id int(11) NOT NULL,
-  owner_id int(11) NOT NULL,
-  name varchar(100) COLLATE utf8mb4_czech_ci NOT NULL
+  name varchar(100) COLLATE utf8mb4_czech_ci NOT NULL,
+  pswd varchar(60) CHARACTER SET ascii COLLATE ascii_bin NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
 
 CREATE TABLE hint (
@@ -104,6 +104,10 @@ CREATE TABLE step (
   to_point_id int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
 
+CREATE TABLE superuser (
+  pswd varchar(60) CHARACTER SET ascii COLLATE ascii_bin NOT NULL
+) ENGINE=InnoDB;
+
 CREATE TABLE team (
   team_id int(11) NOT NULL,
   game_id int(11) NOT NULL,
@@ -130,12 +134,6 @@ CREATE TABLE unihint (
   game_id int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
 
-CREATE TABLE `user` (
-  user_id int(11) NOT NULL,
-  login varchar(30) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
-  pswd varchar(60) CHARACTER SET ascii COLLATE ascii_bin NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
-
 CREATE TABLE wordlist (
   word varchar(20) CHARACTER SET ascii NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
@@ -152,7 +150,7 @@ ALTER TABLE `code`
 
 ALTER TABLE game
   ADD PRIMARY KEY (game_id),
-  ADD KEY owner_id (owner_id);
+  ADD UNIQUE KEY name (name) USING BTREE;
 
 ALTER TABLE hint
   ADD PRIMARY KEY (hint_id) USING BTREE,
@@ -195,9 +193,6 @@ ALTER TABLE unihint
   ADD PRIMARY KEY (unihint_id),
   ADD KEY game_id (game_id);
 
-ALTER TABLE `user`
-  ADD PRIMARY KEY (user_id);
-
 ALTER TABLE wordlist
   ADD PRIMARY KEY (word);
 
@@ -223,9 +218,6 @@ ALTER TABLE `text`
 ALTER TABLE unihint
   MODIFY unihint_id int(11) NOT NULL AUTO_INCREMENT;
 
-ALTER TABLE `user`
-  MODIFY user_id int(11) NOT NULL AUTO_INCREMENT;
-
 
 ALTER TABLE `cipher`
   ADD CONSTRAINT parent_entity_cipher FOREIGN KEY (point_id) REFERENCES point (point_id) ON DELETE CASCADE;
@@ -234,9 +226,6 @@ ALTER TABLE `code`
   ADD CONSTRAINT code_ibfk_1 FOREIGN KEY (point_id) REFERENCES point (point_id) ON DELETE CASCADE,
   ADD CONSTRAINT code_ibfk_2 FOREIGN KEY (team_id) REFERENCES team (team_id) ON DELETE CASCADE,
   ADD CONSTRAINT code_ibfk_3 FOREIGN KEY (unihint_id) REFERENCES unihint (unihint_id) ON DELETE CASCADE;
-
-ALTER TABLE game
-  ADD CONSTRAINT game_ibfk_1 FOREIGN KEY (owner_id) REFERENCES `user` (user_id);
 
 ALTER TABLE hint
   ADD CONSTRAINT hint_ibfk_1 FOREIGN KEY (team_id) REFERENCES team (team_id) ON DELETE CASCADE,

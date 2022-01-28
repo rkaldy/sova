@@ -9,24 +9,42 @@ class Game extends ModelBase {
     const PAST = 2;
     const FUTURE = 3;
 
-	public function setCurrentGame($gameId) {
-        $game = $this->repo->get($gameId);
-        if ($game["owner_id"] != User::current()) {
-            return false;
-        }
-        $_SESSION["game_id"] = $game["game_id"];
-        $_SESSION["game_name"] = $game["name"];
-        (new Settings())->load();
-        return true;
-    }
 
-    public function getOwnedGames() {
-		return $this->repo->getOwned(User::current());
-    }
-
-    public function getIdByName(string $name) {
-        return $this->repo->getIdByName($name, User::current());
+	public function prepare(array &$game) {
+		if (empty($game["pswd"])) {
+			unset($game["pswd"]);
+		} else {
+			$game["pswd"] = password_hash($game["pswd"], PASSWORD_BCRYPT);
+		}
 	}
+
+
+	public function login(string $login, string $pswd) {
+		if ($login == "superuser") {
+			if (password_verify($pswd, $this->repo->superuserPassword())) {
+				$_SESSION["superuser"] = 1;
+				return true;;
+			} else {
+				return false;
+			}
+		}
+
+		$game = $this->repo->get($login);
+		if (!isset($game) || !password_verify($pswd, $game["pswd"])) {
+			return false;
+		}
+		$_SESSION["game_id"] = $game["game_id"];
+		$_SESSION["game_name"] = $game["name"];
+        (new Settings())->load();
+		return true;
+	}
+
+
+	public static function logout() {
+		$_SESSION = [];
+		session_destroy();
+	}
+
 
 	public static function state() {
 		$now = time();
@@ -39,7 +57,9 @@ class Game extends ModelBase {
 		}
 	}
 
+
 	public static function selected() 	 { return isset($_SESSION["game_id"]); }
-	public static function current() 	 { return $_SESSION["game_id"]; }
+	public static function current() 	 { return isset($_SESSION["game_id"]) ? $_SESSION["game_id"] : null; }
 	public static function currentName() { return $_SESSION["game_name"]; }
+	public static function superuser()	 { return isset($_SESSION["superuser"]); }
 }

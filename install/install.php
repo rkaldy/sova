@@ -55,7 +55,7 @@ if (isset($error)) {
 	echo "<p>$error</p><pre>$errorDesc</pre>";
 }
 else { 
-	if (empty($_POST["db_root_login"]) || empty($_POST["db_root_pswd"]) || empty($_POST["su_login"]) || empty($_POST["su_pswd"])) {
+	if (empty($_POST["db_root_login"]) || empty($_POST["db_root_pswd"]) || empty($_POST["su_pswd"])) {
 		if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 			$flash = "Vyplňte všechny údaje.";
 		}
@@ -76,8 +76,8 @@ else {
 			$pdo->exec(file_get_contents(__DIR__."/db.create.sql"));
 			
 			progress("Naplňuji tabulky...");
-			$stmt = $pdo->prepare("INSERT INTO user (user_id, login, pswd) VALUES (?, ?, ?)");
-			$stmt->execute(array(1, $_POST["su_login"], password_hash($_POST["su_pswd"], PASSWORD_BCRYPT)));
+			$stmt = $pdo->prepare("INSERT INTO superuser VALUES (?)");
+			$stmt->execute([password_hash($_POST["su_pswd"], PASSWORD_BCRYPT)]);
 			loadInfile($pdo, __DIR__."/wordlist.txt", "wordlist", ["word"]);
 			loadInfile($pdo, __DIR__."/texts.txt", "text", ["code", "text"]);
 ?>

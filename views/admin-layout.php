@@ -2,7 +2,6 @@
 if ($superuser) {
 	$menu = array(
 		"games" => "Hry",
-		"users" => "Uživatelé",
 		"logout" => "Logout"
 	);
 } else if (isset($game)) {
@@ -70,14 +69,20 @@ if ($superuser) {
       <div id="title">
         <h1>SOVA <span id="version">2.0</span> <span id="section">admin</span></h1>
       </div>
-      <div id="user">
-        <?php echo isset($user) ? "uživatel: <b>$user</b>" : "nepřihlášený" ?><br>
-        <?php echo isset($game) ? "hra: <b>$game</b>" : "" ?><br>
-        čas vytvoření stránky: <b><?php
+      <div id="user"><?php 
+	    if ($superuser) {
+			echo "superuser";
+		} else if (isset($game)) {
+			echo $game;
+		}
+      ?><br>
+        <span id="gentime">
+          čas vytvoření stránky: <b><?php
 			$now = new DateTime('now');
 			echo $now->format('j.n.Y H:i:s');
 		?></b>
-	  </div>
+		</span>
+      </div>
       <div class="clear"></div>
     </header>
 

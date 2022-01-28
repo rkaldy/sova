@@ -21,13 +21,9 @@ if (isset($flash)) {
 		  </tr>
 		  <tr>
 		    <td colspan="2" style="padding-top: 2ex">
-			  Přihlašovací údaje pro superuživatele Sovy.<br>
-			  Superuživatel má jako jediný práva vytvářet nové hry a spravovat ostatní uživatele.
+			  Superuživatelské přihlašovací údaje<br>
+			  Superuživatel má login <b>superuser</b> a jako jediný ma práva vytvářet nové hry.
 			</td>
-		  </tr>
-		  <tr>
-		    <th>login</th>
-			<td><input type="text" name="su_login"></td>
 		  </tr>
 		  <tr> 
 		    <th>heslo</th>
