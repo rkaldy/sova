@@ -37,7 +37,7 @@ class StatController {
 
 	public function toCSV(array $data) {
 		$output = "";
-		foreach ($data as $row) {
+		foreach (array_values($data) as $row) {
 			$output .= join(",", $row) . "\n";
 		}
 		return $output;

@@ -70,9 +70,20 @@ class ProgressRepo extends RepoBase {
             ) finish ON finish.team_id = team.team_id
             ORDER BY -finish.time DESC, ciphers.count DESC, last_cipher.time
         ", ["game_id" => $gameId]);
-    }
+	}
 
-    public function progress(int $gameId) {
+	public function cipherProgress(int $gameId) {
+		return $this->db->query("
+			SELECT team_id, progress.point_id, UNIX_TIMESTAMP(time) AS time
+			FROM progress
+			NATURAL JOIN point
+			NATURAL JOIN cipher
+			WHERE game_id = ?
+			ORDER BY time
+		", $gameId);
+	}
+
+    public function progressByTeam(int $gameId) {
         return $this->db->aquery("
             SELECT team.team_id, team.name AS team_name, point.name AS point_name, progress.time, UNIX_TIMESTAMP(progress.time) as time_sec, ISNULL(cipher.point_id) AS is_loc
             FROM progress
