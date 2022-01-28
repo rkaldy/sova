@@ -30,4 +30,5 @@ class TeamTest extends TestBase {
 		$this->assertFalse(Team::logged());
 		$this->assertFalse(Game::selected());
 	}
+
 }

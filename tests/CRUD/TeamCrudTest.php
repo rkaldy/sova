@@ -12,22 +12,31 @@ class TeamCrudTest extends CrudTestBase {
 	}
 
 	function testCreate() {
-		$team = $this->create(array("name" => "Redwool", "pswd" => "KURE"));
-		$this->assertEquals(array(
-			array("team_id" => 1, "name" => "Parta Nic", "pswd" => "PRAK", "phone" => null, "email" => null),
-			array("team_id" => $team["team_id"], "name" => "Redwool", "pswd" => "KURE", "phone" => null, "email" => null)
-		), $this->list());
+		$team = $this->create(["name" => "Redwool", "pswd" => "KURE", "members" => "Rumcajs,Manka,Cipísek", "accomodation" => 0, "paid" => 0, "tshirt" => 2, "additional" => ["a" => 1, "b" => 2]]);
+		$this->assertEquals([
+			["game_id" => 1, "team_id" => 1, "name" => "Parta Nic", "pswd" => "PRAK", "phone" => null, "email" => null, "members" => null, "accomodation" => 1, "paid" => 0, "tshirt" => 0, "remarks" => null, "additional" => null],
+			["game_id" => 1, "team_id" => $team["team_id"], "name" => "Redwool", "pswd" => "KURE", "phone" => null, "email" => null, "members" => "Rumcajs,Manka,Cipísek", "accomodation" => 0, "paid" => 0, "tshirt" => 2, "remarks" => null, "additional" => '{"a":1,"b":2}']
+		], $this->list());
+	}
+
+	function testCreateWithGameId() {
+		unset($_SESSION["game_id"]);
+		$team = $this->create(["name" => "Pípy z Lípy", "pswd" => "ZIDLE", "accomodation" => 0, "paid" => 0, "tshirt" => 0, "game_id" => 2]);
+		$_SESSION["game_id"] = 2;
+		$this->assertEquals([
+			["game_id" => 2, "team_id" => $team["team_id"], "name" => "Pípy z Lípy", "pswd" => "ZIDLE", "phone" => null, "email" => null, "members" => null, "accomodation" => 0, "paid" => 0, "tshirt" => 0, "remarks" => null, "additional" => null]
+		], $this->list());
 	}
 
 	function testcreateDuplicatePassword() {
 		try {
-			$team = $this->create(array("name" => "Redwool", "pswd" => "prak"));
+			$team = $this->create(["name" => "Redwool", "pswd" => "prak", "accomodation" => 0, "paid" => 0, "tshirt" => 2]);
 			$this->fail("Should throw DBException");
 		} catch (DBException $ex) {
 			$this->assertEquals(1062, $ex->getCode());
 		}
 		$this->assertEquals(array(
-			array("team_id" => 1, "name" => "Parta Nic", "pswd" => "PRAK", "phone" => null, "email" => null)
+			["game_id" => 1, "team_id" => 1, "name" => "Parta Nic", "pswd" => "PRAK", "phone" => null, "email" => null, "members" => null, "accomodation" => 1, "paid" => 0, "tshirt" => 0, "remarks" => null, "additional" => null]
 		), $this->list());
 	}
 
@@ -37,7 +46,7 @@ class TeamCrudTest extends CrudTestBase {
 		$team["pswd"] = "kure";
 		$this->update($team);
 		$this->assertEquals(array(
-			array("team_id" => 1, "name" => "Pípy z Lípy", "pswd" => "KURE", "phone" => null, "email" => null)
+			["game_id" => 1, "team_id" => 1, "name" => "Pípy z Lípy", "pswd" => "KURE", "phone" => null, "email" => null, "members" => null, "accomodation" => 1, "paid" => 0, "tshirt" => 0, "remarks" => null, "additional" => null]
 		), $this->list());
 	}
 

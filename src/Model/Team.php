@@ -4,12 +4,18 @@ namespace Sova\Model;
 class Team extends ModelBase {
 
 	public function prepare(array &$team) {
-		$team["game_id"] = Game::current();
+		if (Game::selected()) {
+			$team["game_id"] = Game::current();
+		}
+        if (isset($team["additional"])) {
+	        $team["additional_str"] = json_encode($team["additional"]);
+        }
+		$this->prepareBooleans($team, ["accomodation", "paid"]);
 		(new Code())->prepare($team["pswd"]);
 	}
-	
+
 	public function login(int $team_id, string $pswd) {
-		$team = $this->repo->get($team_id, strtoupper(trim($pswd)));
+		$team = $this->repo->login($team_id, strtoupper(trim($pswd)));
 		if (isset($team)) {
 			$_SESSION['game_id'] = $team['game_id'];
 			$_SESSION['game_name'] = $team['game_name'];
@@ -25,7 +31,7 @@ class Team extends ModelBase {
 	public static function logout() { 
         $_SESSION = [];
         session_destroy(); 
-    }
+	}
 
 	public static function logged() 	 { return isset($_SESSION['team_id']); }
 	public static function current() 	 { return $_SESSION['team_id']; }

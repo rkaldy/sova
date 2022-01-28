@@ -109,7 +109,13 @@ CREATE TABLE team (
   game_id int(11) NOT NULL,
   name varchar(100) COLLATE utf8mb4_czech_ci NOT NULL,
   phone varchar(20) COLLATE utf8mb4_czech_ci DEFAULT NULL,
-  email varchar(50) COLLATE utf8mb4_czech_ci DEFAULT NULL
+  email varchar(50) COLLATE utf8mb4_czech_ci DEFAULT NULL,
+  members varchar(200) COLLATE utf8mb4_czech_ci DEFAULT NULL,
+  accomodation tinyint(1) NOT NULL DEFAULT 1,
+  paid tinyint(1) NOT NULL DEFAULT 0,
+  tshirt int(11) NOT NULL DEFAULT 0,
+  remarks varchar(500) COLLATE utf8mb4_czech_ci DEFAULT NULL,
+  additional varchar(500) COLLATE utf8mb4_czech_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
 
 CREATE TABLE `text` (

@@ -19,6 +19,18 @@ class ModelBase {
 
 	public function prepare(array &$obj) {}
 
+	protected function prepareBooleans(array &$obj, array $fields) {
+		foreach ($fields as $field) {
+			if ($obj[$field] === "true") {
+				$obj[$field] = 1;
+			} else if ($obj[$field] === "false") {
+				$obj[$field] = 0;
+			} else {
+				$obj[$field] = (int)$obj[$field];
+			}
+		}
+	}
+
 	public function list(int $from = null, $limit = null) {
 		return $this->repo->list(Game::current(), $from, $limit);		
 	}
