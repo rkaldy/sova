@@ -5,17 +5,22 @@ namespace Sova\Repo;
 class TeamRepo extends RepoBase {
 
 	function list(int $gameId) {
-		return $this->db->aquery("
+		$teams = $this->db->aquery("
 			SELECT team.*, code AS pswd 
 			FROM team 
 			NATURAL JOIN code
 			WHERE team.game_id = ? ORDER BY name
 		", $gameId);
+		foreach ($teams as &$team) {
+			$team["members"] = json_decode($team["members"], true);
+			$team["additional"] = json_decode($team["additional"], true);
+		}
+		return $teams;
 	}
 
 	function create(array &$team) {
 		try {
-			$this->db->execute("INSERT INTO team (game_id, name, phone, email, members, accomodation, paid, tshirt, remarks, additional) VALUES (:game_id, :name, :phone, :email, :members, :accomodation, :paid, :tshirt, :remarks, :additional_str)", $team, true);
+			$this->db->execute("INSERT INTO team (game_id, name, phone, email, members, accomodation, paid, tshirt, remarks, additional) VALUES (:game_id, :name, :phone, :email, :members, :accomodation, :paid, :tshirt, :remarks, :additional)", $team, true);
 			$team["team_id"] = $this->db->lastInsertId();
 			$this->db->execute("INSERT INTO code (game_id, team_id, code) VALUES (:game_id, :team_id, :pswd)", $team, true);
 		} catch (DBException $ex) {
@@ -35,7 +40,7 @@ class TeamRepo extends RepoBase {
 
 	public function login(int $team_id, string $pswd) {
 		return $this->db->squery("
-			SELECT team_id, team.name, team.game_id, game.name AS game_name 
+			SELECT team.*, game.name AS game_name 
 			FROM team
 			NATURAL JOIN code
 			JOIN game ON game.game_id = team.game_id 

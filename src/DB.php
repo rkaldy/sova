@@ -31,7 +31,12 @@ class DB extends PDO {
 
 	
 	public function bindValue(&$stmt, $name, $value) {
-		$type = preg_match("/^[0-9]+$/", $value) ? PDO::PARAM_INT : PDO::PARAM_STR;
+		if (is_array($value)) {
+			$value = json_encode($value);
+			$type = PDO::PARAM_STR;
+		} else {
+			$type = preg_match("/^[0-9]+$/", $value) ? PDO::PARAM_INT : PDO::PARAM_STR;
+		}
 		$stmt->bindValue($name, $value, $type);
 		$this->lastParams[] = $value;
 	}

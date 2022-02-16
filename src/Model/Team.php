@@ -7,9 +7,6 @@ class Team extends ModelBase {
 		if (Game::selected()) {
 			$team["game_id"] = Game::current();
 		}
-        if (isset($team["additional"])) {
-	        $team["additional_str"] = json_encode($team["additional"]);
-        }
 		$this->prepareBooleans($team, ["accomodation", "paid"]);
 		(new Code())->prepare($team["pswd"]);
 	}
@@ -26,6 +23,10 @@ class Team extends ModelBase {
 		} else {
 			return false;
 		}
+	}
+
+	public function webLogin(int $team_id, string $pswd) {
+		return $this->repo->login($team_id, strtoupper(trim($pswd)));
 	}
 
 	public static function logout() { 
