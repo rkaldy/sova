@@ -5,6 +5,7 @@ use Sova\HttpException;
 use Sova\Model\Game;
 use Sova\Model\Graph;
 use Sova\Model\Message;
+use Sova\Model\Team;
 
 
 class RestHandler {
@@ -48,5 +49,10 @@ class RestHandler {
 
 	public function messages_recent(array $args): array {
 		return (new Message())->recent($args["since"]);
+	}
+
+
+	public function team_login(array $args) {
+		return (new Team())->webLogin($args["team_id"], $args["pswd"]);
 	}
 }

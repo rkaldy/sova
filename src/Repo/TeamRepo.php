@@ -40,7 +40,7 @@ class TeamRepo extends RepoBase {
 
 	public function login(int $team_id, string $pswd) {
 		return $this->db->squery("
-			SELECT team.*, game.name AS game_name 
+			SELECT team.*, game.name AS game_name, code AS pswd
 			FROM team
 			NATURAL JOIN code
 			JOIN game ON game.game_id = team.game_id 
