@@ -9,7 +9,7 @@ $(function() {
 		[
 			{ name: "team_id", title: "Číslo", type: "text", width: 3, readOnly: true },
 			{ name: "name", title: "Název", type: "text", width: 15, validate: "required" },
-			{ name: "pswd", title: "Heslo", type: "text", width: 10, validate: codeValidator },
+			{ name: "pswd", title: "Heslo", type: "text", width: 10, readOnly: "true" },
 			{ name: "phone", title: "Telefon", type: "text", width: 10 },
 			{ name: "email", title: "Email", type: "text", width: 10 },
 			{ name: "members", title: "Členové", type: "text", width: 30, validate: "required" },

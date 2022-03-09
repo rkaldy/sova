@@ -8,7 +8,12 @@ class Team extends ModelBase {
 			$team["game_id"] = Game::current();
 		}
 		$this->prepareBooleans($team, ["accomodation", "paid"]);
+	}
+
+	public function create(array &$team) {
+		$this->prepare($team);
 		(new Code())->prepare($team["pswd"]);
+		$this->repo->create($team);
 	}
 
 	public function login(int $team_id, string $pswd) {
