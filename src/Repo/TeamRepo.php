@@ -39,12 +39,17 @@ class TeamRepo extends RepoBase {
 	}
 
 	public function login(int $team_id, string $pswd) {
-		return $this->db->squery("
+		$team = $this->db->squery("
 			SELECT team.*, game.name AS game_name, code AS pswd
 			FROM team
 			NATURAL JOIN code
 			JOIN game ON game.game_id = team.game_id 
 			WHERE team.team_id = ? AND code = ?
-		", $team_id, $pswd);
+			", $team_id, $pswd);
+		if ($team) {
+			$team["members"] = json_decode($team["members"], true);
+			$team["additional"] = json_decode($team["additional"], true);
+		}
+		return $team;
 	}
 }

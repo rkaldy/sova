@@ -43,6 +43,7 @@ class SovaClientTest extends TestCase {
 		$team = $this->sova->login(1, "KURE");
 		$this->assertEquals("Parta Nic", $team["name"]);
 		$this->assertEquals("KURE", $team["pswd"]);
+		$this->assertEquals(["Rumcajs", "Manka", "Cipísek"], $team["members"]);
 
 		$team = $this->sova->login(1, "PRAK");
 		$this->assertNull($team);
