@@ -84,6 +84,19 @@ class HintTest extends GameTestBase {
 	}
 
 
+	function testApplyImunity() {
+		$this->hint->add(1);
+		$this->hint->add(2);
+		$resp = $this->hint->applyImunity();
+		$this->assertEquals(new Text("hint.imunity.not-enough-unihints"), $resp);
+		$this->hint->add(3);
+		$resp = $this->hint->applyImunity();
+		$this->assertEquals(new Text("hint.imunity.success"), $resp);
+		$resp = $this->hint->applyImunity();
+		$this->assertEquals(new Text("hint.imunity.already"), $resp);
+	}
+
+
 	function testAmend() {
 		$cipher = (new CipherRepo())->get(11);
 		$resp = $this->hint->amend($cipher);

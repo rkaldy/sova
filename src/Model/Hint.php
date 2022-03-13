@@ -10,6 +10,7 @@ class Hint extends ModelBase {
 	public const NO_HINT = 0;
 	public const NORMAL = 1;
 	public const ABSOLUTE = 2;
+	public const IMUNITY = 3;
 
 	
 	public function add(int $unihintId) {
@@ -30,10 +31,11 @@ class Hint extends ModelBase {
 			return new Text("hint.no-hint");
 		}
 
-		$hint = $this->repo->getUnusedHint(Team::current());
-		if ($hint == null) {
+		$hints = $this->repo->getUnusedHint(Team::current());
+		if (empty($hints)) {
 			return new Text("hint.apply.no-unihint");
 		}
+		$hint = $hints[0];
 		$hint["cipher_id"] = $cipher["point_id"];
 		$hint["type"] = self::NORMAL;
 
@@ -51,6 +53,25 @@ class Hint extends ModelBase {
 			$this->repo->apply($hint);
 			return new Text("hint.apply.success", $cipher["name"], $cipher["hint"]);
 		}
+	}
+
+
+	public function applyImunity() {
+		if ($this->repo->imunityApplied(Team::current())) {
+			return new Text("hint.imunity.already");
+		}
+
+		$price = Settings::value("imunityPrice");
+		$hints = $this->repo->getUnusedHint(Team::current(), $price);
+		if (count($hints) < $price) {
+			return new Text("hint.imunity.not-enough-unihints");
+		}
+
+		foreach ($hints as &$hint) {
+			$hint["type"] = self::IMUNITY;
+			$this->repo->apply($hint);
+		}
+		return new Text("hint.imunity.success");
 	}
 
 	

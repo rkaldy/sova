@@ -23,3 +23,6 @@ hint.apply.already;Pro šifru %s jste již dostali nápovědu. Podívejte se do 
 hint.apply.no-hint;Všechny získané univerzální nápovědy jste již použili.
 hint.apply.success;Nápověda pro šifru %s: %s.
 hint.apply.solved;Šifru %s jste již vyluštili.
+hint.imunity.success;Získali jste imunitu. Kdyby na vás při vyhlášení padlo organizování příštího ročníku, můžete ho odmítnout.
+hint.imunity.already;Imunitu již máte.
+hint.imunity.not-enough-unihints;Nemáte dostatek univerzálních nápověd pro získání imunity.

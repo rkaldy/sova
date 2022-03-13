@@ -97,7 +97,8 @@ class MainController {
 		} else {
 			$response = null;
 		}
-		return new View("main/applyhint", ["response" => $response, "hintCount" => $hint->unusedHintCount()]);
+		$hintCount = $hint->unusedHintCount();
+		return new View("main/applyhint", ["response" => $response, "hintCount" => $hintCount, "imunity" => ($hintCount >= Settings::value("imunityPrice"))]);
 	}
 
 
