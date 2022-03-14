@@ -40,11 +40,11 @@ class CodeControllerTest extends GameTestBase {
 	}
 
 	function testAddHint() {
-		$this->assertEquals(["Získali jste univerzální nápovědu. Aktuálně máte 1 nevyužitých nápověd."], CodeController::process("buben"));
-		$this->assertEquals(["Získali jste univerzální nápovědu. Aktuálně máte 2 nevyužitých nápověd."], CodeController::process("divizna"));
-		$this->assertEquals(["Tento kód nápovědy jste již zadali."], CodeController::process("buben"));
+		$this->assertEquals(["Získali jste céčko. Aktuálně máte 1 nevyužitých céček."], CodeController::process("buben"));
+		$this->assertEquals(["Získali jste céčko. Aktuálně máte 2 nevyužitých céček."], CodeController::process("divizna"));
+		$this->assertEquals(["Toto céčko jste již zadali."], CodeController::process("buben"));
 		$_SESSION["team_id"] = 2;
-		$this->assertEquals(["Získali jste univerzální nápovědu. Aktuálně máte 1 nevyužitých nápověd."], CodeController::process("buben"));
+		$this->assertEquals(["Získali jste céčko. Aktuálně máte 1 nevyužitých céček."], CodeController::process("buben"));
 	}
 
 	function testUnavailableLoc() {

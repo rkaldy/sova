@@ -17,12 +17,12 @@ cipher.hint;Přišel čas na nápovědu k šifře %s: %s.
 cipher.solution;Přišel čas na řešení šifry %s: %s
 hint.request;(Žádost o nápovědu na %s)
 hint.no-hint;K této šifře žádná nápověda není.
-hint.add.already;Tento kód nápovědy jste již zadali.
-hint.add.success;Získali jste univerzální nápovědu. Aktuálně máte %s nevyužitých nápověd.
+hint.add.already;Toto céčko jste již zadali.
+hint.add.success;Získali jste céčko. Aktuálně máte %s nevyužitých céček.
 hint.apply.already;Pro šifru %s jste již dostali nápovědu. Podívejte se do historie zpráv.
 hint.apply.no-hint;Všechny získané univerzální nápovědy jste již použili.
 hint.apply.success;Nápověda pro šifru %s: %s.
 hint.apply.solved;Šifru %s jste již vyluštili.
 hint.imunity.success;Získali jste imunitu. Kdyby na vás při vyhlášení padlo organizování příštího ročníku, můžete ho odmítnout.
-hint.imunity.already;Imunitu již máte.
-hint.imunity.not-enough-unihints;Nemáte dostatek univerzálních nápověd pro získání imunity.
+hint.imunity.already;Imunitu jste již dostali.
+hint.imunity.not-enough-ccodes;Nemáte dostatek céček pro získání imunity.

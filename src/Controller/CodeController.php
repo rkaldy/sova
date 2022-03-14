@@ -29,9 +29,9 @@ class CodeController {
 		if ($entity == null) {
 			$response = new Text("code.unknown", $code);
 		} 
-		else if (isset($entity["unihint_id"])) {
+		else if (isset($entity["ccode_id"])) {
 			$hint = new Hint();
-			$response = $hint->add($entity["unihint_id"]);
+			$response = $hint->addCCode($entity["ccode_id"]);
 		} 
 		else if (isset($entity["point_id"])) {
 			$id = $entity["point_id"];

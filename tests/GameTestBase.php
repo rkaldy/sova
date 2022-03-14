@@ -61,12 +61,12 @@ class GameTestBase extends TestBase {
 		$this->db->execute("INSERT INTO code (game_id, point_id, code) VALUES (1, 15, 'KALENDAR')");
 		$this->db->execute("INSERT INTO code (game_id, point_id, code) VALUES (1, 16, 'SKLUZAVKA')");
 
-		$this->db->execute("INSERT INTO unihint (unihint_id, game_id) VALUES (1, 1)");
-		$this->db->execute("INSERT INTO unihint (unihint_id, game_id) VALUES (2, 1)");
-		$this->db->execute("INSERT INTO unihint (unihint_id, game_id) VALUES (3, 1)");
-		$this->db->execute("INSERT INTO code (unihint_id, game_id, code) VALUES (1, 1, 'BUBEN')");
-		$this->db->execute("INSERT INTO code (unihint_id, game_id, code) VALUES (2, 1, 'DIVIZNA')");
-		$this->db->execute("INSERT INTO code (unihint_id, game_id, code) VALUES (3, 1, 'VCELA')");
+		$this->db->execute("INSERT INTO ccode (ccode_id, game_id) VALUES (1, 1)");
+		$this->db->execute("INSERT INTO ccode (ccode_id, game_id) VALUES (2, 1)");
+		$this->db->execute("INSERT INTO ccode (ccode_id, game_id) VALUES (3, 1)");
+		$this->db->execute("INSERT INTO code (ccode_id, game_id, code) VALUES (1, 1, 'BUBEN')");
+		$this->db->execute("INSERT INTO code (ccode_id, game_id, code) VALUES (2, 1, 'DIVIZNA')");
+		$this->db->execute("INSERT INTO code (ccode_id, game_id, code) VALUES (3, 1, 'VCELA')");
 
 		$this->db->execute("INSERT INTO step (from_point_id, to_point_id) VALUES (1, 11), (1, 12), (11, 2), (12, 3), (2, 13), (3, 13), (13, 4), (4, 5), (5, 14), (14, 6), (6, 15), (6, 16), (15, 7), (16, 7)");
 

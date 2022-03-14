@@ -21,7 +21,7 @@ DROP TABLE IF EXISTS step;
 DROP TABLE IF EXISTS superuser;
 DROP TABLE IF EXISTS team;
 DROP TABLE IF EXISTS text;
-DROP TABLE IF EXISTS unihint;
+DROP TABLE IF EXISTS ccode;
 DROP TABLE IF EXISTS wordlist;
 
 
@@ -37,7 +37,7 @@ CREATE TABLE `code` (
   game_id int(11) NOT NULL,
   code varchar(20) CHARACTER SET ascii NOT NULL,
   point_id int(11) DEFAULT NULL,
-  unihint_id int(11) DEFAULT NULL,
+  ccode_id int(11) DEFAULT NULL,
   team_id int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
 
@@ -50,7 +50,7 @@ CREATE TABLE game (
 CREATE TABLE hint (
   hint_id int(11) NOT NULL,
   team_id int(11) NOT NULL,
-  unihint_id int(11) DEFAULT NULL,
+  ccode_id int(11) DEFAULT NULL,
   cipher_id int(11) DEFAULT NULL,
   time datetime DEFAULT NULL,
   type int(11) DEFAULT NULL
@@ -130,8 +130,8 @@ CREATE TABLE `text` (
   text varchar(200) CHARACTER SET utf8mb4 COLLATE utf8mb4_czech_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE unihint (
-  unihint_id int(11) NOT NULL,
+CREATE TABLE ccode (
+  ccode_id int(11) NOT NULL,
   game_id int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
 
@@ -147,7 +147,7 @@ ALTER TABLE `code`
   ADD PRIMARY KEY (game_id,code) USING BTREE,
   ADD UNIQUE KEY point_id (point_id,game_id) USING BTREE,
   ADD UNIQUE KEY team_id (team_id,game_id) USING BTREE,
-  ADD UNIQUE KEY unihint_id (unihint_id,game_id) USING BTREE;
+  ADD UNIQUE KEY ccode_id (ccode_id,game_id) USING BTREE;
 
 ALTER TABLE game
   ADD PRIMARY KEY (game_id),
@@ -155,7 +155,7 @@ ALTER TABLE game
 
 ALTER TABLE hint
   ADD PRIMARY KEY (hint_id) USING BTREE,
-  ADD UNIQUE KEY unihint_id (unihint_id,team_id) USING BTREE,
+  ADD UNIQUE KEY ccode_id (ccode_id,team_id) USING BTREE,
   ADD UNIQUE KEY team_id (team_id,cipher_id,type) USING BTREE,
   ADD KEY cipher_id (cipher_id);
 
@@ -190,8 +190,8 @@ ALTER TABLE `text`
   ADD PRIMARY KEY (text_id),
   ADD UNIQUE KEY code (game_id,code);
 
-ALTER TABLE unihint
-  ADD PRIMARY KEY (unihint_id),
+ALTER TABLE ccode
+  ADD PRIMARY KEY (ccode_id),
   ADD KEY game_id (game_id);
 
 ALTER TABLE wordlist
@@ -216,8 +216,8 @@ ALTER TABLE team
 ALTER TABLE `text`
   MODIFY text_id int(11) NOT NULL AUTO_INCREMENT;
 
-ALTER TABLE unihint
-  MODIFY unihint_id int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE ccode
+  MODIFY ccode_id int(11) NOT NULL AUTO_INCREMENT;
 
 
 ALTER TABLE `cipher`
@@ -226,11 +226,11 @@ ALTER TABLE `cipher`
 ALTER TABLE `code`
   ADD CONSTRAINT code_ibfk_1 FOREIGN KEY (point_id) REFERENCES point (point_id) ON DELETE CASCADE,
   ADD CONSTRAINT code_ibfk_2 FOREIGN KEY (team_id) REFERENCES team (team_id) ON DELETE CASCADE,
-  ADD CONSTRAINT code_ibfk_3 FOREIGN KEY (unihint_id) REFERENCES unihint (unihint_id) ON DELETE CASCADE;
+  ADD CONSTRAINT code_ibfk_3 FOREIGN KEY (ccode_id) REFERENCES ccode (ccode_id) ON DELETE CASCADE;
 
 ALTER TABLE hint
   ADD CONSTRAINT hint_ibfk_1 FOREIGN KEY (team_id) REFERENCES team (team_id) ON DELETE CASCADE,
-  ADD CONSTRAINT hint_ibfk_2 FOREIGN KEY (unihint_id) REFERENCES unihint (unihint_id) ON DELETE CASCADE,
+  ADD CONSTRAINT hint_ibfk_2 FOREIGN KEY (ccode_id) REFERENCES ccode (ccode_id) ON DELETE CASCADE,
   ADD CONSTRAINT hint_ibfk_3 FOREIGN KEY (cipher_id) REFERENCES cipher (point_id) ON DELETE CASCADE;
 
 ALTER TABLE loc
@@ -260,8 +260,8 @@ ALTER TABLE team
 ALTER TABLE `text`
   ADD CONSTRAINT text_ibfk_1 FOREIGN KEY (game_id) REFERENCES game (game_id) ON DELETE CASCADE;
 
-ALTER TABLE unihint
-  ADD CONSTRAINT unihint_ibfk_1 FOREIGN KEY (game_id) REFERENCES game (game_id) ON DELETE CASCADE;
+ALTER TABLE ccode
+  ADD CONSTRAINT ccode_ibfk_1 FOREIGN KEY (game_id) REFERENCES game (game_id) ON DELETE CASCADE;
 SET FOREIGN_KEY_CHECKS=1;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

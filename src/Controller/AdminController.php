@@ -16,7 +16,7 @@ use Sova\Model\Settings;
 class AdminController {
 
 	const ACTIONS_SU = ["game", "user"];
-	const PAGES = ["users", "games", "locs", "ciphers", "unihints", "teams", "graph", "texts", "messages", "stats"];
+	const PAGES = ["users", "games", "locs", "ciphers", "ccodes", "teams", "graph", "texts", "messages", "stats"];
 
 	public function process(Request $req, array $path): Response {
 		$action = empty($path) ? "login" : $path[0];

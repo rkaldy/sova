@@ -7,15 +7,9 @@ use Sova\Repo\ProgressRepo;
 
 class Hint extends ModelBase {
 
-	public const NO_HINT = 0;
-	public const NORMAL = 1;
-	public const ABSOLUTE = 2;
-	public const IMUNITY = 3;
-
-	
-	public function add(int $unihintId) {
-		$hint = ["team_id" => Team::current(), "unihint_id" => $unihintId];
-		if (!$this->repo->addToTeam($hint)) {
+	public function addCCode(int $ccodeId) {
+		$hint = ["team_id" => Team::current(), "ccode_id" => $ccodeId];
+		if (!$this->repo->addCCode($hint)) {
 			return new Text("hint.add.already");
 		} 
 		$count = $this->repo->getUnusedHintCount($hint["team_id"]);
@@ -33,11 +27,11 @@ class Hint extends ModelBase {
 
 		$hints = $this->repo->getUnusedHint(Team::current());
 		if (empty($hints)) {
-			return new Text("hint.apply.no-unihint");
+			return new Text("hint.apply.no-ccode");
 		}
 		$hint = $hints[0];
 		$hint["cipher_id"] = $cipher["point_id"];
-		$hint["type"] = self::NORMAL;
+		$hint["type"] = HintRepo::NORMAL;
 
 		if ($this->repo->alreadyApplied($hint)) {
 			return new Text("hint.apply.already", $cipher["name"]);
@@ -64,11 +58,11 @@ class Hint extends ModelBase {
 		$price = Settings::value("imunityPrice");
 		$hints = $this->repo->getUnusedHint(Team::current(), $price);
 		if (count($hints) < $price) {
-			return new Text("hint.imunity.not-enough-unihints");
+			return new Text("hint.imunity.not-enough-ccodes");
 		}
 
 		foreach ($hints as &$hint) {
-			$hint["type"] = self::IMUNITY;
+			$hint["type"] = HintRepo::IMUNITY;
 			$this->repo->apply($hint);
 		}
 		return new Text("hint.imunity.success");
@@ -83,13 +77,13 @@ class Hint extends ModelBase {
 	public function amend(array $cipher) {
 		$message = new Message();
 		if (isset($cipher["hint_timeout"])) {
-			$hint = ["team_id" => Team::current(), "cipher_id" => $cipher["point_id"], "time" => $cipher["hint_timeout"], "type" => self::NORMAL ];
+			$hint = ["team_id" => Team::current(), "cipher_id" => $cipher["point_id"], "time" => $cipher["hint_timeout"], "type" => HintRepo::NORMAL ];
 			$this->repo->amend($hint);
 			$hintMsg = new Text("cipher.hint", $cipher["name"], $cipher["hint"]);
 			$message->sendToTeam($hintMsg->format(), $hint["hint_id"], $cipher["hint_timeout"]);
 		}
 		if (isset($cipher["solution_timeout"])) {
-			$hint = ["team_id" => Team::current(), "cipher_id" => $cipher["point_id"], "time" => $cipher["solution_timeout"], "type" => self::ABSOLUTE ];
+			$hint = ["team_id" => Team::current(), "cipher_id" => $cipher["point_id"], "time" => $cipher["solution_timeout"], "type" => HintRepo::ABSOLUTE ];
 			$this->repo->amend($hint);
 			$solutionMsg = new Text("cipher.solution", $cipher["name"], $cipher["code"]);
 			$message->sendToTeam($solutionMsg->format(), $hint["hint_id"], $cipher["solution_timeout"]);
