@@ -2,7 +2,7 @@
 if (isset($team)) {
 	$menu = [
 		"code" => "Zadej kód",
-		"applyhint" => "Použít nápovědu",
+		"applyhint" => "Céčka",
 		"ciphers" => "Přehled šifer",
 		"messages" => "Historie zpráv",
 		"settings" => "Nastavení"

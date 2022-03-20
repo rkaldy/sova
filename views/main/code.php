@@ -1,4 +1,6 @@
-<?php if ($gameState == \Sova\Model\Game::CURRENT) { ?>
+<?php if ($gameState == \Sova\Model\Game::PAST) { ?>
+<p>Hra již skončila.</p>
+<?php } else { ?>
 
 <p id="response"><?php echo join("<br>", $response) ?></p>
 
@@ -8,8 +10,4 @@
   <input type="submit" value="Odeslat">
 </form>
 
-<?php } else if ($gameState == \Sova\Model\Game::FUTURE) { ?>
-<p>Hra ještě nezačala.</p>
-<?php } else if ($gameState == \Sova\Model\Game::PAST) { ?>
-<p>Hra již skončila.</p>
 <?php } ?>

@@ -8,7 +8,7 @@ if ($superuser) {
 	$menu = array(
 		"locs" => "Stanoviště",
 		"ciphers" => "Šifry",
-		"unihints" => "Univerzální nápovědy",
+		"ccodes" => "Céčka",
 		"graph" => "Schéma",
 		"texts" => "Texty",
 		"teams" => "Týmy",
