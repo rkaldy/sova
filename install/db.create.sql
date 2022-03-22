@@ -120,7 +120,8 @@ CREATE TABLE team (
   paid tinyint(1) NOT NULL DEFAULT 0,
   tshirt int(11) NOT NULL DEFAULT 0,
   remarks varchar(500) COLLATE utf8mb4_czech_ci DEFAULT NULL,
-  additional varchar(500) COLLATE utf8mb4_czech_ci DEFAULT NULL
+  additional varchar(500) COLLATE utf8mb4_czech_ci DEFAULT NULL,
+  points int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
 
 CREATE TABLE `text` (

@@ -39,6 +39,16 @@ class Team extends ModelBase {
         session_destroy(); 
 	}
 
+
+	public function points(): int {
+		return $this->repo->points(self::current());
+	}
+
+	public function add_points(int $add) {
+		$this->repo->add_points(self::current(), $add);
+	}
+
+
 	public static function logged() 	 { return isset($_SESSION['team_id']); }
 	public static function current() 	 { return $_SESSION['team_id']; }
 	public static function currentName() { return $_SESSION['team_name']; }

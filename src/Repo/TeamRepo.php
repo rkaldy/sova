@@ -37,6 +37,14 @@ class TeamRepo extends RepoBase {
 		$this->db->execute("DELETE FROM team WHERE team_id = :team_id", $team, true);
 	}
 
+	public function points(int $team_id): int {
+		return $this->db->equery("SELECT points FROM team WHERE team_id = ?", $team_id);
+	}
+
+	public function add_points(int $team_id, int $add) {
+		$this->db->execute("UPDATE team SET points = points + ? where team_id = ?", $add, $team_id);
+	}
+
 	public function login(int $team_id, string $pswd) {
 		$team = $this->db->squery("
 			SELECT team.*, game.name AS game_name, code AS pswd
