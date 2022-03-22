@@ -12,7 +12,7 @@ $(function() {
 			{ name: "pswd", title: "Heslo", type: "text", width: 10, readOnly: "true" },
 			{ name: "phone", title: "Telefon", type: "text", width: 10 },
 			{ name: "email", title: "Email", type: "text", width: 10 },
-			{ name: "members", title: "Členové", type: "text", width: 30, validate: "required" },
+			{ name: "members", title: "Členové", type: "array", width: 30, validate: "required" },
 			{ name: "accomodation", title: "Ubytování", type: "checkbox", width: 3 },
 			{ name: "tshirt", title: "Triček", type: "text", width: 3 },
 			{ name: "paid", title: "Zaplatil?", type: "checkbox", width: 3 },

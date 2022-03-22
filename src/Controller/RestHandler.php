@@ -21,7 +21,6 @@ class RestHandler {
 			case "GET": 	if (isset($params["page"]) && isset($params["pageSize"])) {
 								$from = ($params["page"] - 1) * $params["pageSize"];
 								$limit = $params["pageSize"];
-								$data = $model->list($from, $limit);
 								return [
 									"data" => $model->list($from, $limit),
 									"itemsCount" => $model->count()

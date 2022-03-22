@@ -142,4 +142,17 @@ class RestControllerTest extends TestBase {
 		$this->assertEquals(200, $status);
 	}
 
+    function testJSONFields() {
+        list($status, $data) = $this->rest("POST", "team", ["name" => "Parta Nic", "phone" => "123", "email" => "partanic@post.cz", "members" => ["Rumcajs", "Manka", "Cipísek"], "accomodation" => true, "paid" => false, "tshirt" => 2]);
+        $this->assertEquals(200, $status);
+        list($status, $data) = $this->rest("GET", "team");
+        $this->assertEquals(200, $status);
+        $this->assertEquals(1, count($data));
+        $team = $data[0];
+        $this->assertNotNull($team["team_id"]);
+        $this->assertMatchesRegularExpression("/[A-Z]{4,9}/", $team["pswd"]);
+        $this->assertTrue($team["accomodation"] === true);
+        $this->assertTrue($team["paid"] === false);
+        $this->assertEquals(["Rumcajs", "Manka", "Cipísek"], $team["members"]);
+    }
 }

@@ -32,7 +32,7 @@ class DB extends PDO {
 	
 	public function bindValue(&$stmt, $name, $value) {
 		if (is_array($value)) {
-			$value = json_encode($value);
+			$value = json_encode($value, JSON_UNESCAPED_UNICODE);
 			$type = PDO::PARAM_STR;
 		} else {
 			$type = preg_match("/^[0-9]+$/", $value) ? PDO::PARAM_INT : PDO::PARAM_STR;

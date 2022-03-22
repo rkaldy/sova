@@ -101,6 +101,41 @@ function setGrid(cfg) {
 }
 
 
+var ArrayField = function(config) {
+	jsGrid.Field.call(this, config);
+}
+
+ArrayField.prototype = new jsGrid.Field({
+	itemTemplate: function(value) {
+		return value == null ? "" : value.join(",");
+	},
+
+	insertTemplate: function() {
+		return this.insertControl = this._createTextBox();
+	},
+
+	editTemplate: function(value) {
+        var $result = this.editControl = this._createTextBox();
+        $result.val(value == null ? "" : value.join(","));
+        return $result;
+	},
+
+    insertValue: function() {
+        return this.insertControl.val().split(",");
+    },
+
+    editValue: function() {
+        return this.editControl.val().split(",");
+    },
+
+    _createTextBox: function() {
+       return $("<input>").attr("type", "text")
+    } 
+});
+
+jsGrid.fields.array = ArrayField;
+
+
 var DatetimeField = function(config) {
 	var defaultConfig = {
 		dayOfWeekStart: 1,
