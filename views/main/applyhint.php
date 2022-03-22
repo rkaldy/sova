@@ -1,8 +1,8 @@
-<?php if ($gameState == \Sova\Model\Game::CURRENT) { ?>
-
 <p id="response"><?php if (isset($response)) echo $response; ?></p>
 
 <p id="hintcount">Aktuálně máte <?php echo $points ?> bodů a <?php echo $hintCount ?> nevyužitých céček.</p>
+
+<?php if ($gameState == \Sova\Model\Game::CURRENT) { ?>
 
 <form method="POST" action="applyhint">
   <p>

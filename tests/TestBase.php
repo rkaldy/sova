@@ -16,7 +16,7 @@ class TestBase extends TestCase {
 		$this->db->execute("INSERT INTO text (game_id, code, text) SELECT 1, code, text FROM text WHERE game_id IS NULL");
 		$this->db->execute("INSERT INTO text (game_id, code, text) SELECT 2, code, text FROM text WHERE game_id IS NULL");
 		$this->db->execute("INSERT INTO settings (game_id) VALUES (1)");
-		$this->db->execute("INSERT INTO settings (game_id, gameStart, gameEnd) VALUES (2, DATE_ADD(NOW(), INTERVAL 1 HOUR), DATE_ADD(NOW(), INTERVAL 2 HOUR))");
+		$this->db->execute("INSERT INTO settings (game_id, gameStart, gameEnd) VALUES (2, DATE_SUB(NOW(), INTERVAL 2 HOUR), DATE_SUB(NOW(), INTERVAL 1 HOUR))");
 		$_SESSION["game_id"] = 1;
 		(new Settings())->load();
 	}

@@ -3,7 +3,7 @@ namespace Sova\CRUD;
 
 use Sova\DBException;
 
-class CCodeCrudTest extends CrudTestBase {
+class CcodeCrudTest extends CrudTestBase {
 
 	function setUp(): void {
 		parent::setUp();

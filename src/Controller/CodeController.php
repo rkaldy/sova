@@ -14,8 +14,8 @@ use Sova\HttpException;
 class CodeController {
 
 	public static function process($request) {
-		if (Game::state() != Game::CURRENT) {
-			throw new HttpException(403);
+		if (Game::state() == Game::PAST) {
+			throw new HttpException(403, "Hra již skončila");
 		}
 
 		$code = Code::polish($request);
