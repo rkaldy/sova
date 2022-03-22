@@ -31,7 +31,7 @@ class ModelBase {
 		}
 	}
 
-	public function list(int $from = null, $limit = null) {
+	public function list(int $from = null, $limit = null): array {
 		return $this->repo->list(Game::current(), $from, $limit);		
 	}
 

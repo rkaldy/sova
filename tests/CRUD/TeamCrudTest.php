@@ -14,8 +14,8 @@ class TeamCrudTest extends CrudTestBase {
 	function testCreate() {
 		$team = $this->create(["name" => "Redwool", "pswd" => "KURE", "members" => ["Rumcajs", "Manka" ,"Cipísek"], "accomodation" => 0, "paid" => 0, "tshirt" => 2, "additional" => ["a" => 1, "b" => 2]]);
 		$this->assertEquals([
-			["game_id" => 1, "team_id" => 1, "name" => "Parta Nic", "pswd" => "PRAK", "phone" => null, "email" => null, "members" => null, "accomodation" => 1, "paid" => 0, "tshirt" => 0, "remarks" => null, "additional" => null, "points" => 0],
-			["game_id" => 1, "team_id" => $team["team_id"], "name" => "Redwool", "pswd" => "KURE", "phone" => null, "email" => null, "members" => ["Rumcajs", "Manka", "Cipísek"], "accomodation" => 0, "paid" => 0, "tshirt" => 2, "remarks" => null, "additional" => ["a" => 1, "b" => 2 ], "points" => 0]
+			["game_id" => 1, "team_id" => 1, "name" => "Parta Nic", "pswd" => "PRAK", "phone" => null, "email" => null, "members" => null, "accomodation" => 1, "paid" => 0, "tshirt" => 0, "remarks" => null, "additional" => null, "points" => 0, "fee" => 0],
+			["game_id" => 1, "team_id" => $team["team_id"], "name" => "Redwool", "pswd" => "KURE", "phone" => null, "email" => null, "members" => ["Rumcajs", "Manka", "Cipísek"], "accomodation" => 0, "paid" => 0, "tshirt" => 2, "remarks" => null, "additional" => ["a" => 1, "b" => 2 ], "points" => 0, "fee" => 0]
 		], $this->list());
 	}
 
@@ -24,12 +24,12 @@ class TeamCrudTest extends CrudTestBase {
 		$team = $this->create(["name" => "Pípy z Lípy", "pswd" => "ZIDLE", "accomodation" => 0, "paid" => 0, "tshirt" => 0, "game_id" => 2]);
 		$_SESSION["game_id"] = 2;
 		$this->assertEquals([
-			["game_id" => 2, "team_id" => $team["team_id"], "name" => "Pípy z Lípy", "pswd" => "ZIDLE", "phone" => null, "email" => null, "members" => null, "accomodation" => 0, "paid" => 0, "tshirt" => 0, "remarks" => null, "additional" => null, "points" => 0]
+			["game_id" => 2, "team_id" => $team["team_id"], "name" => "Pípy z Lípy", "pswd" => "ZIDLE", "phone" => null, "email" => null, "members" => null, "accomodation" => 0, "paid" => 0, "tshirt" => 0, "remarks" => null, "additional" => null, "points" => 0, "fee" => 0]
 		], $this->list());
 	}
 
 	function testCreateGeneratePassword() {
-		$team = $this->create(["name" => "Redwool", "members" => ["Rumcajs", "Manka" ,"Cipísek"], "accomodation" => 0, "paid" => 0, "tshirt" => 2, "additional" => ["a" => 1, "b" => 2], "points" => 0]);
+		$team = $this->create(["name" => "Redwool", "members" => ["Rumcajs", "Manka" ,"Cipísek"], "accomodation" => 0, "paid" => 0, "tshirt" => 2, "additional" => ["a" => 1, "b" => 2], "points" => 0, "fee" => 0]);
 		$this->assertGreaterThan(4, strlen($team["pswd"]));
 	}
 
@@ -41,7 +41,7 @@ class TeamCrudTest extends CrudTestBase {
 			$this->assertEquals(1062, $ex->getCode());
 		}
 		$this->assertEquals(array(
-			["game_id" => 1, "team_id" => 1, "name" => "Parta Nic", "pswd" => "PRAK", "phone" => null, "email" => null, "members" => null, "accomodation" => 1, "paid" => 0, "tshirt" => 0, "remarks" => null, "additional" => null, "points" => 0]
+			["game_id" => 1, "team_id" => 1, "name" => "Parta Nic", "pswd" => "PRAK", "phone" => null, "email" => null, "members" => null, "accomodation" => 1, "paid" => 0, "tshirt" => 0, "remarks" => null, "additional" => null, "points" => 0, "fee" => 0]
 		), $this->list());
 	}
 
@@ -51,7 +51,7 @@ class TeamCrudTest extends CrudTestBase {
 		$team["pswd"] = null;
 		$this->update($team);
 		$this->assertEquals(array(
-			["game_id" => 1, "team_id" => 1, "name" => "Pípy z Lípy", "pswd" => "PRAK", "phone" => null, "email" => null, "members" => null, "accomodation" => 1, "paid" => 0, "tshirt" => 0, "remarks" => null, "additional" => null, "points" => 0]
+			["game_id" => 1, "team_id" => 1, "name" => "Pípy z Lípy", "pswd" => "PRAK", "phone" => null, "email" => null, "members" => null, "accomodation" => 1, "paid" => 0, "tshirt" => 0, "remarks" => null, "additional" => null, "points" => 0, "fee" => 0]
 		), $this->list());
 	}
 

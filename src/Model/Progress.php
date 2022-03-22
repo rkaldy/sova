@@ -22,18 +22,17 @@ class Progress extends ModelBase {
 	}
 
 	public function locStatus() {
-		$locs = (new LocRepo())->listSimple(Game::current());
+		$locs = (new LocRepo())->listAsArray(Game::current());
 		$status = $this->repo->locStatus(Game::current());
 		$ret = [];
-		foreach ($locs as $loc) {
+		foreach ($locs as $id => $name) {
 			$teams = [];
 			foreach ($status as $stat) {
-				if ($stat["point_id"] == $loc["point_id"]) {
+				if ($stat["point_id"] == $id) {
 					$teams[] = $stat;
 				}
 			}
-			$loc["teams"] = $teams;
-			$ret[] = $loc;
+			$ret[] = ["point_id" => $id, "name" => $name, "teams" => $teams];
 		}
 
 		$maxSolved = 0;

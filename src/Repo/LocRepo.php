@@ -43,8 +43,8 @@ class LocRepo extends PointRepo {
 		return $locs;
 	}
 
-	public function listSimple($gameId) {
-		return $this->db->aquery("
+	public function listAsArray($gameId) {
+		return $this->db->dquery("
 			SELECT point_id, name
 			FROM point
 			NATURAL JOIN loc

@@ -4,20 +4,20 @@
 $(function() {
 	setGrid({
 		table: "team", 
-		width: "100%",
 		fields: 
 		[
-			{ name: "team_id", title: "Číslo", type: "text", width: 3, readOnly: true },
-			{ name: "name", title: "Název", type: "text", width: 15, validate: "required" },
-			{ name: "pswd", title: "Heslo", type: "text", width: 10, readOnly: "true" },
-			{ name: "phone", title: "Telefon", type: "text", width: 10 },
-			{ name: "email", title: "Email", type: "text", width: 10 },
-			{ name: "members", title: "Členové", type: "array", width: 30, validate: "required" },
-			{ name: "accomodation", title: "Ubytování", type: "checkbox", width: 3 },
-			{ name: "tshirt", title: "Triček", type: "text", width: 3 },
-			{ name: "paid", title: "Zaplatil?", type: "checkbox", width: 3 },
-			{ name: "remark", title: "Poznámky", type: "text", width: 20, readOnly: true },
-			{ type: "control", width: 5 }
+			{ name: "team_id", title: "Číslo", type: "text", width: "10ex", readOnly: true },
+			{ name: "name", title: "Název", type: "text", width: "20ex", validate: "required" },
+			{ name: "pswd", title: "Heslo", type: "text", width: "15ex", readOnly: "true" },
+			{ name: "phone", title: "Telefon", type: "text", width: "15ex" },
+			{ name: "email", title: "Email", type: "text", width: "30ex" },
+			{ name: "members", title: "Členové", type: "array", width: "40ex", validate: "required" },
+			{ name: "accomodation", title: "Ubytování", type: "checkbox", width: "10ex" },
+			{ name: "tshirt", title: "Triček", type: "text", width: "10ex" },
+			{ name: "fee", title: "Platba", type: "text", width: "10ex", readOnly: true},		
+			{ name: "paid", title: "Zaplatil?", type: "checkbox", width: "10ex" },
+			{ name: "remark", title: "Poznámky", type: "text", width: "20ex", readOnly: true },
+			{ type: "control", width: "10ex" }
 		]
 	});
 });
@@ -38,6 +38,8 @@ $(function() {
     <th>Telefon, email</th>
     <td>Kontaktní údaje na tým.</td>
   </tr>
+  <tr>
+    <th>Platba</th>
+	<td>Účastnický poplatek + ubytování + trička (ceny nastavíte v <a href="settings">Nastavení</a>)</td>
+  </tr>
 </table>
-
-<p>Nezapomeňte rozeslat čísla a hesla týmům před hrou.</p>

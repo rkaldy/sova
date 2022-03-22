@@ -10,13 +10,24 @@ class Team extends ModelBase {
 		$this->prepareBooleans($team, ["accomodation", "paid"]);
 	}
 
+	public function list(int $from = null, $limit = null): array {
+		$teams = $this->repo->list(Game::current());
+		foreach ($teams as &$team) {
+			$team["fee"] = Settings::value("gamePrice") + Settings::value("tshirtPrice") * $team["tshirt"];
+			if ($team["accomodation"] && !empty($team["members"])) {
+				$team["fee"] += Settings::value("accomodationPrice") * count($team["members"]);
+			}
+		}
+		return $teams;
+	}
+
 	public function create(array &$team) {
 		$this->prepare($team);
 		(new Code())->prepare($team["pswd"]);
 		$this->repo->create($team);
 	}
 
-	public function login(int $team_id, string $pswd) {
+	public function login(int $team_id, string $pswd): bool {
 		$team = $this->repo->login($team_id, strtoupper(trim($pswd)));
 		if (isset($team)) {
 			$_SESSION['game_id'] = $team['game_id'];

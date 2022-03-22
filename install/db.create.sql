@@ -97,7 +97,10 @@ CREATE TABLE settings (
   showRank tinyint(4) NOT NULL DEFAULT 1,
   linkMapyCz VARCHAR(20) NULL DEFAULT NULL,
   deleteParallelHints tinyint(4) NOT NULL DEFAULT 0,
-  imunityPrice int(11) DEFAULT 3
+  imunityPrice int(11) DEFAULT 3,
+  gamePrice int(11) DEFAULT 0,
+  accomodationPrice int(11) DEFAULT 0,
+  tshirtPrice int(11) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE step (

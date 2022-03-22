@@ -102,6 +102,7 @@ class AdminController {
 		$settings = new Settings();
 		if (!empty($args)) {
 			$ret = $settings->set($args);
+			$settings->load();
 		}
 		$fields = $settings->get();
 		if (isset($ret)) {

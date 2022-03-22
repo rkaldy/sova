@@ -15,7 +15,7 @@ class Message extends ModelBase {
 		}
 	}
 
-	public function list($from = 0, $limit = 999999) {
+	public function list($from = 0, $limit = 999999): array {
 		$messages = $this->repo->list(Game::current(), $from, $limit);
 		$this->addDirectionStr($messages);
 		return $messages;
