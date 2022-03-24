@@ -101,10 +101,9 @@ class AdminController {
 	public function settings($args) {
 		$settings = new Settings();
 		if (!empty($args)) {
-			$ret = $settings->set($args);
-			$settings->load();
+			$ret = $settings->save($args);
 		}
-		$fields = $settings->get();
+		$fields = $_SESSION["settings"];
 		if (isset($ret)) {
 			$fields["flash"] = $ret;
 		}

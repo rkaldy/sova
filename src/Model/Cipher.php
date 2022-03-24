@@ -12,7 +12,7 @@ class Cipher extends ModelBase {
 	}
 
 	public function isReachable(array $cipher) {
-		if (Settings::isLocVisitMandatory()) {
+		if (Settings::get("locVisitMandatory")) {
 			return $this->repo->previousLocsVisited(Team::current(), $cipher);
 		} else {
 			return !$this->repo->hasPreviousCiphers($cipher) || $this->repo->previousCiphersSolved(Team::current(), $cipher);
@@ -40,21 +40,25 @@ class Cipher extends ModelBase {
 			$progress->create($loc);
 		}
 
-		if (Settings::value("deleteParallelHints")) {
+		if (Settings::get("deleteParallelHints")) {
 			$this->repo->deletePendingHintsForParallelCiphers(Team::current(), $cipher);
 		} else {
 			$this->repo->deletePendingHints(Team::current(), $cipher);
 		}
 
 		$solved = $this->repo->solvedCipherCount(Team::current());
-		
-		if (Settings::showRank()) {
-			list($rank, $firstTeam, $firstTime) = $progress->getRank($cipher);
-			$ret = [new Text("cipher.solved", $cipher["name"], $rank, $firstTeam, $firstTime, $solved)];
+
+		if (Settings::get("usePoints")) {
+            $team = new Team();
+			$team->addPoints($cipher["points"]);
+            $ret = [new Text("cipher.solved.points", $cipher["name"], $team->points(), $solved)];
 		} else {
-			$ret = [new Text("cipher.solved.no-rank", $cipher["name"], $solved)];
+			$ret = [new Text("cipher.solved", $cipher["name"], $solved)];
+        }
+		if (Settings::get("showRank")) {
+			list($rank, $firstTeam, $firstTime) = $progress->getRank($cipher);
+			$ret[] = new Text("cipher.rank", $rank, $firstTeam, $firstTime);
 		}
-		
 		foreach ($this->repo->getNextLocsNotVisited(Team::current(), $cipher) as $loc) {
 			$ret[] = new Text("loc.next", $loc["name"], Loc::getDescription($loc));
 		}

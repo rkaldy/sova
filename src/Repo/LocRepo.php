@@ -11,7 +11,7 @@ class LocRepo extends PointRepo {
 
 	public function get(int $id) {
 		$loc = $this->db->squery("
-			SELECT loc.*, point.name,
+			SELECT loc.*, point.name, point.points,
 			  GROUP_CONCAT(DISTINCT prev.from_point_id ORDER BY prev.from_point_id SEPARATOR ',') AS prev,
 			  GROUP_CONCAT(DISTINCT next.to_point_id ORDER BY next.to_point_id SEPARATOR ',') AS next
 			FROM loc 
@@ -26,7 +26,7 @@ class LocRepo extends PointRepo {
 
 	public function list($gameId) {
 		$locs = $this->db->aquery("
-			SELECT loc.*, point.name, code,
+			SELECT loc.*, point.name, point.points, code,
 			  GROUP_CONCAT(DISTINCT next.point_id ORDER BY next.order_id, name SEPARATOR ',') AS next			
 			FROM loc
 			NATURAL JOIN point
@@ -64,7 +64,7 @@ class LocRepo extends PointRepo {
 
 	function create(array &$loc) {
 		try {
-			$this->db->execute("INSERT INTO point (game_id, name) VALUES (:game_id, :name)", $loc, true);
+			$this->db->execute("INSERT INTO point (game_id, name, points) VALUES (:game_id, :name, :points)", $loc, true);
 			$loc["point_id"] = $this->db->lastInsertId();
 			$this->db->execute("INSERT INTO loc (point_id, description, order_id, coord_lat, coord_lon, solved_cipher_count, end_time) VALUES (:point_id, :description, :order_id, :coord_lat, :coord_lon, :solved_cipher_count, :end_time)", $loc, true);
 			$this->db->execute("INSERT INTO code (game_id, code, point_id) VALUES (:game_id, :code, :point_id)", $loc, true);
@@ -76,7 +76,7 @@ class LocRepo extends PointRepo {
 	}
 
 	function update(array $loc) {
-		$this->db->execute("UPDATE point SET name = :name WHERE point_id = :point_id", $loc);
+		$this->db->execute("UPDATE point SET name = :name, points = :points WHERE point_id = :point_id", $loc);
 		$this->db->execute("UPDATE loc SET description = :description, order_id = :order_id, coord_lat = :coord_lat, coord_lon = :coord_lon, solved_cipher_count = :solved_cipher_count, end_time = :end_time WHERE point_id = :point_id", $loc);
 		$this->db->execute("UPDATE code SET code = :code WHERE point_id = :point_id", $loc);
 		$this->addNextLocs($loc);

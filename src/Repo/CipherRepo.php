@@ -6,7 +6,7 @@ use Sova\DBException;
 class CipherRepo extends PointRepo {
 
 	protected const SQL = "
-		    SELECT cipher.point_id, name, hint, hint_timeout, solution_timeout, code,
+		    SELECT cipher.point_id, name, hint, hint_timeout, solution_timeout, code, points,
 			  GROUP_CONCAT(DISTINCT prev.from_point_id ORDER BY prev.from_point_id SEPARATOR ',') AS prev,
 			  GROUP_CONCAT(DISTINCT next.to_point_id ORDER BY next.to_point_id SEPARATOR ',') AS next
 			FROM cipher 
@@ -38,7 +38,7 @@ class CipherRepo extends PointRepo {
 
 	function list(int $gameId) {
 		$ciphers = $this->db->aquery("
-			SELECT cipher.point_id, name, name_int, hint, hint_timeout, solution_timeout, code, 
+			SELECT cipher.point_id, name, name_int, hint, hint_timeout, solution_timeout, code, points,
 			  GROUP_CONCAT(DISTINCT prev.from_point_id ORDER BY prev.from_point_id SEPARATOR ',') AS prev, 
 			  GROUP_CONCAT(DISTINCT next.to_point_id ORDER BY next.to_point_id SEPARATOR ',') AS next 
 			FROM cipher 
@@ -73,7 +73,7 @@ class CipherRepo extends PointRepo {
 
 	function create(array &$cipher) {
 		try {
-			$this->db->execute("INSERT INTO point (game_id, name) VALUES (:game_id, :name)", $cipher, true);
+			$this->db->execute("INSERT INTO point (game_id, name, points) VALUES (:game_id, :name, :points)", $cipher, true);
 			$cipher["point_id"] = $this->db->lastInsertId();
 			$this->db->execute("INSERT INTO cipher (point_id, name_int, solution_timeout, hint, hint_timeout) VALUES (:point_id, :name_int, :solution_timeout, :hint, :hint_timeout)", $cipher, true);
 			$this->db->execute("INSERT INTO code (game_id, point_id, code) VALUES (:game_id, :point_id, :code)", $cipher, true);
@@ -85,7 +85,7 @@ class CipherRepo extends PointRepo {
 	}
 
 	function update(array &$cipher) {
-		$this->db->execute("UPDATE point SET name = :name WHERE point_id = :point_id", $cipher);
+		$this->db->execute("UPDATE point SET name = :name, points = :points WHERE point_id = :point_id", $cipher);
 		$this->db->execute("UPDATE cipher SET name_int = :name_int, solution_timeout = :solution_timeout, hint = :hint, hint_timeout = :hint_timeout WHERE point_id = :point_id", $cipher);
 		$this->db->execute("UPDATE code SET code = :code WHERE point_id = :point_id", $cipher);
 		$this->addPrevNextLocs($cipher);

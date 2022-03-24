@@ -45,7 +45,7 @@ class MainController {
 		if (Team::logged()) {
 			$view->addField("team", Team::currentName());
 			$view->addField("game", Game::currentName());
-		    $view->addField("showRank", Settings::value("showRank"));
+		    $view->addField("showRank", Settings::get("showRank"));
 		}
 
 		$output = $view->render("main-layout");
@@ -98,7 +98,7 @@ class MainController {
 			$response = null;
 		}
 		$hintCount = $hint->unusedHintCount();
-		return new View("main/applyhint", ["response" => $response, "points" => (new Team())->points(), "hintCount" => $hintCount, "imunity" => ($hintCount >= Settings::value("imunityPrice"))]);
+		return new View("main/applyhint", ["response" => $response, "points" => (new Team())->points(), "hintCount" => $hintCount, "imunity" => ($hintCount >= Settings::get("imunityPrice"))]);
 	}
 
 

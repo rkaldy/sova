@@ -1,4 +1,6 @@
 <?php
+const SEPARATOR = 1;
+
 const TEXT = 1;
 const BOOL = 2;
 const ENUM = 3;
@@ -49,6 +51,7 @@ $settings = [
 		"desc"	=> "Má-li stanoviště zadané souřadnice, zobrazí se týmům jako odkaz na mapy.cz",
 		"enumValues" => ["turisticka" => "Turistická", "zimni" => "Zimní"]
 	],
+	SEPARATOR,
 	[	
 		"var"	=> "gamePrice",
 		"type"	=> TEXT,
@@ -66,6 +69,47 @@ $settings = [
 		"type"	=> TEXT,
 		"label"	=> "Cena trička"
 	],
+	SEPARATOR,
+	[
+		"var"	=> "usePoints",
+		"type"	=> BOOL,
+		"label"	=> "Počítat body?",
+		"desc"	=> "Je-li zaškrtnuto, hlavním kritériem pořadí týmů je počet bodů. V opačném případě je hlavním kritériem čas příchodu do cíle."
+	],
+	[
+		"var"	=> "hintPoints",
+		"type"	=> TEXT,
+		"label"	=> "Cena nápovědy (v bodech)"
+	],
+	[
+		"var"	=> "howtoPoints",
+		"type"	=> TEXT,
+		"label"	=> "Cena postupu (v bodech)",
+		"desc"  => "navíc k ceně nápovědy"
+	],
+	[
+		"var"	=> "solutionPoints",
+		"type"	=> TEXT,
+		"label"	=> "Cena řešení (v bodech)",
+		"desc"  => "navíc k ceně postupu"
+	],
+	[
+		"var"	=> "hintCCodes",
+		"type"	=> TEXT,
+		"label"	=> "Cena nápovědy (v céčkách)"
+	],
+	[
+		"var"	=> "howtoCCodes",
+		"type"	=> TEXT,
+		"label"	=> "Cena postupu (v céčkách)",
+		"desc"  => "navíc k ceně nápovědy"
+	],
+	[
+		"var"	=> "solutionCCodes",
+		"type"	=> TEXT,
+		"label"	=> "Cena řešení (v céčkách)",
+		"desc"  => "navíc k ceně postupu"
+	]
 ];
 
 ?>
@@ -78,6 +122,11 @@ $settings = [
 <table>
 <?php 
 foreach ($settings as $item) {
+	if ($item == SEPARATOR) {
+		echo '<tr><td colspan="2"><hr></td></tr>'."\n";
+		continue;
+	}
+	$desc = null;
 	extract($item);
 	echo "<tr>\n";
 	echo "  <th><label for=\"$var\">$label";
@@ -125,6 +174,9 @@ foreach ($settings as $item) {
 <script type="text/javascript">
 <?php
 foreach ($settings as $item) {
+	if (!is_array($item)) {
+		continue;
+	}
 	extract($item);
 	if ($type == DATETIME) {
 		echo " jQuery('#$var').datetimepicker({'format': 'Y-m-d H:i:s'});\n";

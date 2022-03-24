@@ -79,7 +79,8 @@ CREATE TABLE message (
 CREATE TABLE `point` (
   point_id int(11) NOT NULL,
   game_id int(11) NOT NULL,
-  name varchar(40) COLLATE utf8mb4_czech_ci NOT NULL
+  name varchar(40) COLLATE utf8mb4_czech_ci NOT NULL,
+  points int(11) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
 
 CREATE TABLE progress (
@@ -94,13 +95,20 @@ CREATE TABLE settings (
   gameEnd timestamp NULL DEFAULT NULL,
   locVisitMandatory tinyint(4) NOT NULL DEFAULT 0,
   locFinish int(11) DEFAULT NULL,
-  showRank tinyint(4) NOT NULL DEFAULT 1,
+  showRank tinyint(4) NOT NULL DEFAULT 0,
   linkMapyCz VARCHAR(20) NULL DEFAULT NULL,
   deleteParallelHints tinyint(4) NOT NULL DEFAULT 0,
   imunityPrice int(11) DEFAULT 3,
   gamePrice int(11) DEFAULT 0,
   accomodationPrice int(11) DEFAULT 0,
-  tshirtPrice int(11) DEFAULT 0
+  tshirtPrice int(11) DEFAULT 0,
+  usePoints tinyint(4) NOT NULL DEFAULT 0,
+  hintPoints int(11) NOT NULL DEFAULT 0,
+  howtoPoints int(11) NOT NULL DEFAULT 0,
+  solutionPoints int(11) NOT NULL DEFAULT 0,
+  hintCCodes int(11) NOT NULL DEFAULT 0,
+  howtoCCodes int(11) NOT NULL DEFAULT 0,
+  solutionCCodes int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE step (

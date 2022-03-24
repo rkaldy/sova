@@ -38,7 +38,7 @@ class Hint extends ModelBase {
 		} else if ((new ProgressRepo())->isDone(Team::current(), $cipher["point_id"])) {
 			return new Text("hint.apply.solved", $cipher["name"]);
 		} else if (!(new Cipher())->isReachable($cipher)) {
-			if (Settings::isLocVisitMandatory()) {
+			if (Settings::get("locVisitMandatory")) {
 				return new Text("cipher.no-previous-loc", $cipher["name"]);
 			} else {
 				return new Text("cipher.no-previous-cipher", $cipher["name"]);
@@ -55,7 +55,7 @@ class Hint extends ModelBase {
 			return new Text("hint.imunity.already");
 		}
 
-		$price = Settings::value("imunityPrice");
+		$price = Settings::get("imunityPrice");
 		$hints = $this->repo->getUnusedHint(Team::current(), $price);
 		if (count($hints) < $price) {
 			return new Text("hint.imunity.not-enough-ccodes");

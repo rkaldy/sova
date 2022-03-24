@@ -48,17 +48,35 @@ class LocTest extends GameTestBase {
 
 	function testVisit() {
 		$loc = $this->locRepo->get(1);
-		$this->assertEquals([new Text("loc.visited", "Start", 1, "Parta Nic", $this->dbNow())], $this->loc->visit($loc, "PRALINKA"));
+		$this->assertEquals([
+            new Text("loc.visited", "Start")
+        ], $this->loc->visit($loc, "PRALINKA"));
+	}
+
+	function testVisitRank() {
+        Settings::set("showRank", true);
+		$loc = $this->locRepo->get(1);
+		$this->assertEquals([
+            new Text("loc.visited", "Start"), 
+            new Text("loc.rank", 1, "Parta Nic", $this->dbNow())
+        ], $this->loc->visit($loc, "PRALINKA"));
+	}
+
+	function testVisitPoints() {
+		Settings::set("usePoints", true);
+		$loc = $this->locRepo->get(1);
+		$this->assertEquals([
+            new Text("loc.visited.points", "Start", 15), 
+        ], $this->loc->visit($loc, "PRALINKA"));
 	}
 
 	function testNextLoc() {
 		$this->progressRepo->create(1, 13);
 		$loc = $this->locRepo->get(4);
 		$this->assertEquals([
-			new Text("loc.visited", "Turniket", 1, "Parta Nic", $this->dbNow()),
+			new Text("loc.visited", "Turniket"),
 			new Text("loc.next", "3", "na Kolínské boudě")
-		], $this->loc->visit($loc, "MEDVED")
-		);
+		], $this->loc->visit($loc, "MEDVED"));
 	}
 
 	function testGetDescription() {
@@ -67,17 +85,17 @@ class LocTest extends GameTestBase {
 		$loc["coord_lat"] = "90";
 	    $loc["coord_lon"] = "0";
 		$this->assertEquals("na severním pólu, 90N 0E", Loc::getDescription($loc));
-		$_SESSION["settings"]["linkMapyCz"] = "zimni";
+		Settings::set("linkMapyCz", "zimni");
 		$this->assertEquals('na severním pólu, <a href="https://mapy.cz/zimni?q=90N%200E">90N 0E</a>', Loc::getDescription($loc));
 	}
 
 	function testFinish() {
-		$_SESSION["settings"]["locFinish"] = 3;
+		Settings::set("locFinish", 3);
 		$this->progressRepo->create(1, 11);
 		$this->progressRepo->create(1, 12);
 		$loc = $this->locRepo->get(2);
-		$this->assertEquals([new Text("loc.visited", "1a", 1, "Parta Nic", $this->dbNow())], $this->loc->visit($loc, "KYBL"));
+		$this->assertEquals([new Text("loc.visited", "1a")], $this->loc->visit($loc, "KYBL"));
 		$loc = $this->locRepo->get(3);
-		$this->assertEquals([new Text("loc.finish.visited", "1b", 1, "Parta Nic", $this->dbNow())], $this->loc->visit($loc, "PODNOS"));
+		$this->assertEquals([new Text("loc.finish.visited", "1b")], $this->loc->visit($loc, "PODNOS"));
 	}
 }

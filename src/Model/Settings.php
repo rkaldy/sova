@@ -5,6 +5,7 @@ use Sova\Repo\LocRepo;
 
 class Settings extends ModelBase {
 
+	const BOOLEANS = ["locVisitMandatory", "showRank", "deleteParallelHints", "usePoints"];
 	var $locRepo;
 
 	public function __construct() {
@@ -12,7 +13,7 @@ class Settings extends ModelBase {
 		$this->locRepo = new LocRepo();
 	}
 
-	public function get() {
+	public function load() {
 		$settings = $this->repo->get(Game::current());
 		$settings["locs"] = $this->locRepo->listAsArray(Game::current());
 		if (isset($settings["gameStart"])) {
@@ -21,19 +22,20 @@ class Settings extends ModelBase {
 		if (isset($settings["gameEnd"])) {
 			$settings["gameEndTimestamp"] = strtotime($settings["gameEnd"]);
 		}
-		return $settings;
+		$_SESSION["settings"] = $settings;
 	}
 
-	public function set($settings) {
+	public function save($settings) {
 		if (!empty($settings["locFinish"])) {
 			if (!$this->locRepo->isLoc($settings["locFinish"])) {
 				return "Chyba: Neznámé číslo stanoviště";
 			}
 		}
-		$settings["locVisitMandatory"] = (int)isset($settings["locVisitMandatory"]);
-		$settings["showRank"] = (int)isset($settings["showRank"]);
-		$settings["deleteParallelHints"] = (int)isset($settings["deleteParallelHints"]);
+		foreach (self::BOOLEANS as $var) {
+			$settings[$var] = (int)isset($settings[$var]);
+		}
 		$this->repo->set(Game::current(), $settings);
+		$_SESSION["settings"] = $settings;
 		return "Nastavení bylo uloženo";
 	}
 
@@ -41,15 +43,11 @@ class Settings extends ModelBase {
 		return isset($_SESSION["settings"][$key]);
 	}
 
-	public static function value(string $key) {
+	public static function set(string $key, $value) {
+		$_SESSION["settings"][$key] = $value;
+	}
+
+	public static function get(string $key) {
 		return $_SESSION["settings"][$key];
 	}
-
-
-	public function load() {
-		$_SESSION["settings"] = $this->get();
-	}
-
-	public static function isLocVisitMandatory() 	{ return $_SESSION["settings"]["locVisitMandatory"]; }
-	public static function showRank()			 	{ return $_SESSION["settings"]["showRank"]; }
 }

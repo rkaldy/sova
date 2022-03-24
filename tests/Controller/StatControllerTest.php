@@ -4,6 +4,7 @@ namespace Sova\Controller;
 use Sova\Request;
 use Sova\GameTestBase;
 use Sova\Model\Progress;
+use Sova\Model\Settings;
 use Sova\Controller\StatController;
 
 
@@ -16,7 +17,7 @@ class StatControllerTest extends GameTestBase {
 		$this->db->execute("INSERT INTO team (team_id, game_id, name) VALUES (3, 1, 'abpopa')");
 		$this->stat = new StatController();
         $_SESSION["user_id"] = 1;
-        $_SESSION["settings"]["locVisitMandatory"] = 1;
+        Settings::set("locVisitMandatory", 1);
 	}
 
 	function tearDown(): void {

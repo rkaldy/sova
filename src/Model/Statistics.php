@@ -60,7 +60,7 @@ class Statistics {
 		}
 		$progress = (new ProgressRepo())->cipherProgress(Game::current());
 		$prog = $progress->fetch(PDO::FETCH_ASSOC);
-		for ($t = Settings::value("gameStartTimestamp") + 3600*3; $t < Settings::value("gameEndTimestamp"); $t += 60) {
+		for ($t = Settings::get("gameStartTimestamp") + 3600*3; $t < Settings::get("gameEndTimestamp"); $t += 60) {
 			while ($prog != null && $prog["time"] <= $t) {
 				$solved[$prog["team_id"]]++;
 				$prog = $progress->fetch(PDO::FETCH_ASSOC);

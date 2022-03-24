@@ -48,9 +48,9 @@ class Game extends ModelBase {
 
 	public static function state() {
 		$now = time();
-		if (Settings::isset("gameStartTimestamp") && $now < Settings::value("gameStartTimestamp")) {
+		if (Settings::isset("gameStartTimestamp") && $now < Settings::get("gameStartTimestamp")) {
 			return self::FUTURE;
-		} else if (Settings::isset("gameEndTimestamp") && $now > Settings::value("gameEndTimestamp")) {
+		} else if (Settings::isset("gameEndTimestamp") && $now > Settings::get("gameEndTimestamp")) {
 			return self::PAST;
 		} else {
 			return self::CURRENT;

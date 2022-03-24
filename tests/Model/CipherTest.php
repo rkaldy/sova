@@ -33,7 +33,7 @@ class CipherTest extends GameTestBase {
 	}
 
 	function testCheckPreviouslLocsVisited() {
-		$_SESSION["settings"]["locVisitMandatory"] = 1;
+		Settings::set("locVisitMandatory", 1);
 		$cipher = $this->cipherRepo->get(13);
 		$this->assertFalse($this->cipher->isReachable($cipher));
 		$this->progressRepo->create(1, 2);
@@ -57,7 +57,26 @@ class CipherTest extends GameTestBase {
 	function testSolve() {
 		$cipher = $this->cipherRepo->get(11);
 		$this->assertEquals([
-			new Text("cipher.solved", "S1a", 1, "Parta Nic", $this->dbNow(), 1), 
+			new Text("cipher.solved", "S1a", 1), 
+			new Text("loc.next", "1a", "na vrcholu Bílé hory")
+		], $this->cipher->solve($cipher, "ABERACE"));
+	}
+
+	function testSolveRank() {
+        Settings::set("showRank", true);
+		$cipher = $this->cipherRepo->get(11);
+		$this->assertEquals([
+			new Text("cipher.solved", "S1a", 1), 
+			new Text("cipher.rank", 1, "Parta Nic", $this->dbNow()), 
+			new Text("loc.next", "1a", "na vrcholu Bílé hory")
+		], $this->cipher->solve($cipher, "ABERACE"));
+	}
+
+	function testSolvePoints() {
+		Settings::set("usePoints", true);
+		$cipher = $this->cipherRepo->get(11);
+		$this->assertEquals([
+			new Text("cipher.solved.points", "S1a", 30, 1), 
 			new Text("loc.next", "1a", "na vrcholu Bílé hory")
 		], $this->cipher->solve($cipher, "ABERACE"));
 	}
@@ -65,12 +84,12 @@ class CipherTest extends GameTestBase {
 	function testSolvedCipherCount() {
 		$cipher = $this->cipherRepo->get(11);
 		$this->assertEquals([
-			new Text("cipher.solved", "S1a", 1, "Parta Nic", $this->dbNow(), 1), 
+			new Text("cipher.solved", "S1a", 1), 
 			new Text("loc.next", "1a", "na vrcholu Bílé hory")
 		], $this->cipher->solve($cipher, "ABERACE"));
 		$cipher = $this->cipherRepo->get(12);
 		$this->assertEquals([
-			new Text("cipher.solved", "S1b", 1, "Parta Nic", $this->dbNow(), 2), 
+			new Text("cipher.solved", "S1b", 2), 
 			new Text("loc.next", "1b", "na vrcholu Černé hory"),
 			new Text("loc.by-solved-ciphers", "Váza", "na vrcholu Sněžky")
 		], $this->cipher->solve($cipher, "ZABRADLI"));
@@ -80,7 +99,7 @@ class CipherTest extends GameTestBase {
 		$this->progressRepo->create(1, 2);
 		$cipher = $this->cipherRepo->get(11);
 		$this->assertEquals([
-			new Text("cipher.solved", "S1a", 1, "Parta Nic", $this->dbNow(), 1) 
+			new Text("cipher.solved", "S1a", 1) 
 		], $this->cipher->solve($cipher, "ABERACE"));
 	}
 }

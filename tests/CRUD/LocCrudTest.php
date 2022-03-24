@@ -15,11 +15,11 @@ class LocCrudTest extends CrudTestBase {
 	}
 
 	function testCreate() {
-		$loc = $this->create(["name" => "Turniket", "code" => "ovce"]);
+		$loc = $this->create(["name" => "Turniket", "code" => "ovce", "points" => 1]);
 		$this->assertEquals([
-			["point_id" => 1, "name" => "1a", "description" => null, "order_id" => null, "solved_cipher_count" => null, "end_time" => null, "coord_lat" => null, "coord_lon" => null, "code" => "PRALINKA", "prev" => [], "next" => []],
-			["point_id" => 2, "name" => "1b", "description" => null, "order_id" => null, "solved_cipher_count" => null, "end_time" => null, "coord_lat" => null, "coord_lon" => null, "code" => "KYBL", "prev" => [], "next" => []],
-			["point_id" => $loc["point_id"], "name" => "Turniket", "description" => null, "order_id" => null, "solved_cipher_count" => null, "end_time" => null, "coord_lat" => null, "coord_lon" => null, "code" => "OVCE", "prev" => [], "next" => []]
+			["point_id" => 1, "name" => "1a", "description" => null, "order_id" => null, "solved_cipher_count" => null, "end_time" => null, "coord_lat" => null, "coord_lon" => null, "code" => "PRALINKA", "prev" => [], "next" => [], "points" => 0],
+			["point_id" => 2, "name" => "1b", "description" => null, "order_id" => null, "solved_cipher_count" => null, "end_time" => null, "coord_lat" => null, "coord_lon" => null, "code" => "KYBL", "prev" => [], "next" => [], "points" => 0],
+			["point_id" => $loc["point_id"], "name" => "Turniket", "description" => null, "order_id" => null, "solved_cipher_count" => null, "end_time" => null, "coord_lat" => null, "coord_lon" => null, "code" => "OVCE", "prev" => [], "next" => [], "points" => 1]
 		], $this->list());
 		$this->assertEquals(3, $this->db->equery("SELECT COUNT(*) FROM point"));
 		$this->assertEquals(3, $this->db->equery("SELECT COUNT(*) FROM loc"));
@@ -34,8 +34,8 @@ class LocCrudTest extends CrudTestBase {
 			$this->assertEquals(1062, $ex->getCode());
 		}
 		$this->assertEquals([
-			["point_id" => 1, "name" => "1a", "description" => null, "order_id" => null, "solved_cipher_count" => null, "end_time" => null, "coord_lat" => null, "coord_lon" => null, "code" => "PRALINKA", "prev" => [], "next" => []],
-			["point_id" => 2, "name" => "1b", "description" => null, "order_id" => null, "solved_cipher_count" => null, "end_time" => null, "coord_lat" => null, "coord_lon" => null, "code" => "KYBL", "prev" => [], "next" => []],
+			["point_id" => 1, "name" => "1a", "description" => null, "order_id" => null, "solved_cipher_count" => null, "end_time" => null, "coord_lat" => null, "coord_lon" => null, "code" => "PRALINKA", "prev" => [], "next" => [], "points" => 0],
+			["point_id" => 2, "name" => "1b", "description" => null, "order_id" => null, "solved_cipher_count" => null, "end_time" => null, "coord_lat" => null, "coord_lon" => null, "code" => "KYBL", "prev" => [], "next" => [], "points" => 0],
 		], $this->list());
 		$this->assertEquals(2, $this->db->equery("SELECT COUNT(*) FROM point"));
 		$this->assertEquals(2, $this->db->equery("SELECT COUNT(*) FROM loc"));
@@ -43,17 +43,17 @@ class LocCrudTest extends CrudTestBase {
 	}
 
 	function testUpdate() {
-		$this->update(["point_id" => 2, "name" => "Turniket", "code" => "VEDRO"]);
+		$this->update(["point_id" => 2, "name" => "Turniket", "code" => "VEDRO", "points" => 2]);
 		$this->assertEquals([
-			["point_id" => 1, "name" => "1a", "description" => null, "order_id" => null, "solved_cipher_count" => null, "end_time" => null, "coord_lat" => null, "coord_lon" => null, "code" => "PRALINKA", "prev" => [], "next" => []],
-			["point_id" => 2, "name" => "Turniket", "description" => null, "order_id" => null, "solved_cipher_count" => null, "end_time" => null, "coord_lat" => null, "coord_lon" => null, "code" => "VEDRO", "prev" => [], "next" => []]
+			["point_id" => 1, "name" => "1a", "description" => null, "order_id" => null, "solved_cipher_count" => null, "end_time" => null, "coord_lat" => null, "coord_lon" => null, "code" => "PRALINKA", "prev" => [], "next" => [], "points" => 0],
+			["point_id" => 2, "name" => "Turniket", "description" => null, "order_id" => null, "solved_cipher_count" => null, "end_time" => null, "coord_lat" => null, "coord_lon" => null, "code" => "VEDRO", "prev" => [], "next" => [], "points" => 2]
 		], $this->list());
 	}
 	
 	function testDelete() {
 		$this->delete(["point_id" => 2]);
 		$this->assertEquals([
-			["point_id" => 1, "name" => "1a", "description" => null, "order_id" => null, "solved_cipher_count" => null, "end_time" => null, "coord_lat" => null, "coord_lon" => null, "code" => "PRALINKA", "prev" => [], "next" => []]
+			["point_id" => 1, "name" => "1a", "description" => null, "order_id" => null, "solved_cipher_count" => null, "end_time" => null, "coord_lat" => null, "coord_lon" => null, "code" => "PRALINKA", "prev" => [], "next" => [], "points" => 0]
 		], $this->list());
 		$this->assertEquals(1, $this->db->equery("SELECT COUNT(*) FROM point"));
 		$this->assertEquals(1, $this->db->equery("SELECT COUNT(*) FROM loc"));

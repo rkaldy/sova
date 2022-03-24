@@ -5,6 +5,7 @@ use Sova\TestBase;
 use Sova\DB;
 use Sova\Request;
 use Sova\Response;
+use Sova\Model\Settings;
 use Mockery;
 
 class RestControllerTest extends TestBase {
@@ -143,9 +144,9 @@ class RestControllerTest extends TestBase {
 	}
 
 	function testJSONFields() {
-		$_SESSION["settings"]["gamePrice"] = 1000;
-		$_SESSION["settings"]["accomodationPrice"] = 100;
-		$_SESSION["settings"]["tshirtPrice"] = 10;
+		Settings::set("gamePrice", 1000);
+		Settings::set("accomodationPrice", 100);
+		Settings::set("tshirtPrice", 10);
 
         list($status, $data) = $this->rest("POST", "team", ["name" => "Parta Nic", "phone" => "123", "email" => "partanic@post.cz", "members" => ["Rumcajs", "Manka", "Cipísek"], "accomodation" => true, "paid" => false, "tshirt" => 2]);
         $this->assertEquals(200, $status);

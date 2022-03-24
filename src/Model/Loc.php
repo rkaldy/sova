@@ -25,8 +25,8 @@ class Loc extends ModelBase {
 		$desc = $loc["description"];
 		if (isset($loc["coord_lat"]) && isset($loc["coord_lon"])) {
 			$coord = "{$loc["coord_lat"]}N {$loc["coord_lon"]}E";
-			if (!empty(Settings::value("linkMapyCz"))) {
-				$desc .= ', <a href="https://mapy.cz/'.Settings::value("linkMapyCz")."?q={$loc["coord_lat"]}N%20{$loc["coord_lon"]}E\">$coord</a>";
+			if (!empty(Settings::get("linkMapyCz"))) {
+				$desc .= ', <a href="https://mapy.cz/'.Settings::get("linkMapyCz")."?q={$loc["coord_lat"]}N%20{$loc["coord_lon"]}E\">$coord</a>";
 			} else {
 				$desc .= ", $coord";
 			}
@@ -36,7 +36,7 @@ class Loc extends ModelBase {
 
 
 	public function isFinish(array $loc) {
-		return $loc["point_id"] == Settings::value("locFinish");
+		return $loc["point_id"] == Settings::get("locFinish");
 	}
 
 
@@ -49,13 +49,19 @@ class Loc extends ModelBase {
 		if (!$progress->create($loc)) {
 			return new Text("loc.already");
 		}
+		
+        $finish = $this->isFinish($loc) ? ".finish" : "";
 
-		$finish = $this->isFinish($loc) ? ".finish" : "";
-		if (Settings::showRank()) {		
-			list($rank, $firstTeam, $firstTime) = $progress->getRank($loc);
-			$ret = [new Text("loc$finish.visited", $loc["name"], $rank, $firstTeam, $firstTime)];
+		if (Settings::get("usePoints")) {
+            $team = new Team();
+			$team->addPoints($loc["points"]);
+			$ret = [new Text("loc$finish.visited.points", $loc["name"], $team->points())];
 		} else {
-			$ret = [new Text("loc$finish.visited.no-rank", $loc["name"])];
+			$ret = [new Text("loc$finish.visited", $loc["name"])];
+        }
+		if (Settings::get("showRank")) {		
+			list($rank, $firstTeam, $firstTime) = $progress->getRank($loc);
+			$ret[] = new Text("loc.rank", $rank, $firstTeam, $firstTime);
 		}
 		
 		$hint = new Hint();

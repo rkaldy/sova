@@ -43,8 +43,8 @@ class TeamRepo extends RepoBase {
 		return $this->db->equery("SELECT points FROM team WHERE team_id = ?", $team_id);
 	}
 
-	public function add_points(int $team_id, int $add) {
-		$this->db->execute("UPDATE team SET points = points + ? where team_id = ?", $add, $team_id);
+	public function addPoints(int $team_id, int $add) {
+		$this->db->execute("UPDATE team SET points = points + ? where team_id = ?", [$add, $team_id]);
 	}
 
 	public function login(int $team_id, string $pswd) {

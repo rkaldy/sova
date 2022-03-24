@@ -150,6 +150,10 @@ select, .jsgrid-edit-row select {
 	padding-right: 1em;
 }
 
+.separator hr {
+	border-top: dotted 1px black;
+}
+
 
 /* Progress */
 

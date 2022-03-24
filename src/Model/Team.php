@@ -13,9 +13,9 @@ class Team extends ModelBase {
 	public function list(int $from = null, $limit = null): array {
 		$teams = $this->repo->list(Game::current());
 		foreach ($teams as &$team) {
-			$team["fee"] = Settings::value("gamePrice") + Settings::value("tshirtPrice") * $team["tshirt"];
+			$team["fee"] = Settings::get("gamePrice") + Settings::get("tshirtPrice") * $team["tshirt"];
 			if ($team["accomodation"] && !empty($team["members"])) {
-				$team["fee"] += Settings::value("accomodationPrice") * count($team["members"]);
+				$team["fee"] += Settings::get("accomodationPrice") * count($team["members"]);
 			}
 		}
 		return $teams;
@@ -55,8 +55,8 @@ class Team extends ModelBase {
 		return $this->repo->points(self::current());
 	}
 
-	public function add_points(int $add) {
-		$this->repo->add_points(self::current(), $add);
+	public function addPoints(int $add) {
+		$this->repo->addPoints(self::current(), $add);
 	}
 
 

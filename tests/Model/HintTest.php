@@ -56,7 +56,7 @@ class HintTest extends GameTestBase {
 
 	function testApplyNoPreviousLoc() {
 		$this->db->execute("INSERT INTO hint (team_id, ccode_id, cipher_id) VALUES (1, 2, NULL)");
-		$_SESSION["settings"]["locVisitMandatory"] = 1;
+		Settings::set("locVisitMandatory", 1);
 		$resp = $this->hint->apply("S2");
 		$this->assertEquals(new Text("cipher.no-previous-loc", "S2"), $resp);
 	}
