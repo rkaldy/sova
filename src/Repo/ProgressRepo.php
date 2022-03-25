@@ -38,22 +38,15 @@ class ProgressRepo extends RepoBase {
         ", $pointId);
     }
 
-    public function rankTotal(int $gameId) {
-        return $this->db->aquery("
+
+	public function rankTotal(int $gameId): array {
+		return $this->db->aquery("
             SELECT 
-                team.name, 
+				team.name, 
+				team.points,
                 IFNULL(DATE_FORMAT(finish.time, '%H:%i:%s'), '-') AS finish_time, 
-                IFNULL(ciphers.count, 0) AS solved,
                 IFNULL(DATE_FORMAT(last_cipher.time, '%H:%i:%s'), '-') AS last_cipher_time
             FROM team
-            LEFT JOIN (
-                SELECT team_id, COUNT(cipher.point_id) AS count 
-                FROM progress
-                NATURAL JOIN point
-                NATURAL JOIN cipher
-                WHERE game_id = :game_id
-                GROUP BY team_id
-            ) ciphers ON ciphers.team_id = team.team_id
             LEFT JOIN (
                 SELECT team_id, MAX(time) as time
                 FROM progress
@@ -68,9 +61,10 @@ class ProgressRepo extends RepoBase {
                 JOIN progress ON progress.point_id = settings.locFinish
                 WHERE settings.game_id = :game_id
             ) finish ON finish.team_id = team.team_id
-            ORDER BY -finish.time DESC, ciphers.count DESC, last_cipher.time, team.name
+            ORDER BY points, -finish.time DESC, last_cipher.time, team.name
         ", ["game_id" => $gameId]);
 	}
+
 
 	public function cipherProgress(int $gameId) {
 		return $this->db->query("

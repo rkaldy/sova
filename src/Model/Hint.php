@@ -72,21 +72,4 @@ class Hint extends ModelBase {
 	public function unusedHintCount() {
 		return $this->repo->getUnusedHintCount(Team::current());
 	}
-
-	
-	public function amend(array $cipher) {
-		$message = new Message();
-		if (isset($cipher["hint_timeout"])) {
-			$hint = ["team_id" => Team::current(), "cipher_id" => $cipher["point_id"], "time" => $cipher["hint_timeout"], "type" => HintRepo::NORMAL ];
-			$this->repo->amend($hint);
-			$hintMsg = new Text("cipher.hint", $cipher["name"], $cipher["hint"]);
-			$message->sendToTeam($hintMsg->format(), $hint["hint_id"], $cipher["hint_timeout"]);
-		}
-		if (isset($cipher["solution_timeout"])) {
-			$hint = ["team_id" => Team::current(), "cipher_id" => $cipher["point_id"], "time" => $cipher["solution_timeout"], "type" => HintRepo::ABSOLUTE ];
-			$this->repo->amend($hint);
-			$solutionMsg = new Text("cipher.solution", $cipher["name"], $cipher["code"]);
-			$message->sendToTeam($solutionMsg->format(), $hint["hint_id"], $cipher["solution_timeout"]);
-		}
-	}
 }

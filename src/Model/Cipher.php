@@ -19,12 +19,6 @@ class Cipher extends ModelBase {
 		}
 	}
 
-	public function checkSolvedCipherCount(array &$ret, int $solved) {
-		foreach ((new LocRepo())->getBySolvedCipherCount(Game::current(), $solved) as $loc) {
-			$ret[] = new Text("loc.by-solved-ciphers", $loc["name"], $loc["description"]);
-		}
-	}
-
 	public function solve(array $cipher, string $code) {
 		if (!$this->isReachable($cipher)) {
 			return new Text("code.unknown", $code);
@@ -46,15 +40,10 @@ class Cipher extends ModelBase {
 			$this->repo->deletePendingHints(Team::current(), $cipher);
 		}
 
-		$solved = $this->repo->solvedCipherCount(Team::current());
+        $team = new Team();
+		$team->addPoints($cipher["points"]);
 
-		if (Settings::get("usePoints")) {
-            $team = new Team();
-			$team->addPoints($cipher["points"]);
-            $ret = [new Text("cipher.solved.points", $cipher["name"], $team->points(), $solved)];
-		} else {
-			$ret = [new Text("cipher.solved", $cipher["name"], $solved)];
-        }
+		$ret = [new Text("cipher.solved", $cipher["name"], $team->points())];
 		if (Settings::get("showRank")) {
 			list($rank, $firstTeam, $firstTime) = $progress->getRank($cipher);
 			$ret[] = new Text("cipher.rank", $rank, $firstTeam, $firstTime);
@@ -63,8 +52,6 @@ class Cipher extends ModelBase {
 			$ret[] = new Text("loc.next", $loc["name"], Loc::getDescription($loc));
 		}
 		
-		$this->checkSolvedCipherCount($ret, $solved);
-
 		return $ret;
 	}
 

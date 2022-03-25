@@ -84,7 +84,6 @@ class HintTest extends GameTestBase {
 		$this->assertEquals(new Text("hint.apply.solved", "S1a"), $resp);
 	}
 
-
 	function testApplyImunity() {
 		$this->hint->addCCode(1);
 		$this->hint->addCCode(2);
@@ -95,57 +94,5 @@ class HintTest extends GameTestBase {
 		$this->assertEquals(new Text("hint.imunity.success"), $resp);
 		$resp = $this->hint->applyImunity();
 		$this->assertEquals(new Text("hint.imunity.already"), $resp);
-	}
-
-
-	function testAmend() {
-		$cipher = (new CipherRepo())->get(11);
-		$resp = $this->hint->amend($cipher);
-		
-		$hints = $this->db->aquery("SELECT team_id, ccode_id, cipher_id, type FROM hint ORDER BY time");
-		$this->assertEquals([
-			["team_id" => 1, "ccode_id" => null, "cipher_id" => 11, "type" => HintRepo::NORMAL],
-			["team_id" => 1, "ccode_id" => null, "cipher_id" => 11, "type" => HintRepo::ABSOLUTE]
-		], $hints);
-		$messages = $this->db->aquery("SELECT team_id, direction, text FROM message ORDER BY time");
-		$this->assertEquals([
-			["team_id" => 1, "direction" => Message::TO_TEAM, "text" => (new Text("cipher.hint", "S1a", "Čárka tečka čárka, tak začíná Klárka"))->format()],
-			["team_id" => 1, "direction" => Message::TO_TEAM, "text" => (new Text("cipher.solution", "S1a", "ABERACE"))->format()]
-		], $messages);
-	}
-	
-
-	function testAmendWithoutDead() {
-		$cipher = (new CipherRepo())->get(12);
-		$resp = $this->hint->amend($cipher);
-		
-		$hints = $this->db->aquery("SELECT team_id, ccode_id, cipher_id, type FROM hint ORDER BY time");
-		$this->assertEquals([
-			["team_id" => 1, "ccode_id" => null, "cipher_id" => 12, "type" => HintRepo::NORMAL]
-		], $hints);
-		$messages = $this->db->aquery("SELECT team_id, direction, text FROM message ORDER BY time");
-		$this->assertEquals([
-			["team_id" => 1, "direction" => Message::TO_TEAM, "text" => (new Text("cipher.hint", "S1b", "Zkus ji luštit poslepu"))->format()],
-		], $messages);
-	}
-
-
-	function testUniHintAfterAmend() {
-		$cipher = (new CipherRepo())->get(11);
-		$resp = $this->hint->amend($cipher);
-		
-		$this->db->execute("INSERT INTO hint (team_id, ccode_id, cipher_id) VALUES (1, 2, NULL)");
-		$resp = $this->hint->apply("S1a");
-		$this->assertEquals(new Text("hint.apply.success", "S1a", "Čárka tečka čárka, tak začíná Klárka"), $resp);
-
-		$hints = $this->db->aquery("SELECT team_id, ccode_id, cipher_id, type FROM hint ORDER BY time");
-		$this->assertEquals([
-			["team_id" => 1, "ccode_id" => 2, "cipher_id" => 11, "type" => HintRepo::NORMAL],
-			["team_id" => 1, "ccode_id" => null, "cipher_id" => 11, "type" => HintRepo::ABSOLUTE]
-		], $hints);
-		$messages = $this->db->aquery("SELECT team_id, direction, text FROM message ORDER BY time");
-		$this->assertEquals([
-			["team_id" => 1, "direction" => Message::TO_TEAM, "text" => (new Text("cipher.solution", "S1a", "ABERACE"))->format()]
-		], $messages);
 	}
 }

@@ -49,12 +49,12 @@ class GameTestBase extends TestBase {
 		$this->db->execute("INSERT INTO point (point_id, game_id, name, points) VALUES (14, 1, 'S3', 30)");
 		$this->db->execute("INSERT INTO point (point_id, game_id, name, points) VALUES (15, 1, 'S4a', 30)");
 		$this->db->execute("INSERT INTO point (point_id, game_id, name, points) VALUES (16, 1, 'S4b', 30)");
-		$this->db->execute("INSERT INTO cipher (point_id, name_int, hint, hint_timeout, solution_timeout) VALUES (11, 'Morseovka', 'Čárka tečka čárka, tak začíná Klárka', 30, 60)");
-		$this->db->execute("INSERT INTO cipher (point_id, name_int, hint, hint_timeout, solution_timeout) VALUES (12, 'Braille', 'Zkus ji luštit poslepu', 40, NULL)");
-		$this->db->execute("INSERT INTO cipher (point_id, name_int, hint, hint_timeout, solution_timeout) VALUES (13, 'Polský kříž', 'Krzyz', 50, NULL)");
-		$this->db->execute("INSERT INTO cipher (point_id, name_int, hint, hint_timeout, solution_timeout) VALUES (14, 'Vlajková abeceda', NULL, 30, 60)");
-		$this->db->execute("INSERT INTO cipher (point_id, name_int, hint, hint_timeout, solution_timeout) VALUES (15, 'Semafor', 'Křižovatka, železnice, Suchý', 30, 60)");
-		$this->db->execute("INSERT INTO cipher (point_id, name_int, hint, hint_timeout, solution_timeout) VALUES (16, 'Binárka', 'Jedničky a nuly', 40, NULL)");
+		$this->db->execute("INSERT INTO cipher (point_id, name_int, hint) VALUES (11, 'Morseovka', 'Čárka tečka čárka, tak začíná Klárka')");
+		$this->db->execute("INSERT INTO cipher (point_id, name_int, hint) VALUES (12, 'Braille', 'Zkus ji luštit poslepu')");
+		$this->db->execute("INSERT INTO cipher (point_id, name_int, hint) VALUES (13, 'Polský kříž', 'Krzyz')");
+		$this->db->execute("INSERT INTO cipher (point_id, name_int, hint) VALUES (14, 'Vlajková abeceda', NULL)");
+		$this->db->execute("INSERT INTO cipher (point_id, name_int, hint) VALUES (15, 'Semafor', 'Křižovatka, železnice, Suchý')");
+		$this->db->execute("INSERT INTO cipher (point_id, name_int, hint) VALUES (16, 'Binárka', 'Jedničky a nuly')");
 		$this->db->execute("INSERT INTO code (game_id, point_id, code) VALUES (1, 11, 'ABERACE')");
 		$this->db->execute("INSERT INTO code (game_id, point_id, code) VALUES (1, 12, 'ZABRADLI')");
 		$this->db->execute("INSERT INTO code (game_id, point_id, code) VALUES (1, 13, 'KOBLIHA')");

@@ -49,7 +49,7 @@ class LocTest extends GameTestBase {
 	function testVisit() {
 		$loc = $this->locRepo->get(1);
 		$this->assertEquals([
-            new Text("loc.visited", "Start")
+            new Text("loc.visited", "Start", 15)
         ], $this->loc->visit($loc, "PRALINKA"));
 	}
 
@@ -57,16 +57,8 @@ class LocTest extends GameTestBase {
         Settings::set("showRank", true);
 		$loc = $this->locRepo->get(1);
 		$this->assertEquals([
-            new Text("loc.visited", "Start"), 
+            new Text("loc.visited", "Start", 15), 
             new Text("loc.rank", 1, "Parta Nic", $this->dbNow())
-        ], $this->loc->visit($loc, "PRALINKA"));
-	}
-
-	function testVisitPoints() {
-		Settings::set("usePoints", true);
-		$loc = $this->locRepo->get(1);
-		$this->assertEquals([
-            new Text("loc.visited.points", "Start", 15), 
         ], $this->loc->visit($loc, "PRALINKA"));
 	}
 
@@ -74,7 +66,7 @@ class LocTest extends GameTestBase {
 		$this->progressRepo->create(1, 13);
 		$loc = $this->locRepo->get(4);
 		$this->assertEquals([
-			new Text("loc.visited", "Turniket"),
+			new Text("loc.visited", "Turniket", 0),
 			new Text("loc.next", "3", "na Kolínské boudě")
 		], $this->loc->visit($loc, "MEDVED"));
 	}
@@ -94,8 +86,8 @@ class LocTest extends GameTestBase {
 		$this->progressRepo->create(1, 11);
 		$this->progressRepo->create(1, 12);
 		$loc = $this->locRepo->get(2);
-		$this->assertEquals([new Text("loc.visited", "1a")], $this->loc->visit($loc, "KYBL"));
+		$this->assertEquals([new Text("loc.visited", "1a", 0)], $this->loc->visit($loc, "KYBL"));
 		$loc = $this->locRepo->get(3);
-		$this->assertEquals([new Text("loc.finish.visited", "1b")], $this->loc->visit($loc, "PODNOS"));
+		$this->assertEquals([new Text("loc.finish.visited", 0)], $this->loc->visit($loc, "PODNOS"));
 	}
 }

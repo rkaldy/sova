@@ -50,27 +50,21 @@ class Loc extends ModelBase {
 			return new Text("loc.already");
 		}
 		
-        $finish = $this->isFinish($loc) ? ".finish" : "";
+        $team = new Team();
+		$team->addPoints($loc["points"]);
 
-		if (Settings::get("usePoints")) {
-            $team = new Team();
-			$team->addPoints($loc["points"]);
-			$ret = [new Text("loc$finish.visited.points", $loc["name"], $team->points())];
+		if ($this->isFinish($loc)) {
+			$ret = [new Text("loc.finish.visited",$team->points())];
 		} else {
-			$ret = [new Text("loc$finish.visited", $loc["name"])];
-        }
+			$ret = [new Text("loc.visited", $loc["name"], $team->points())];
+		}
 		if (Settings::get("showRank")) {		
 			list($rank, $firstTeam, $firstTime) = $progress->getRank($loc);
 			$ret[] = new Text("loc.rank", $rank, $firstTeam, $firstTime);
 		}
 		
-		$hint = new Hint();
 		foreach ($this->repo->getNextPoints($loc["point_id"]) as $point) {
-			if ($point["is_cipher"]) {
-				if ($this->repo->visitedAllLocsWithCipher(Team::current(), $point["point_id"])) {
-					$hint->amend($point);
-				}
-			} else {
+			if (!$point["is_cipher"]) {
 				$ret[] = new Text("loc.next", $point["name"], self::getDescription($point));
 			}
 		}

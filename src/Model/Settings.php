@@ -5,7 +5,7 @@ use Sova\Repo\LocRepo;
 
 class Settings extends ModelBase {
 
-	const BOOLEANS = ["locVisitMandatory", "showRank", "deleteParallelHints", "usePoints"];
+	const BOOLEANS = ["locVisitMandatory", "showRank", "deleteParallelHints"];
 	var $locRepo;
 
 	public function __construct() {

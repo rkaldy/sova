@@ -1,28 +1,25 @@
 code.unknown;Neznámý kód: %s
 code.invalid;Kód musí být jednoslovné podstatné jméno.
-loc.visited;Vítejte na stanovišti %s.
-loc.visited.points;Vítejte na stanovišti %s. Máte %s bodů.
-loc.finish.visited;Gratulujeme, jste v cíli!
+loc.visited;Vítejte na stanovišti %s. Máte %s bodů.
+loc.finish.visited;Gratulujeme, jste v cíli! Celkem jste dosáhli %s bodů.
 loc.rank;Jste tu %s. První tu byl tým %s v %s.
 loc.already;Tento kód stanoviště jste již zadali.
 loc.next;Další stanoviště %s se nachází %s.
-loc.by-solved-ciphers;Vyluštili jste dostatek šifer pro otevření stanoviště %s, které se nachází %s.
 cipher.unknown;Neznámé číslo šifry: %s
 cipher.no-previous-cipher;Na šifru %s jste se ještě nemohli dostat, protože jste nevyluštili předchozí šifru.
 cipher.no-previous-loc;Na šifru %s jste se ještě nemohli dostat, protože jste nezadali kód jejího stanoviště.
-cipher.solved;Úspěšně jste vyluštili šifru %s. Máte vyluštěno celkem %s šifer.
-cipher.solved.points;Úspěšně jste vyluštili šifru %s. Máte %s bodů a %s vyluštěných šifer.
+cipher.solved;Úspěšně jste vyluštili šifru %s. Máte %s bodů.
 cipher.rank;Jste %s. První ji vyluštil tým %s v %s.
 cipher.already;Toto řešení šifry jste již zadali.
-cipher.hint;Přišel čas na nápovědu k šifře %s: %s.
-cipher.solution;Přišel čas na řešení šifry %s: %s
+cipher.hint;Nápověda k šifře %s: %s.
+cipher.howto;Postup k šifře %s: %s
+cipher.solution;Řešení šifry %s: %s
 hint.request;(Žádost o nápovědu na %s)
-hint.no-hint;K této šifře žádná nápověda není.
+hint.no-hint;K této šifře žádná nápověda není.
 hint.add.already;Toto céčko jste již zadali.
 hint.add.success;Získali jste céčko. Aktuálně máte %s nevyužitých céček.
 hint.apply.already;Pro šifru %s jste již dostali nápovědu. Podívejte se do historie zpráv.
-hint.apply.no-hint;Všechny získané univerzální nápovědy jste již použili.
-hint.apply.success;Nápověda pro šifru %s: %s.
+hint.apply.no-hint;Všechna céčka jste již použili.
 hint.apply.solved;Šifru %s jste již vyluštili.
 imunity.success;Získali jste imunitu. Kdyby na vás při vyhlášení padlo organizování příštího ročníku, můžete ho odmítnout.
 imunity.already;Imunitu jste již dostali.

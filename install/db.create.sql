@@ -28,9 +28,7 @@ DROP TABLE IF EXISTS wordlist;
 CREATE TABLE `cipher` (
   point_id int(11) NOT NULL,
   name_int varchar(50) COLLATE utf8mb4_czech_ci DEFAULT NULL,
-  hint varchar(500) COLLATE utf8mb4_czech_ci DEFAULT NULL,
-  hint_timeout int(11) DEFAULT NULL,
-  solution_timeout int(11) DEFAULT NULL
+  hint varchar(500) COLLATE utf8mb4_czech_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
 
 CREATE TABLE `code` (
@@ -102,7 +100,6 @@ CREATE TABLE settings (
   gamePrice int(11) DEFAULT 0,
   accomodationPrice int(11) DEFAULT 0,
   tshirtPrice int(11) DEFAULT 0,
-  usePoints tinyint(4) NOT NULL DEFAULT 0,
   hintPoints int(11) NOT NULL DEFAULT 0,
   howtoPoints int(11) NOT NULL DEFAULT 0,
   solutionPoints int(11) NOT NULL DEFAULT 0,

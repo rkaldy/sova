@@ -66,7 +66,7 @@ class LocRepo extends PointRepo {
 		try {
 			$this->db->execute("INSERT INTO point (game_id, name, points) VALUES (:game_id, :name, :points)", $loc, true);
 			$loc["point_id"] = $this->db->lastInsertId();
-			$this->db->execute("INSERT INTO loc (point_id, description, order_id, coord_lat, coord_lon, solved_cipher_count, end_time) VALUES (:point_id, :description, :order_id, :coord_lat, :coord_lon, :solved_cipher_count, :end_time)", $loc, true);
+			$this->db->execute("INSERT INTO loc (point_id, description, order_id, coord_lat, coord_lon) VALUES (:point_id, :description, :order_id, :coord_lat, :coord_lon)", $loc, true);
 			$this->db->execute("INSERT INTO code (game_id, code, point_id) VALUES (:game_id, :code, :point_id)", $loc, true);
 			$this->addNextLocs($loc);
 		} catch (DBException $ex) {
@@ -77,7 +77,7 @@ class LocRepo extends PointRepo {
 
 	function update(array $loc) {
 		$this->db->execute("UPDATE point SET name = :name, points = :points WHERE point_id = :point_id", $loc);
-		$this->db->execute("UPDATE loc SET description = :description, order_id = :order_id, coord_lat = :coord_lat, coord_lon = :coord_lon, solved_cipher_count = :solved_cipher_count, end_time = :end_time WHERE point_id = :point_id", $loc);
+		$this->db->execute("UPDATE loc SET description = :description, order_id = :order_id, coord_lat = :coord_lat, coord_lon = :coord_lon WHERE point_id = :point_id", $loc);
 		$this->db->execute("UPDATE code SET code = :code WHERE point_id = :point_id", $loc);
 		$this->addNextLocs($loc);
 	}
@@ -117,15 +117,6 @@ class LocRepo extends PointRepo {
 			LEFT JOIN progress ON step.from_point_id = progress.point_id AND progress.team_id = ?
 			WHERE step.to_point_id = ? AND progress.team_id IS NULL
 		", $teamId, $cipherId) == 0;
-	}
-
-	public function getBySolvedCipherCount(int $gameId, int $solved) {
-		return $this->db->aquery("
-			SELECT point.name, loc.*
-			FROM loc
-			NATURAL JOIN point
-			WHERE game_id = ? AND solved_cipher_count = ?
-		", $gameId, $solved);
 	}
 }
 

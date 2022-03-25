@@ -46,9 +46,4 @@ class HintRepo extends RepoBase {
 		}
 		$this->db->execute("UPDATE hint SET cipher_id = :cipher_id, time = NOW(), type = :type WHERE hint_id = :hint_id", $hint);
 	}
-
-	public function amend(array &$hint) {
-		$this->db->execute("INSERT INTO hint (team_id, cipher_id, time, type) VALUES (:team_id, :cipher_id, DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL :time MINUTE), :type)", $hint);
-		$hint["hint_id"] = $this->db->lastInsertId();
-	}
 }

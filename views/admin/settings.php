@@ -71,12 +71,6 @@ $settings = [
 	],
 	SEPARATOR,
 	[
-		"var"	=> "usePoints",
-		"type"	=> BOOL,
-		"label"	=> "Počítat body?",
-		"desc"	=> "Je-li zaškrtnuto, hlavním kritériem pořadí týmů je počet bodů. V opačném případě je hlavním kritériem čas příchodu do cíle."
-	],
-	[
 		"var"	=> "hintPoints",
 		"type"	=> TEXT,
 		"label"	=> "Cena nápovědy (v bodech)"
