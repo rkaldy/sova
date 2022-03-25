@@ -4,5 +4,5 @@ const DB_NAME = 'sova_test';
 const DB_USER = 'root';
 const DB_PASS = 'taliyota';
 
-const CREATE_DB = false;
+const DEVELOPMENT = true;
 const SQL_LOG = false;
