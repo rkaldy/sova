@@ -37,15 +37,15 @@ class HintTest extends GameTestBase {
 
 	function testApply() {
 		$this->db->execute("INSERT INTO hint (team_id, ccode_id, cipher_id) VALUES (1, 2, NULL)");
-		$resp = $this->hint->apply("S1b");
-		$this->assertEquals(new Text("hint.apply.success", "S1b", "Zkus ji luštit poslepu"), $resp);
+		$resp = $this->hint->apply("S1");
+		$this->assertEquals(new Text("hint.apply.success", "S1", "Čárka tečka čárka, tak začíná Klárka"), $resp);
 	}
 
 	function testApplyAlready() {
 		$this->db->execute("INSERT INTO hint (team_id, ccode_id, cipher_id, time, type) VALUES (1, 1, 11, NOW(), 1)");
 		$this->db->execute("INSERT INTO hint (team_id, ccode_id, cipher_id) VALUES (1, 2, NULL)");
-		$resp = $this->hint->apply("S1a");
-		$this->assertEquals(new Text("hint.apply.already", "S1a"), $resp);
+		$resp = $this->hint->apply("S1");
+		$this->assertEquals(new Text("hint.apply.already", "S1"), $resp);
 	}
 
 	function testApplyNoPrevious() {
@@ -68,20 +68,20 @@ class HintTest extends GameTestBase {
 	}
 
 	function testApplyNoHint() {
-		$resp = $this->hint->apply("S3");
+		$resp = $this->hint->apply("A1");
 		$this->assertEquals(new Text("hint.no-hint"), $resp);
 	}
 	
 	function testApplyNoCCode() {
-		$resp = $this->hint->apply("S1b");
+		$resp = $this->hint->apply("S1");
 		$this->assertEquals(new Text("hint.apply.no-ccode"), $resp);
 	}
 
 	function testApplyAlreadySolved() {
 		$this->db->execute("INSERT INTO hint (team_id, ccode_id, cipher_id) VALUES (1, 2, NULL)");
 		$this->progressRepo->create(1, 11);
-		$resp = $this->hint->apply("S1a");
-		$this->assertEquals(new Text("hint.apply.solved", "S1a"), $resp);
+		$resp = $this->hint->apply("S1");
+		$this->assertEquals(new Text("hint.apply.solved", "S1"), $resp);
 	}
 
 	function testApplyImunity() {

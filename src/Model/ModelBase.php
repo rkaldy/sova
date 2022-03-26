@@ -21,7 +21,9 @@ class ModelBase {
 
 	protected function prepareBooleans(array &$obj, array $fields) {
 		foreach ($fields as $field) {
-			if ($obj[$field] === "true") {
+			if (!isset($obj[$field])) {
+				$obj[$field] = false;
+			} else if ($obj[$field] === "true") {
 				$obj[$field] = 1;
 			} else if ($obj[$field] === "false") {
 				$obj[$field] = 0;

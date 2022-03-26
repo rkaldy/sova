@@ -15,20 +15,27 @@ class CipherRepo extends PointRepo {
 			LEFT JOIN step AS prev ON prev.to_point_id = cipher.point_id
 			LEFT JOIN step AS next ON next.from_point_id = cipher.point_id";
 
+	
+	protected static function convert(array &$cipher) {
+		self::convertBooleans($cipher, ["activity"]);
+		self::flattenPrevNext($cipher);
+	}
+
+
 	public function isCipher(int $id) {
 		return $this->db->equery("SELECT COUNT(*) FROM cipher WHERE point_id = ?", $id) != 0;
 	}
 
 	public function get(int $id) {
 		$cipher = $this->db->squery(self::SQL." WHERE cipher.point_id = ?", $id);
-		self::flattenPrevNext($cipher);
+		self::convert($cipher);
 		return $cipher;
 	}
 
 	public function getByName(string $name, int $gameId) {
 		$cipher = $this->db->squery(self::SQL." WHERE name = ? and point.game_id = ?", $name, $gameId);
 		if (isset($cipher["point_id"])) {
-			self::flattenPrevNext($cipher);
+			self::convert($cipher);
 			return $cipher;
 		} else {		
 			return null;
@@ -44,7 +51,7 @@ class CipherRepo extends PointRepo {
 			ORDER BY name
 		", $gameId);
 		foreach ($ciphers as &$cipher) {
-			self::flattenPrevNext($cipher);
+			self::convert($cipher);
 		}
 		return $ciphers;
 	}
@@ -68,7 +75,7 @@ class CipherRepo extends PointRepo {
 		try {
 			$this->db->execute("INSERT INTO point (game_id, name, points) VALUES (:game_id, :name, :points)", $cipher, true);
 			$cipher["point_id"] = $this->db->lastInsertId();
-			$this->db->execute("INSERT INTO cipher (point_id, name_int, hint) VALUES (:point_id, :name_int, :hint)", $cipher, true);
+			$this->db->execute("INSERT INTO cipher (point_id, name_int, activity, hint) VALUES (:point_id, :name_int, :activity, :hint)", $cipher, true);
 			$this->db->execute("INSERT INTO code (game_id, point_id, code) VALUES (:game_id, :point_id, :code)", $cipher, true);
 			$this->addPrevNextLocs($cipher);
 		} catch (DBException $ex) {
@@ -79,7 +86,7 @@ class CipherRepo extends PointRepo {
 
 	function update(array &$cipher) {
 		$this->db->execute("UPDATE point SET name = :name, points = :points WHERE point_id = :point_id", $cipher);
-		$this->db->execute("UPDATE cipher SET name_int = :name_int, hint = :hint WHERE point_id = :point_id", $cipher);
+		$this->db->execute("UPDATE cipher SET name_int = :name_int, activity = :activity, hint = :hint WHERE point_id = :point_id", $cipher);
 		$this->db->execute("UPDATE code SET code = :code WHERE point_id = :point_id", $cipher);
 		$this->addPrevNextLocs($cipher);
 	}

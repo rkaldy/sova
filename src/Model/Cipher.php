@@ -9,6 +9,10 @@ class Cipher extends ModelBase {
 	public function prepare(array &$cipher) {
 		$cipher["game_id"] = Game::current();
 		(new Code())->prepare($cipher["code"]);
+		$this->prepareBooleans($cipher, ["activity"]);
+		if (empty($cipher["points"])) {
+			$cipher["points"] = 0;
+		}
 	}
 
 	public function isReachable(array $cipher) {
@@ -24,9 +28,11 @@ class Cipher extends ModelBase {
 			return new Text("code.unknown", $code);
 		}
 
+		$type = $cipher["activity"] ? "activity" : "cipher";
+
 		$progress = new Progress();
 		if (!$progress->create($cipher)) {
-			return new Text("cipher.already");
+			return new Text("$type.already");
 		}
 
 		foreach ($cipher["prev"] AS $prev) {
@@ -43,10 +49,10 @@ class Cipher extends ModelBase {
         $team = new Team();
 		$team->addPoints($cipher["points"]);
 
-		$ret = [new Text("cipher.solved", $cipher["name"], $team->points())];
+		$ret = [new Text("$type.solved", $cipher["name"], $team->points())];
 		if (Settings::get("showRank")) {
 			list($rank, $firstTeam, $firstTime) = $progress->getRank($cipher);
-			$ret[] = new Text("cipher.rank", $rank, $firstTeam, $firstTime);
+			$ret[] = new Text("$type.rank", $rank, $firstTeam, $firstTime);
 		}
 		foreach ($this->repo->getNextLocsNotVisited(Team::current(), $cipher) as $loc) {
 			$ret[] = new Text("loc.next", $loc["name"], Loc::getDescription($loc));

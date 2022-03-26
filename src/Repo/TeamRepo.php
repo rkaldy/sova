@@ -14,8 +14,7 @@ class TeamRepo extends RepoBase {
 		foreach ($teams as &$team) {
 			$team["members"] = json_decode($team["members"], true);
 			$team["additional"] = json_decode($team["additional"], true);
-            $team["accomodation"] = (bool)$team["accomodation"];
-            $team["paid"] = (bool)$team["paid"];
+			self::convertBooleans($team, ["accomodation", "paid"]);
 		}
 		return $teams;
 	}

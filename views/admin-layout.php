@@ -7,9 +7,8 @@ if ($superuser) {
 } else if (isset($game)) {
 	$menu = array(
 		"locs" => "Stanoviště",
-		"ciphers" => "Šifry",
+		"ciphers" => "Šifry a aktivity",
 		"ccodes" => "Céčka",
-		"graph" => "Schéma",
 		"texts" => "Texty",
 		"teams" => "Týmy",
 		"progress" => "Postup týmů",

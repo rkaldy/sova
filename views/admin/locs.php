@@ -9,19 +9,17 @@ $(function() {
 	}).done(function(locs) {
 	setGrid({
 		table: "loc", 
-		width: "95%",
 		fields: 
 		[
-			{ name: "name", title: "Název", type: "text", width: 20 , validate: "required" },
-			{ name: "description", title: "Popis", type: "textarea", width: 80 },
-			{ name: "order_id", title: "Pořadí", type: "text", width: 10 },
-			{ name: "coord_lat", title: "Souřadnice (N)", type: "text", width: 20, validate: coordValidator },
-			{ name: "coord_lon", title: "Souřadnice (E)", type: "text", width: 20, validate: coordValidator },
-			{ name: "code", title: "Vstupní kód", type: "text", width: 20, validate: codeValidator },
-			{ name: "solved_cipher_count", title: "Počet vyřešených šifer", type: "number", width: 15 },
-			{ name: "end_time", title: "Deadline", type: "datetime", width: 30 },
-			{ name: "next", title: "Následující stanoviště", type: "multiselect", width: 30, items: locs, valueField: "point_id", textField: "name", longTextField: "description" },
-			{ type: "control", width: 5 }
+			{ name: "name", title: "Název", type: "text", width: "10ex", validate: "required" },
+			{ name: "description", title: "Popis", type: "textarea", width: "40ex" },
+			{ name: "order_id", title: "Pořadí", type: "text", width: "10ex", validate: integerValidator },
+			{ name: "coord_lat", title: "Souřadnice (N)", type: "text", width: "20ex", validate: coordValidator },
+			{ name: "coord_lon", title: "Souřadnice (E)", type: "text", width: "20ex", validate: coordValidator },
+			{ name: "code", title: "Vstupní kód", type: "text", width: "20ex", validate: codeValidator },
+			{ name: "points", title: "Body", type: "text", width: "10ex", validate: integerValidator },
+			{ name: "next", title: "Následující stanoviště", type: "multiselect", width: "20ex", items: locs, valueField: "point_id", textField: "name", longTextField: "description" },
+			{ type: "control", width: "10ex" }
 		]
 	});
 });
@@ -39,24 +37,20 @@ $(function() {
     <td>Přesný popis polohy, který systém pošle po úspěšném vyluštění předchozí šifry <i>(nepovinné)</i>.</td>
   </tr>
   <tr>
-    <th>Souřadnice</th>
-	<td>Severní a východní souřadnice stanoviště, ve stupních jako desetinná čísla. <i>(nepovinné, ale bez nich Sova nevygeneruje odkaz na mapy.cz)</i></td>
-  </tr>
-  <tr>
     <th>Pořadí</th>
     <td>Číslo, podle nějž se budou řadit stanoviště v tabulkách a seznamech <i>(nepovinné)</i></td>
   </tr>
   <tr>
+    <th>Souřadnice</th>
+	<td>Severní a východní souřadnice stanoviště, ve stupních jako desetinná čísla. <i>(nepovinné, ale bez nich Sova nevygeneruje odkaz na mapy.cz)</i></td>
+  </tr>
+  <tr>
+    <th>Body</th>
+    <td>Týmu se přičtou po odeslání vstupního kódu do Sovy <i>(nepovinné)</i></td>
+  </tr>
+  <tr>
     <th>Vstupní kód</th>
     <td>Kód, který týmy zadají do Sovy po příchodu na stanoviště. Necháte-li prázdný, vygeneruje se náhodné slovo.</td>
-  </tr>
-  <tr>
-    <th>Počet vyřešených šifer</th>
-    <td>Jakmile kterýkoliv tým vyluští daný počet šifer, Sova mu odešle polohu tohoto stanoviště. Typické použití pro cílové stanoviště.</td>
-  </tr>
-  <tr>
-    <th>Deadline</th>
-    <td>Časový limit, do něhož je třeba dojít na stanoviště <i>(nepovinné)</i>.</td>
   </tr>
   <tr>
     <th>Následující stanoviště</th>

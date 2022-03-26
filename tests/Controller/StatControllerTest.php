@@ -56,13 +56,13 @@ class StatControllerTest extends GameTestBase {
 		$this->sendCode(2, "Start", false);
 		$this->sendCode(3, "Start", false);
 		Progress::addFakeTime(10);
-		$this->sendCode(1, "S1a", true);
+		$this->sendCode(1, "S1", true);
 		Progress::addFakeTime(5);
-		$this->sendCode(2, "S1b", true);
+		$this->sendCode(2, "A1", true);
         Progress::addFakeTime(1);
-        $this->sendCode(1, "S1b", true);
+        $this->sendCode(1, "A1", true);
         Progress::addFakeTime(1);
-        $this->sendCode(3, "S1b", true);
+        $this->sendCode(3, "A1", true);
         Progress::addFakeTime(2);
         $this->sendCode(1, "1a", false);
         Progress::addFakeTime(10);
@@ -71,7 +71,7 @@ class StatControllerTest extends GameTestBase {
         $this->sendCode(1, "S2", true);
 
         $this->assertMatchesRegularExpression(
-            "/Šifra,Tým,Doba luštění\nS1a,Parta Nic,00:10:0[01]\nS1b,Redwool,00:15:0[01]\nS1b,Parta Nic,00:16:0[01]\nS1b,abpopa,00:17:0[01]\nS2,Parta Nic,00:04:0[01]\n/",
+            "/Šifra,Tým,Doba luštění\nA1,Redwool,00:15:0[01]\nA1,Parta Nic,00:16:0[01]\nA1,abpopa,00:17:0[01]\nS1,Parta Nic,00:10:0[01]\nS2,Parta Nic,00:04:0[01]\n/",
             $this->getStats("ciphers")
         );
 	}

@@ -67,7 +67,7 @@ class CodeControllerTest extends GameTestBase {
 	function testVisitFinish() {
 		Settings::set("locFinish", 3);
 		CodeController::process("zabradli");
-		$this->assertEquals(["Gratulujeme, jste v cíli! Celkem jste dosáhli 30 bodů."], CodeController::process("podnos"));
+		$this->assertEquals(["Gratulujeme, jste v cíli! Celkem jste dosáhli 20 bodů."], CodeController::process("podnos"));
 	}
 
 	function testUnavailableCipher() {
@@ -81,7 +81,7 @@ class CodeControllerTest extends GameTestBase {
 
 	function testSolveCipher() {
 		$this->assertEquals([
-			"Úspěšně jste vyluštili šifru S1a. Máte 30 bodů.",
+			"Úspěšně jste vyluštili šifru S1. Máte 30 bodů.",
 			"Další stanoviště 1a se nachází na vrcholu Bílé hory."
 		], CodeController::process("aberace"));
 		$this->assertEquals(["Toto řešení šifry jste již zadali."], CodeController::process("aberace"));
@@ -90,17 +90,26 @@ class CodeControllerTest extends GameTestBase {
 	function testSolveCipherRank() {
 		Settings::set("showRank", true);
 		$this->assertEquals([
-			"Úspěšně jste vyluštili šifru S1a. Máte 30 bodů.",
-            "Jste 1. První ji vyluštil tým Parta Nic v ".$this->dbNow().".", 
+			"Úspěšně jste vyluštili šifru S1. Máte 30 bodů.",
+            "Jste 1. První ji vyluštil tým Parta Nic v {$this->dbNow()}.", 
 			"Další stanoviště 1a se nachází na vrcholu Bílé hory."
 		], CodeController::process("aberace"));
+	}
+
+	function testSolveActivityRank() {
+		Settings::set("showRank", true);
+		$this->assertEquals([
+			"Úspěšně jste zvládli aktivitu A1. Máte 20 bodů.",
+            "Jste 1. První ji dal tým Parta Nic v {$this->dbNow()}.", 
+			"Další stanoviště 1b se nachází na vrcholu Černé hory."
+		], CodeController::process("zabradli"));
 	}
 
 	function testSolveCipherWithLink() {
 		$this->db->execute("UPDATE loc SET coord_lat = 50.08, coord_lon = 14.32 WHERE point_id = 2");
 		Settings::set("linkMapyCz", "turisticka");
 		$this->assertEquals([
-			"Úspěšně jste vyluštili šifru S1a. Máte 30 bodů.",
+			"Úspěšně jste vyluštili šifru S1. Máte 30 bodů.",
 			'Další stanoviště 1a se nachází na vrcholu Bílé hory, <a href="https://mapy.cz/turisticka?q=50.0800000N%2014.3200000E">50.0800000N 14.3200000E</a>.'
 		], CodeController::process("aberace"));
 	}
@@ -138,17 +147,17 @@ class CodeControllerTest extends GameTestBase {
         ], $this->sendCode(2, "pralinka"));
 		
 		$this->assertEquals([
-			"Úspěšně jste vyluštili šifru S1a. Máte 45 bodů.",
+			"Úspěšně jste vyluštili šifru S1. Máte 45 bodů.",
             "Jste 1. První ji vyluštil tým Redwool v {$this->dbNow(4)}.", 
 			"Další stanoviště 1a se nachází na vrcholu Bílé hory."
 		], $this->sendCode(2, "aberace"));
 		$this->assertEquals([
-			"Úspěšně jste vyluštili šifru S1a. Máte 45 bodů.",
+			"Úspěšně jste vyluštili šifru S1. Máte 45 bodů.",
             "Jste 2. První ji vyluštil tým Redwool v {$this->dbNow(4)}.", 
 			"Další stanoviště 1a se nachází na vrcholu Bílé hory."
 		], $this->sendCode(1, "aberace"));
 		$this->assertEquals([
-			"Úspěšně jste vyluštili šifru S1a. Máte 45 bodů.",
+			"Úspěšně jste vyluštili šifru S1. Máte 45 bodů.",
             "Jste 3. První ji vyluštil tým Redwool v {$this->dbNow(4)}.", 
 			"Další stanoviště 1a se nachází na vrcholu Bílé hory."
 		], $this->sendCode(3, "aberace"));

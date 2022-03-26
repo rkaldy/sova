@@ -14,16 +14,18 @@ $(function() {
 	}).done(function(locs) {
 	setGrid({
 		table: "cipher", 
-		width: "100%",
 		fields: 
 		[
-			{ name: "name", title: "Číslo šifry", type: "text", width: 20 , validate: "required" },
-			{ name: "name_int", title: "Interní název", type: "text", width: 30  },
-			{ name: "code", title: "Řešení", type: "text", width: 20, validate: codeValidatorReq },
-			{ name: "hint", title: "Nápověda", type: "textarea", width: 40 },
-			{ name: "prev", title: "Umístění šifry", type: "multiselect", width: 30, items: locs, valueField: "point_id", textField: "name", longTextField: longText },
-			{ name: "next", title: "Následující stanoviště", type: "multiselect", width: 30, items: locs, valueField: "point_id", textField: "name", longTextField: longText },
-			{ type: "control", width: 5 }
+			{ name: "name", title: "Číslo", type: "text", width: "10ex", validate: "required" },
+			{ name: "name_int", title: "Interní název", type: "text", width: "20ex" },
+			{ name: "activity", title: "Aktivita?", type: "checkbox", width: "10ex" },
+			{ name: "code", title: "Řešení", type: "text", width: "20ex", validate: codeValidator },
+			{ name: "hint", title: "Nápověda", type: "textarea", width: "30ex" },
+			{ name: "howto", title: "Postup", type: "textarea", width: "40ex" },
+			{ name: "points", title: "Body", type: "text", width: "10ex", validate: integerValidator },
+			{ name: "prev", title: "Umístění", type: "multiselect", width: "15ex", items: locs, valueField: "point_id", textField: "name", longTextField: longText },
+			{ name: "next", title: "Následující stanoviště", type: "multiselect", width: "20ex", items: locs, valueField: "point_id", textField: "name", longTextField: longText },
+			{ type: "control", width: "10ex" }
 		]
 	});
 });
@@ -33,27 +35,35 @@ $(function() {
 <h3>Legenda</h3>
 <table id="legend">
   <tr>
-    <th>Číslo šifry</th>
-    <td>Identifikační kód šifry (S1, S2A...), kterou týmy zadávají např. pro univerzální nápovědu.</td>
+    <th>Číslo</th>
+    <td>Identifikační kód šifry/aktivity (S1, S2A...), kterou týmy zadávají např. pro nápovědu.</td>
   </tr>
   <tr>
     <th>Interní název</th>
-    <td>Krátký název šifry (Morseovka, Skryté tečky...), který je viditelný jen ve statistikách pro orgy <i>(nepovinné)</i>.</td>
+    <td>Krátký název (Morseovka, Slaňování...), který je viditelný jen ve statistikách pro orgy <i>(nepovinné)</i>.</td>
   </tr>
   <tr>
     <th>Řešení</th>
-    <td>Řešení šifry, jednoslovný kód, který týmy zadají do Sovy po vyluštění šifry.</td>
+    <td>Řešení šifry či kód, který týmy dostanou po zdolání aktivity. Necháte-li prázdné, vygeneruje se náhodné slovo.</td>
   </tr>
   <tr>
     <th>Nápověda</th>
     <td>Nápověda, kterou Sova pošle po daném čase anebo oproti kódu univerzální nápovědy <i>(nepovinné)</i>.</td>
   </tr>
   <tr>
-    <th>Umístění šifry</h3>
-	<td>Stanoviště, na němž se šifra nachází. Stanovišť může být i více, pokud se šifra skládá z více částí na různých místech. Čas pro odeslání nápovědy se spustí po odeslání kódů ze všech těchto stanovišť.</td>
+    <th>Postup</th>
+    <td>Přesný popis, jak vyluštit šifru. <i>(nepovinné)</i></td>
+  </tr>
+  <tr>
+    <th>Body</th>
+    <td>Týmu se přičtou po odeslání řešení do Sovy <i>(nepovinné)</i></td>
+  </tr>
+  <tr>
+    <th>Umístění</h3>
+	<td>Stanoviště, na němž se šifra či aktivita nachází. Stanovišť může být i více, pokud se šifra skládá z více částí na různých místech</td>
   </tr>
   <tr>
     <th>Následující stanoviště</th>
-	<td>Stanoviště, na které šifra ukazuje. Stanovišť může být i více, v takovém případě po vyluštění šifry Sova vrátí polohu všech těchto stanovišť.</td>
+	<td>Stanoviště, na které šifra ukazuje. Stanovišť může být i více, v takovém případě po vyřešení šifry/aktivity Sova vrátí polohu všech těchto stanovišť.</td>
   </tr>
 </table>
