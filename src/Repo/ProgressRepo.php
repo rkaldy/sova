@@ -61,7 +61,7 @@ class ProgressRepo extends RepoBase {
                 JOIN progress ON progress.point_id = settings.locFinish
                 WHERE settings.game_id = :game_id
             ) finish ON finish.team_id = team.team_id
-            ORDER BY points, -finish.time DESC, last_cipher.time, team.name
+            ORDER BY points DESC, -finish.time DESC, last_cipher.time, team.name
         ", ["game_id" => $gameId]);
 	}
 
