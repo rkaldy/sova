@@ -30,25 +30,19 @@ class MessageTest extends TestBase {
 		$this->message->sendToSova("Pomoc!");
 		$messages = $this->message->list();
 		$this->assertEquals([
-			["name" => "Parta Nic", "direction" => Message::FROM_TEAM, "direction_str" => "in", "async" => 0, "text" => "Pomoc!"]
+			["name" => "Parta Nic", "direction" => Message::FROM_TEAM, "direction_str" => "in", "text" => "Pomoc!"]
 		], self::stripTimes($messages));
 		$now = new DateTime();
 		$time = new DateTime($messages[0]["time"], new DateTimeZone("Europe/Prague"));
 		$this->assertLessThanOrEqual($now, $time);
 	}
 
-	function testSendToTeamAmended() {
-		$this->message->sendToTeam("Nápověda", null, 30);
-		$messages = $this->message->list();
-		$this->assertEquals([], $messages);
-	}
-
 	function testBroadcast() {
 		$this->message->broadcast([1, 2], "Konec hry");
 		$messages = $this->message->list();
 		$this->assertEquals([
-			["name" => "Parta Nic", "direction" => Message::TO_TEAM, "direction_str" => "out", "async" => 1, "text" => "Konec hry"],
-			["name" => "Redwool", "direction" => Message::TO_TEAM, "direction_str" => "out", "async" => 1, "text" => "Konec hry"]
+			["name" => "Parta Nic", "direction" => Message::TO_TEAM, "direction_str" => "out", "text" => "Konec hry"],
+			["name" => "Redwool", "direction" => Message::TO_TEAM, "direction_str" => "out", "text" => "Konec hry"]
 		], self::stripTimes($messages));
 	}
 
@@ -57,7 +51,7 @@ class MessageTest extends TestBase {
 		list($messages, $count) = $this->message->listForTeam();
 		$this->assertEquals(1, $count);
 		$this->assertEquals([
-			["direction" => Message::TO_TEAM, "direction_str" => "out", "async" => 1, "text" => "Konec hry"]
+			["direction" => Message::TO_TEAM, "direction_str" => "out", "text" => "Konec hry"]
 		], self::stripTimes($messages));
 	}
 
@@ -73,8 +67,8 @@ class MessageTest extends TestBase {
 		$resp = (new RestHandler())->crud("message", "GET", [], ["page" => 1, "pageSize" => 20]);
 		$this->assertEquals(2, $resp["itemsCount"]);
 		$this->assertEquals([
-			["name" => "Parta Nic", "direction" => "2", "direction_str" => "out", "async" => 0, "text" => "Nazdar"],
-			["name" => "Parta Nic", "direction" => "1", "direction_str" => "in", "async" => 0, "text" => "Ahoj"]
+			["name" => "Parta Nic", "direction" => "2", "direction_str" => "out", "text" => "Nazdar"],
+			["name" => "Parta Nic", "direction" => "1", "direction_str" => "in", "text" => "Ahoj"]
 		], self::stripTimes($resp["data"]));
 	}
 }

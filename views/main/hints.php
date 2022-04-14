@@ -1,13 +1,14 @@
 <p id="hintcount">Aktuálně máte <?php echo $points ?> bodů a <?php echo $ccodes ?> nevyužitých céček.</p>
 
-<p id="flash"><?php if (isset($response)) echo $response; ?></p>
+<p id="flash"><?php if (isset($flash)) echo $flash; ?></p>
 
 <?php if ($gameState == \Sova\Model\Game::CURRENT) { ?>
 
-<form method="POST" action="applyhint">
-  <input type="hidden" name="cipher" value="<?php echo $cipher ?>">
+<form method="POST" action="checkhint">
   <p>
-    <input type="submit" value="Zažádat">
+    <label for="cipher">Číslo šifry</label>
+    <input type="text" id="cipher" name="cipher" class="focused">
+    <input type="submit" value="Zkontrolovat">
   </p>
 </form>
 

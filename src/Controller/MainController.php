@@ -20,7 +20,7 @@ use Sova\Model\Settings;
 class MainController {
 
 	const ACTIONS_PUBLIC = ["login"];
-	const ACTIONS_DURING_GAME = ["code", "applyhint"];
+	const ACTIONS_DURING_GAME = ["code", "hints"];
 
 	public function process(Request $req, array $path): Response {
 		if (empty($path)) {
@@ -40,8 +40,13 @@ class MainController {
 		if ($view instanceof Redirect) {
 			return $view->buildResponse();
 		}
+		
 		$view->addField("action", $action);
 		$view->addField("gameState", Game::state());
+		if (isset($_SESSION["flash"])) {
+			$view->addField("flash", $_SESSION["flash"]);
+			unset($_SESSION["flash"]);
+		}
 		if (Team::logged()) {
 			$view->addField("team", Team::currentName());
 			$view->addField("game", Game::currentName());
@@ -83,22 +88,51 @@ class MainController {
 	}	
 
 
-	public function applyhint($params, $data) {
-		$hint = new Hint();
-		if (isset($data["cipher"])) {
-			if (Game::state() != Game::CURRENT) {
-				throw new HttpException(403);
-			}
-			$cipherName = Code::polish($data["cipher"]);
-			$message = new Message();
-			$message->sendToSova((new Text("hint.request", $cipherName))->format());
-			$response = $hint->apply($cipherName)->format();
-			$message->sendToTeam($response);
-		} else {
-			$response = null;
+	public function hints($params, $data) {
+		$ccodeCount = (new Hint())->unusedCCodeCount();
+		return new View("main/hints", ["points" => (new Team())->points(), "ccodes" => $ccodeCount, "imunity" => ($ccodeCount >= Settings::get("imunityPrice"))]);
+	}
+
+
+	public function checkhint($params, $data) {
+		if (Game::state() != Game::CURRENT) {
+			throw new HttpException(403);
 		}
-		$hintCount = $hint->unusedHintCount();
-		return new View("main/applyhint", ["response" => $response, "points" => (new Team())->points(), "hintCount" => $hintCount, "imunity" => ($hintCount >= Settings::get("imunityPrice"))]);
+		$hint = new Hint();
+		$message = new Message();
+
+		$cipherName = Code::polish($data["cipher"]);
+		$message->sendToSova((new Text("hint.check", $cipherName))->format());
+		list($ok, $ret) = $hint->check($cipherName);
+
+		$response = "";
+		foreach ($ret as $text) {
+			$response .= $text->format();
+			$response .= ' ';
+		}
+		$message->sendToTeam($response);
+
+		if ($ok) {
+			return new View("main/applyhint", ["response" => $response, "cipher" => $cipherName, "points" => (new Team())->points(), "ccodes" => $hint->unusedCCodeCount()]);
+		} else {
+			return new Redirect("hints", $response);
+		}
+	}
+
+
+	public function applyhint($params, $data) {
+		if (Game::state() != Game::CURRENT) {
+			throw new HttpException(403);
+		}
+		$hint = new Hint();
+		$message = new Message();
+
+		$cipherName = Code::polish($data["cipher"]);
+		$message->sendToSova((new Text("hint.request", $cipherName))->format());
+		$response = $hint->apply($cipherName)->format();
+		$message->sendToTeam($response);
+
+		return new Redirect("hints", $response);
 	}
 
 

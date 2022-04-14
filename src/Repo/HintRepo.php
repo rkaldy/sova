@@ -6,9 +6,10 @@ use Sova\DBException;
 
 class HintRepo extends RepoBase {
 
-    public const NORMAL = 1;
-	public const SOLUTION = 2;
-	public const ABSOLUTE = 3;
+	public const NONE = 0;
+    public const HINT = 1;
+	public const HOWTO = 2;
+	public const SOLUTION = 3;
     public const IMUNITY = 4;
 
 
@@ -24,26 +25,31 @@ class HintRepo extends RepoBase {
 		}
 	}
 
-	public function getUnusedHintCount(int $teamId) {
+	public function getUnusedCCodeCount(int $teamId) {
 		return $this->db->equery("SELECT COUNT(*) FROM hint WHERE team_id = ? AND type IS NULL", $teamId);
+	}
+
+	public function getAppliedHintType(int $teamId, int $cipherId) {
+		$ret = $this->db->equery("SELECT MAX(type) FROM hint WHERE team_id = ? AND cipher_id = ?", $teamId, $cipherId);
+		return is_null($ret) ? self::NONE : $ret;
 	}
 
 	public function getUnusedHint(int $teamId, int $count = 1) {
 		return $this->db->aquery("SELECT * FROM hint WHERE team_id = ? AND type IS NULL LIMIT ?", $teamId, $count);
 	}
 
-	public function alreadyApplied(array $hint) {
-		return $this->db->equery("SELECT COUNT(*) FROM hint WHERE team_id = :team_id AND cipher_id = :cipher_id AND time <= NOW()", $hint) != 0;
-	}
-
 	public function imunityApplied(int $teamId) {
 		return $this->db->equery("SELECT COUNT(*) FROM hint WHERE team_id = ? AND type = ?", $teamId, self::IMUNITY) != 0;
 	}
 
-	public function apply(array $hint) {
-		if ($hint["type"] != self::IMUNITY) {
-			$this->db->execute("DELETE FROM hint WHERE team_id = :team_id AND cipher_id = :cipher_id AND type = :type AND time > NOW()", $hint);
+	public function applyByPoints(int $teamId, int $cipherId, int $type) {
+		$this->db->execute("INSERT INTO hint (team_id, cipher_id, time, type) VALUES (?, ?, NOW(), ?)", [$teamId, $cipherId, $type]);
+	}
+
+	public function applyByCCodes(int $teamId, int $cipherId, int $type, int $price) {
+		$ccodes = $this->db->aquery("SELECT ccode_id FROM hint WHERE team_id = ? AND type IS NULL LIMIT ?", $teamId, $price);
+		foreach ($ccodes as $ccode) {
+			$this->db->execute("UPDATE hint SET cipher_id = ?, time = NOW(), type = ? WHERE team_id = ? AND ccode_id = ?", [$cipherId, $type, $teamId, $ccode["ccode_id"]]);
 		}
-		$this->db->execute("UPDATE hint SET cipher_id = :cipher_id, time = NOW(), type = :type WHERE hint_id = :hint_id", $hint);
 	}
 }

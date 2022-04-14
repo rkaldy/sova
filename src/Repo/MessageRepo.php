@@ -9,7 +9,7 @@ class MessageRepo extends RepoBase {
 
 	public function list(int $gameId, int $limit, int $offset) {
 		return $this->db->aquery("
-			SELECT time, team.name AS name, direction, async, text
+			SELECT time, team.name AS name, direction, text
 			FROM message NATURAL JOIN team
 			WHERE team.game_id = ? AND time <= NOW()
 			ORDER BY time DESC, direction DESC 
@@ -19,7 +19,7 @@ class MessageRepo extends RepoBase {
 
 	public function listForTeam(int $teamId, $limit, $offset) {
 		return $this->db->aquery("
-			SELECT time, direction, async, text
+			SELECT time, direction, text
 			FROM message
 			WHERE team_id = ? AND time <= NOW()
 			ORDER BY time DESC, direction DESC
@@ -40,23 +40,17 @@ class MessageRepo extends RepoBase {
 	}
 
 	public function recent($teamId, $since) {
-		return $this->db->query("SELECT text FROM message WHERE team_id = ? AND time >= ? AND async = 1 ORDER BY time", [$teamId, $since]);
+		return $this->db->query("SELECT text FROM message WHERE team_id = ? AND time >= ? ORDER BY time", [$teamId, $since]);
 	}
 
 	public function create(array $message) {
-		if (isset($message["time"])) {
-			$message["async"] = 1;
-			$this->db->execute("INSERT INTO message (team_id, hint_id, direction, async, time, text) VALUES (:team_id, :hint_id, :direction, :async, DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL :time MINUTE), :text)", $message);
-		} else {
-			$message["async"] = 0;
-			$this->db->execute("INSERT INTO message (team_id, hint_id, direction, async, text) VALUES (:team_id, :hint_id, :direction, :async, :text)", $message);
-		}
+		$this->db->execute("INSERT INTO message (team_id, direction, text) VALUES (:team_id, :direction, :text)", $message);
 	}
 
 	public function broadcast(array $teams, string $message) {
-		$stmt = $this->db->prepare("INSERT INTO message (team_id, direction, async, text) VALUES (?, ?, ?, ?)");
+		$stmt = $this->db->prepare("INSERT INTO message (team_id, direction, text) VALUES (?, ?, ?)");
 		foreach ($teams as $team_id) {
-			$stmt->execute([$team_id, self::TO_TEAM, 1, $message]);
+			$stmt->execute([$team_id, self::TO_TEAM, $message]);
 		}
 	}
 

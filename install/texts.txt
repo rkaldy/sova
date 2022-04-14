@@ -17,13 +17,20 @@ cipher.solution;Řešení šifry %s: %s
 activity.solved;Úspěšně jste zvládli aktivitu %s. Máte %s bodů.
 activity.already;Tento kód aktivity jste již zadali.
 activity.rank;Jste %s. První ji dal tým %s v %s.
+hint.check;(Kontrola nápovědy na %s)
 hint.request;(Žádost o nápovědu na %s)
-hint.no-hint;K této šifře žádná nápověda není.
-hint.add.already;Toto céčko jste již zadali.
-hint.add.success;Získali jste céčko. Aktuálně máte %s nevyužitých céček.
-hint.apply.already;Pro šifru %s jste již dostali nápovědu. Podívejte se do historie zpráv.
-hint.apply.no-hint;Všechna céčka jste již použili.
+hint.apply.activity;K aktivitám žádné nápovědy nejsou.
+hint.apply.no-hint;K této šifře žádná nápověda není.
 hint.apply.solved;Šifru %s jste již vyluštili.
+hint.apply.already;Pro šifru %s jste již dostali řešení. Podívejte se do historie zpráv.
+hint.apply.history;Pro šifru %s jste již dostali %s.
+hint.apply.ccodes;Nyní můžete zažádat o %s za %s céček.
+hint.apply.points;Nyní můžete zažádat o %s. Protože nemáte dostatek céček, bude vás to stát %s bodů.
+hint.text.hint;Nápověda k šifře %s: %s
+hint.text.howto;Postup k šifře %s: %s
+hint.text.solution;Řešení šifry %s: %s
+ccode.add.already;Toto céčko jste již zadali.
+ccode.add.success;Získali jste céčko. Aktuálně máte %s nevyužitých céček.
 imunity.success;Získali jste imunitu. Kdyby na vás při vyhlášení padlo organizování příštího ročníku, můžete ho odmítnout.
 imunity.already;Imunitu jste již dostali.
 imunity.not-enough-ccodes;Nemáte dostatek céček pro získání imunity.

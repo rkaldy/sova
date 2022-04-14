@@ -29,7 +29,8 @@ CREATE TABLE `cipher` (
   point_id int(11) NOT NULL,
   name_int varchar(50) COLLATE utf8mb4_czech_ci DEFAULT NULL,
   activity tinyint(4) NOT NULL DEFAULT 0,
-  hint varchar(500) COLLATE utf8mb4_czech_ci DEFAULT NULL
+  hint varchar(200) COLLATE utf8mb4_czech_ci DEFAULT NULL,
+  howto varchar(500) COLLATE utf8mb4_czech_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
 
 CREATE TABLE `code` (
@@ -68,9 +69,7 @@ CREATE TABLE loc (
 CREATE TABLE message (
   message_id int(11) NOT NULL,
   team_id int(11) NOT NULL,
-  hint_id int(11) DEFAULT NULL,
   direction tinyint(1) NOT NULL,
-  async tinyint(1) NOT NULL DEFAULT 0,
   time datetime NOT NULL DEFAULT current_timestamp(),
   text varchar(500) COLLATE utf8mb4_czech_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
@@ -166,16 +165,14 @@ ALTER TABLE game
 ALTER TABLE hint
   ADD PRIMARY KEY (hint_id) USING BTREE,
   ADD UNIQUE KEY ccode_id (ccode_id,team_id) USING BTREE,
-  ADD UNIQUE KEY team_id (team_id,cipher_id,type) USING BTREE,
-  ADD KEY cipher_id (cipher_id);
+  ADD KEY team_id (team_id,type) USING BTREE;
 
 ALTER TABLE loc
   ADD PRIMARY KEY (point_id);
 
 ALTER TABLE message
   ADD PRIMARY KEY (message_id),
-  ADD KEY sort_idx (team_id,time,direction) USING BTREE,
-  ADD KEY hint_id (hint_id);
+  ADD KEY sort_idx (team_id,time,direction) USING BTREE;
 
 ALTER TABLE `point`
   ADD PRIMARY KEY (point_id,game_id) USING BTREE,
@@ -247,8 +244,7 @@ ALTER TABLE loc
   ADD CONSTRAINT parent_entity_loc FOREIGN KEY (point_id) REFERENCES point (point_id) ON DELETE CASCADE;
 
 ALTER TABLE message
-  ADD CONSTRAINT message_ibfk_1 FOREIGN KEY (team_id) REFERENCES team (team_id) ON DELETE CASCADE,
-  ADD CONSTRAINT message_ibfk_2 FOREIGN KEY (hint_id) REFERENCES hint (hint_id) ON DELETE CASCADE;
+  ADD CONSTRAINT message_ibfk_1 FOREIGN KEY (team_id) REFERENCES team (team_id) ON DELETE CASCADE;
 
 ALTER TABLE `point`
   ADD CONSTRAINT point_ibfk_1 FOREIGN KEY (game_id) REFERENCES game (game_id) ON DELETE CASCADE;

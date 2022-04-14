@@ -49,7 +49,7 @@ class GameTestBase extends TestBase {
 		$this->db->execute("INSERT INTO point (point_id, game_id, name, points) VALUES (14, 1, 'S3', 30)");
 		$this->db->execute("INSERT INTO point (point_id, game_id, name, points) VALUES (15, 1, 'S4a', 30)");
 		$this->db->execute("INSERT INTO point (point_id, game_id, name, points) VALUES (16, 1, 'S4b', 30)");
-		$this->db->execute("INSERT INTO cipher (point_id, name_int, hint) VALUES (11, 'Morseovka', 'Čárka tečka čárka, tak začíná Klárka')");
+		$this->db->execute("INSERT INTO cipher (point_id, name_int, hint, howto) VALUES (11, 'Morseovka', 'Čárka tečka čárka, tak začíná Klárka', 'Použij morseovku')");
 		$this->db->execute("INSERT INTO cipher (point_id, name_int, activity) VALUES (12, 'Slaňování', 1)");
 		$this->db->execute("INSERT INTO cipher (point_id, name_int, hint) VALUES (13, 'Polský kříž', 'Krzyz')");
 		$this->db->execute("INSERT INTO cipher (point_id, name_int, hint) VALUES (14, 'Vlajková abeceda', NULL)");

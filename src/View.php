@@ -4,7 +4,7 @@ namespace Sova;
 class View {
 
 	protected $template;
-	protected $fields;
+	public $fields;
 
 	public function __construct(string $template, array $fields = array()) {
 		$this->template = $template;

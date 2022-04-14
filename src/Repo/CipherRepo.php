@@ -86,7 +86,7 @@ class CipherRepo extends PointRepo {
 
 	function update(array &$cipher) {
 		$this->db->execute("UPDATE point SET name = :name, points = :points WHERE point_id = :point_id", $cipher);
-		$this->db->execute("UPDATE cipher SET name_int = :name_int, activity = :activity, hint = :hint WHERE point_id = :point_id", $cipher);
+		$this->db->execute("UPDATE cipher SET name_int = :name_int, activity = :activity, hint = :hint, howto = :howto WHERE point_id = :point_id", $cipher);
 		$this->db->execute("UPDATE code SET code = :code WHERE point_id = :point_id", $cipher);
 		$this->addPrevNextLocs($cipher);
 	}
