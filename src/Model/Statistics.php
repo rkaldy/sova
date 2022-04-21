@@ -30,24 +30,16 @@ class Statistics {
 
 	public function hints() {
 		return array_merge(
-			[["Šifra", "Vyluštili", "Vyluštili s nápovědou", "Vyluštili s postupem","Nevyluštili"]],
+			[["Šifra", "Vyluštili", "Vyluštili s nápovědou", "Vyluštili s postupem", "Vyluštili s řešéním", "Nevyluštili"]],
 			$this->repo->hints(Game::current())
 		);
 	}
 
-	public function zakys() {
-		$progress = (new ProgressRepo())->progressByTeam(Game::current());
-		$times = [];
-		for ($i = 1; $i < count($progress); $i++) {
-			$prog = $progress[$i];
-			$prev = $progress[$i-1];
-			if ($prog["team_id"] == $prev["team_id"] && !$prog["is_loc"]) {
-				$timediff = $prog["time_sec"] - $prev["time_sec"];
-				$times[] = [$prog["team_name"], $prev["point_name"].'→'.$prog["point_name"], gmdate("H:i:s", (int)$timediff)];
-			}
-		}
-		usort($times, function($a, $b) { return -($a[2] <=> $b[2]); });
-		return array_merge([["Tým", "Vyluštěná šifra", "Čas"]], array_slice($times, 0, 10));
+	public function ccodes() {
+		return array_merge(
+			[["Tým", "Počet céček"]],
+			$this->repo->ccodes(Game::current())
+		);
 	}
 
 	public function barchart() {

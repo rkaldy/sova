@@ -35,7 +35,8 @@ class StatisticsRepo extends RepoBase {
 				name,
 				COUNT(DISTINCT IF(hint.type IS NULL, solved.team_id, NULL)) AS solved,
 				COUNT(DISTINCT IF(hint.type = 1, solved.team_id, NULL)) AS solved_with_hint,
-				COUNT(DISTINCT IF(hint.type = 2, solved.team_id, NULL)) AS solved_with_absolute,
+				COUNT(DISTINCT IF(hint.type = 2, solved.team_id, NULL)) AS solved_with_howto,
+				COUNT(DISTINCT IF(hint.type = 3, solved.team_id, NULL)) AS solved_with_solution,
 				COUNT(DISTINCT IF(solved.point_id IS NULL, arrive.team_id, NULL)) AS not_solved
 			FROM cipher
 			NATURAL JOIN point
@@ -62,5 +63,16 @@ class StatisticsRepo extends RepoBase {
 			WHERE game_id = ? AND time < ?
 			GROUP BY team_id
 		", $gameId, $to);
+	}
+
+	public function ccodes(int $gameId) {
+		return $this->query("
+			SELECT team.name, COUNT(hint_id) AS ccodes
+			FROM team
+			LEFT JOIN hint ON hint.team_id = team.team_id AND hint.ccode_id IS NOT NULL
+			WHERE game_id = ?
+			GROUP BY team.team_id
+			ORDER BY ccodes DESC
+		", $gameId);
 	}
 }
