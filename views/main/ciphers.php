@@ -1,18 +1,24 @@
-<table>
-  <thead>
-    <tr>
-      <td>Šifra</td>
-      <td>Vyluštěno</td>
-      <td>Nápověda</td>
-    </tr>
-  </thead>
-  <tbody>
-<?php for ($i = 0; $i < count($ciphers); $i++) { ?>
-	<tr<?php if ($i % 2 == 1) echo ' class="alt-row"' ?>>
-      <th><?php echo $ciphers[$i]["name"] ?></th>
-      <td><?php echo $ciphers[$i]["time"] ?></td>
-      <td><?php echo $ciphers[$i]["hint"] ?></td>
-    </tr>
-<?php } ?>
-  </tbody>
-</table>
+<?php 
+for ($i = 0; $i < count($ciphers); $i++) { 
+	echo "<div class=\"message";
+	if ($i % 2 == 1) echo " alt-row";
+	echo "\">\n";
+	
+	echo "<b>{$ciphers[$i]["name"]}";
+    if ($ciphers[$i]["time"] != "-") {
+		echo " - vyřešeno {$ciphers[$i]["time"]}";
+	}
+	echo "</b><br>\n";
+
+	if ($ciphers[$i]["hint"] != "-") {
+		echo "Nápověda: {$ciphers[$i]["hint"]}<br>\n";
+	}
+	if ($ciphers[$i]["howto"] != "-") {
+		echo "Postup: {$ciphers[$i]["howto"]}<br>\n";
+	}
+	if ($ciphers[$i]["solution"] != "-") {
+		echo "Řešení: {$ciphers[$i]["solution"]}<br>\n";
+	}
+
+	echo "</div>\n";
+}

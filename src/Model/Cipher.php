@@ -40,12 +40,6 @@ class Cipher extends ModelBase {
 			$progress->create($loc);
 		}
 
-		if (Settings::get("deleteParallelHints")) {
-			$this->repo->deletePendingHintsForParallelCiphers(Team::current(), $cipher);
-		} else {
-			$this->repo->deletePendingHints(Team::current(), $cipher);
-		}
-
         $team = new Team();
 		$team->addPoints($cipher["points"]);
 

@@ -136,21 +136,6 @@ class CipherRepo extends PointRepo {
 		", $teamId, $cipher["point_id"]);
 	}
 
-	public function deletePendingHints(int $teamId, array $cipher) {
-		$this->db->execute("DELETE FROM hint WHERE team_id = ? AND time > NOW() AND cipher_id = ?", [$teamId, $cipher["point_id"]]);
-	}
-
-	public function deletePendingHintsForParallelCiphers(int $teamId, array $cipher) {
-		$this->db->execute("
-			DELETE FROM hint 
-			WHERE team_id = ? AND time > NOW() AND cipher_id IN (
-				SELECT step2.from_point_id
-				FROM step AS step1
-				JOIN step AS step2 ON step1.to_point_id = step2.to_point_id
-				WHERE step1.from_point_id = ?
-			)", [$teamId, $cipher["point_id"]]);
-	}
-
 	public function solvedCipherCount(int $teamId) {
 		return $this->db->equery("
 			SELECT COUNT(*) FROM progress
@@ -161,14 +146,20 @@ class CipherRepo extends PointRepo {
 
 	public function teamCipherStatus(int $teamId) {
 		return $this->db->aquery("
-			SELECT cipher_point.name, IFNULL(DATE_FORMAT(solved.time, '%H:%i:%s'), '-') AS time, IF(ISNULL(MAX(hint_id)) , '-', cipher.hint ) AS hint
+			SELECT 
+				cipher_point.name, 
+				IFNULL(DATE_FORMAT(solved.time, '%H:%i:%s'), '-') AS time, 
+				IF(MAX(hint.type) >= 1, cipher.hint, '-') AS hint,
+				IF(MAX(hint.type) >= 2, cipher.howto, '-') AS howto,
+				IF(MAX(hint.type) >= 3, code.code, '-') AS solution
 			FROM progress
 			NATURAL JOIN loc
 			JOIN step ON step.from_point_id = loc.point_id
-			JOIN cipher ON cipher.point_id = step.to_point_id
+			JOIN cipher ON cipher.point_id = step.to_point_id	
 			JOIN point cipher_point ON cipher_point.point_id = cipher.point_id
+			JOIN code ON code.point_id = cipher.point_id
 			LEFT JOIN progress solved ON solved.team_id = progress.team_id AND solved.point_id = cipher.point_id
-			LEFT JOIN hint ON hint.team_id = progress.team_id AND hint.cipher_id = cipher.point_id AND hint.time <= NOW()
+			LEFT JOIN hint ON hint.team_id = progress.team_id AND hint.cipher_id = cipher.point_id
 			WHERE progress.team_id = ?
 			GROUP BY cipher.point_id
 			ORDER BY loc.order_id, cipher_point.name

@@ -95,7 +95,6 @@ CREATE TABLE settings (
   locFinish int(11) DEFAULT NULL,
   showRank tinyint(4) NOT NULL DEFAULT 0,
   linkMapyCz VARCHAR(20) NULL DEFAULT NULL,
-  deleteParallelHints tinyint(4) NOT NULL DEFAULT 0,
   imunityPrice int(11) DEFAULT 3,
   gamePrice int(11) DEFAULT 0,
   accomodationPrice int(11) DEFAULT 0,
@@ -165,7 +164,8 @@ ALTER TABLE game
 ALTER TABLE hint
   ADD PRIMARY KEY (hint_id) USING BTREE,
   ADD UNIQUE KEY ccode_id (ccode_id,team_id) USING BTREE,
-  ADD KEY team_id (team_id,type) USING BTREE;
+  ADD KEY team_type (team_id,type) USING BTREE,
+  ADD KEY team_cipher (team_id,cipher_id) USING BTREE;
 
 ALTER TABLE loc
   ADD PRIMARY KEY (point_id);

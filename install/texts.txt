@@ -22,7 +22,7 @@ hint.request;(Žádost o nápovědu na %s)
 hint.apply.activity;K aktivitám žádné nápovědy nejsou.
 hint.apply.no-hint;K této šifře žádná nápověda není.
 hint.apply.solved;Šifru %s jste již vyluštili.
-hint.apply.already;Pro šifru %s jste již dostali řešení. Podívejte se do historie zpráv.
+hint.apply.already;Pro šifru %s jste již dostali řešení. Podívejte se do přehledu šifer.
 hint.apply.history;Pro šifru %s jste již dostali %s.
 hint.apply.ccodes;Nyní můžete zažádat o %s za %s céček.
 hint.apply.points;Nyní můžete zažádat o %s. Protože nemáte dostatek céček, bude vás to stát %s bodů.
