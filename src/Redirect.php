@@ -5,8 +5,9 @@ class Redirect {
 
 	protected $url;
 
-	public function __construct($uri) {
+	public function __construct($uri, $flash = null) {
 		$this->uri = $uri;
+		$_SESSION["flash"] = $flash;
 	}
 
 	public function buildResponse() {
