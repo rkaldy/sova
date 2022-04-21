@@ -13,7 +13,7 @@
 		<tr<?php if ($team["recent"]) echo ' class="recent"' ?>>
           <th><?php echo $team["team_name"] ?></th>
           <td><?php echo $team["time"] ?></td>
-		  <td<?php if ($team["solved"] == $maxSolved) echo ' class="maxSolved"' ?>><?php echo $team["solved"] ?> šifer</td>
+		  <td><?php echo $team["points"] ?> bodů</td>
         </tr>
       <?php } ?>
       </table>

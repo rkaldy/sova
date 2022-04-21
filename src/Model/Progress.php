@@ -34,14 +34,7 @@ class Progress extends ModelBase {
 			}
 			$ret[] = ["point_id" => $id, "name" => $name, "teams" => $teams];
 		}
-
-		$maxSolved = 0;
-		foreach ($status as $stat) {
-			if ($stat["solved"] > $maxSolved) {
-				$maxSolved = $stat["solved"];
-			}
-		}
-		return [$ret, $maxSolved];
+		return $ret;
 	}
 
 	public function cipherStatus() {

@@ -87,11 +87,7 @@ class AdminController {
 	}
 
 	public function progress() {
-		list($progress, $maxSolved) = (new Progress())->locStatus();
-		return new View("admin/progress", [
-			"progress" => $progress,
-			"maxSolved" => $maxSolved
-		]);
+		return new View("admin/progress", ["progress" => (new Progress())->locStatus()]);
 	}
 
 	public function cipherStatus() {

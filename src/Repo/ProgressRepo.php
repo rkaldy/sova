@@ -91,7 +91,7 @@ class ProgressRepo extends RepoBase {
 
     public function locStatus(int $gameId) {
         return $this->db->aquery("
-            SELECT point_id, team.name AS team_name, DATE_FORMAT(time, '%H:%i:%s') AS time, time >=DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL 1 MINUTE) AS recent, IF(ciphers.solved IS NULL, 0, ciphers.solved) AS solved
+            SELECT point_id, team.name AS team_name, DATE_FORMAT(time, '%H:%i:%s') AS time, time >=DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL 1 MINUTE) AS recent, team.points
             FROM progress
             NATURAL JOIN team
             NATURAL JOIN (
@@ -102,14 +102,6 @@ class ProgressRepo extends RepoBase {
                 WHERE game_id = :game_id
                 GROUP BY team_id
             ) last
-            LEFT JOIN (
-                SELECT team_id, count(*) as solved
-                FROM progress
-                NATURAL JOIN point
-                NATURAL JOIN cipher
-                 WHERE game_id = :game_id
-                GROUP BY team_id
-            ) ciphers ON ciphers.team_id = team.team_id
             ORDER BY point_id, time
         ", ["game_id" => $gameId]);
     }
@@ -121,7 +113,7 @@ class ProgressRepo extends RepoBase {
             JOIN point ON point.point_id = progress.point_id
 			JOIN cipher ON cipher.point_id = point.point_id
             JOIN team ON team.team_id = progress.team_id
-			LEFT JOIN hint ON hint.team_id = progress.team_id AND hint.cipher_id = progress.point_id AND hint.time < progress.time
+			LEFT JOIN hint ON hint.team_id = progress.team_id AND hint.cipher_id = progress.point_id
             WHERE point.game_id = ?
 			GROUP BY point.point_id, progress.team_id
 	        ORDER BY point.point_id, time
