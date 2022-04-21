@@ -132,11 +132,11 @@ foreach ($settings as $item) {
 	switch ($type) {
 		case TEXT:
 		case DATETIME:
-			echo "<input type=\"text\" id=\"$var\" name=\"$var\" value=\"{$$var}\">";
+			echo "<input type=\"text\" id=\"$var\" name=\"$var\" value=\"{$fields[$var]}\">";
 		   	break;
 		case BOOL: 
 			echo "<input type=\"checkbox\" id=\"$var\" name=\"$var\"";
-		  	if ($$var) {
+		  	if ($fields[$var]) {
 				echo ' checked="checked"';
 			}
 			echo ">";
@@ -146,7 +146,7 @@ foreach ($settings as $item) {
 			echo "  <option value=\"\">-</option>\n";
 			foreach ($enumValues as $key => $value) {
 				echo "    <option value=\"$key\"";
-				if ($$var == $key) {
+				if ($fields[$var] == $key) {
 					echo ' selected="selected"';
 				}
 				echo ">$value</option>\n";

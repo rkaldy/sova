@@ -100,13 +100,10 @@ class AdminController {
 
 	public function settings($args) {
 		$settings = new Settings();
+		$flash = null;
 		if (!empty($args)) {
-			$ret = $settings->save($args);
+			$flash = $settings->save($args);
 		}
-		$fields = $_SESSION["settings"];
-		if (isset($ret)) {
-			$fields["flash"] = $ret;
-		}
-		return new View("admin/settings", $fields);
+		return new View("admin/settings", ["fields" => $_SESSION["settings"], "locs" => (new Loc())->locs(), "flash" => $flash]);
 	}
 }

@@ -15,7 +15,6 @@ class Settings extends ModelBase {
 
 	public function load() {
 		$settings = $this->repo->get(Game::current());
-		$settings["locs"] = $this->locRepo->listAsArray(Game::current());
 		if (isset($settings["gameStart"])) {
 			$settings["gameStartTimestamp"] = strtotime($settings["gameStart"]);
 		}

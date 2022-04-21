@@ -15,6 +15,11 @@ class Loc extends ModelBase {
 	}
 
 
+	public function locs(): array {
+		return $this->repo->listAsArray(Game::current());
+	}
+
+
 	public function checkPreviousPointsVisited(int $locId) {
 		if (!$this->repo->hasPreviousPoints($locId)) {
 			return true;
