@@ -114,21 +114,29 @@ class Hint extends ModelBase {
 	}
 
 
+	public function imunityStatus(int $ccodeCount) {
+		$price = Settings::get("imunityCCodes");
+        $available = false;
+        if ($this->repo->haveImunity(Team::current())) {
+            $ret = new Text("imunity.already");
+        } else if ($ccodeCount < $price) {
+            $ret = new Text("imunity.insufficient");
+        } else {
+            $available = true;
+            $ret = new Text("imunity.available", $price);
+		}
+		return [$available, $ret];
+	}
+
+
 	public function applyImunity() {
-		if ($this->repo->imunityApplied(Team::current())) {
-			return new Text("hint.imunity.already");
+		$price = Settings::get("imunityCCodes");
+		if ($this->repo->haveImunity(Team::current())) {
+			return new Text("imunity.already");
+		} else if ($this->repo->getUnusedCCodeCount(Team::current()) < $price) {
+			return new Text("imunity.insufficient");
 		}
-
-		$price = Settings::get("imunityPrice");
-		$hints = $this->repo->getUnusedHint(Team::current(), $price);
-		if (count($hints) < $price) {
-			return new Text("hint.imunity.not-enough-ccodes");
-		}
-
-		foreach ($hints as &$hint) {
-			$hint["type"] = HintRepo::IMUNITY;
-			$this->repo->apply($hint);
-		}
-		return new Text("hint.imunity.success");
+		$this->repo->applyByCCodes(Team::current(), null, HintRepo::IMUNITY, $price);
+		return new Text("imunity.success");
 	}
 }

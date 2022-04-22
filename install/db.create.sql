@@ -95,7 +95,6 @@ CREATE TABLE settings (
   locFinish int(11) DEFAULT NULL,
   showRank tinyint(4) NOT NULL DEFAULT 0,
   linkMapyCz VARCHAR(20) NULL DEFAULT NULL,
-  imunityPrice int(11) DEFAULT 3,
   gamePrice int(11) DEFAULT 0,
   accomodationPrice int(11) DEFAULT 0,
   tshirtPrice int(11) DEFAULT 0,
@@ -104,7 +103,8 @@ CREATE TABLE settings (
   solutionPoints int(11) NOT NULL DEFAULT 0,
   hintCCodes int(11) NOT NULL DEFAULT 0,
   howtoCCodes int(11) NOT NULL DEFAULT 0,
-  solutionCCodes int(11) NOT NULL DEFAULT 0
+  solutionCCodes int(11) NOT NULL DEFAULT 0,
+  imunityCCodes int(11) DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE step (

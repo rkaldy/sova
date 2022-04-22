@@ -54,17 +54,6 @@ class StatisticsRepo extends RepoBase {
 		", $gameId);
 	}
 
-	public function solvedCiphers(int $gameId, string $to) {
-		return $this->squery("
-			SELECT team_id, COUNT(cipher.point_id) 
-			FROM progress 
-			NATURAL JOIN point
-			NATURAL JOIN cipher 
-			WHERE game_id = ? AND time < ?
-			GROUP BY team_id
-		", $gameId, $to);
-	}
-
 	public function ccodes(int $gameId) {
 		return $this->query("
 			SELECT team.name, COUNT(hint_id) AS ccodes

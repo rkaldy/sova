@@ -19,6 +19,7 @@ class HintTest extends GameTestBase {
 		Settings::set("hintPoints", 10);
 		Settings::set("howtoPoints", 20);
 		Settings::set("solutionPoints", 30);
+		Settings::set("imunityCCodes", 2);
 	}
 
 	function testAddCCode() {
@@ -157,17 +158,21 @@ class HintTest extends GameTestBase {
 		
         $resp = $this->hint->apply("S1");
 		$this->assertEquals(new Text("hint.apply.already", "S1"), $resp);
-    }
-    /*
-	function testApplyImunity() {
+	}
+
+	function testImunityStatus() {
+		$this->assertEquals([false, new Text("imunity.insufficient")], $this->hint->imunityStatus(0));
+		$this->assertEquals([true, new Text("imunity.available", 2)], $this->hint->imunityStatus(5));
+	}
+
+	function testImunity() {
+		$this->assertEquals(new Text("imunity.insufficient"), $this->hint->applyImunity());
 		$this->hint->addCCode(1);
 		$this->hint->addCCode(2);
-		$resp = $this->hint->applyImunity();
-		$this->assertEquals(new Text("hint.imunity.not-enough-ccodes"), $resp);
 		$this->hint->addCCode(3);
-		$resp = $this->hint->applyImunity();
-		$this->assertEquals(new Text("hint.imunity.success"), $resp);
-		$resp = $this->hint->applyImunity();
-		$this->assertEquals(new Text("hint.imunity.already"), $resp);
-	}*/
+		$this->assertEquals(new Text("imunity.success"), $this->hint->applyImunity());
+		$this->assertEquals(1, $this->hint->unusedCCodeCount());
+		$this->assertEquals(new Text("imunity.already"), $this->hint->applyImunity());
+		$this->assertEquals([false, new Text("imunity.already")], $this->hint->imunityStatus(5));
+	}
 }

@@ -89,10 +89,11 @@ class MainController {
 
 
 	public function hints($params, $data) {
-		$ccodeCount = (new Hint())->unusedCCodeCount();
-		return new View("main/hints", ["points" => (new Team())->points(), "ccodes" => $ccodeCount, "imunity" => ($ccodeCount >= Settings::get("imunityPrice"))]);
+		$hint = new Hint();
+		$ccodeCount = $hint->unusedCCodeCount();
+		list($imunityAvailable, $imunityMsg) = $hint->imunityStatus($ccodeCount);
+		return new View("main/hints", ["points" => (new Team())->points(), "ccodes" => $ccodeCount, "imunityAvailable" => $imunityAvailable, "imunityMsg" => $imunityMsg->format()]);
 	}
-
 
 	public function checkhint($params, $data) {
 		if (Game::state() != Game::CURRENT) {
@@ -119,7 +120,6 @@ class MainController {
 		}
 	}
 
-
 	public function applyhint($params, $data) {
 		if (Game::state() != Game::CURRENT) {
 			throw new HttpException(403);
@@ -133,6 +133,10 @@ class MainController {
 		$message->sendToTeam($response);
 
 		return new Redirect("hints", $response);
+	}
+
+	public function imunity($params, $data) {
+		return new Redirect("hints", (new Hint())->applyImunity()->format());
 	}
 
 

@@ -16,7 +16,7 @@ class Statistics {
 
 	public function rank() {
 		return array_merge(
-			[["Tým", "Počet bodů", "Příchod do cíle", "Čas poslední vyřešené šifry/aktivity", "Poslední navštívené stanoviště"]],
+			[["Tým", "Počet bodů", "Příchod do cíle", "Čas poslední vyřešené šifry/aktivity", "Poslední navštívené stanoviště", "Imunita?"]],
 			(new ProgressRepo())->rankTotal(Game::current())
 		);
 	}
@@ -30,7 +30,7 @@ class Statistics {
 
 	public function hints() {
 		return array_merge(
-			[["Šifra", "Vyluštili", "Vyluštili s nápovědou", "Vyluštili s postupem", "Vyluštili s řešéním", "Nevyluštili"]],
+			[["Šifra", "Vyluštili", "Vyluštili s nápovědou", "Vyluštili s postupem", "Vyluštili s řešením", "Nevyluštili"]],
 			$this->repo->hints(Game::current())
 		);
 	}

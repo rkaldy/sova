@@ -31,6 +31,7 @@ hint.text.howto;Postup k šifře %s: %s
 hint.text.solution;Řešení šifry %s: %s
 ccode.add.already;Toto céčko jste již zadali.
 ccode.add.success;Získali jste céčko. Aktuálně máte %s nevyužitých céček.
-imunity.success;Získali jste imunitu. Kdyby na vás při vyhlášení padlo organizování příštího ročníku, můžete ho odmítnout.
+imunity.available;Můžete si zakoupit imunitu za %s céček.
 imunity.already;Imunitu jste již dostali.
-imunity.not-enough-ccodes;Nemáte dostatek céček pro získání imunity.
+imunity.insufficient;Nemáte dostatek céček pro získání imunity.
+imunity.success;Získali jste imunitu. Kdyby na vás při vyhlášení padlo organizování příštího ročníku, můžete ho odmítnout.

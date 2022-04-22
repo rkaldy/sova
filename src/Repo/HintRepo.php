@@ -34,22 +34,19 @@ class HintRepo extends RepoBase {
 		return is_null($ret) ? self::NONE : $ret;
 	}
 
-	public function getUnusedHint(int $teamId, int $count = 1) {
-		return $this->db->aquery("SELECT * FROM hint WHERE team_id = ? AND type IS NULL LIMIT ?", $teamId, $count);
-	}
-
-	public function imunityApplied(int $teamId) {
-		return $this->db->equery("SELECT COUNT(*) FROM hint WHERE team_id = ? AND type = ?", $teamId, self::IMUNITY) != 0;
-	}
-
 	public function applyByPoints(int $teamId, int $cipherId, int $type) {
 		$this->db->execute("INSERT INTO hint (team_id, cipher_id, time, type) VALUES (?, ?, NOW(), ?)", [$teamId, $cipherId, $type]);
 	}
 
-	public function applyByCCodes(int $teamId, int $cipherId, int $type, int $price) {
+	public function applyByCCodes(int $teamId, ?int $cipherId, int $type, int $price) {
 		$ccodes = $this->db->aquery("SELECT ccode_id FROM hint WHERE team_id = ? AND type IS NULL LIMIT ?", $teamId, $price);
 		foreach ($ccodes as $ccode) {
 			$this->db->execute("UPDATE hint SET cipher_id = ?, time = NOW(), type = ? WHERE team_id = ? AND ccode_id = ?", [$cipherId, $type, $teamId, $ccode["ccode_id"]]);
 		}
 	}
+	
+	public function haveImunity(int $teamId) {
+		return $this->db->equery("SELECT COUNT(*) FROM hint WHERE team_id = ? AND type = ?", $teamId, self::IMUNITY) != 0;
+	}
+
 }

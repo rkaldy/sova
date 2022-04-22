@@ -33,12 +33,6 @@ $settings = [
 		"desc"	=> "Je-li zaškrtnuto, Sova po odeslání kódu šifry či stanoviště pošle zpátky i pořadí týmu na daném místě a celkově."
 	],
 	[
-		"var"	=> "deleteParallelHints",
-		"type"	=> BOOL,
-		"label"	=> "Rušit časové nápovědy na paralelních šifrách?",
-		"desc"	=> "Vyřešíte-li šifru, zruší se tím časové nápovědy na všech paralelních šifrách (tj. šifrách vedoucích na stejné stanoviště jako právě vyluštěná šifra)"
-	],
-	[
 		"var"	=> "locFinish",
 		"type"	=> ENUM,
 		"label"	=> "Cílové stanoviště",
@@ -103,6 +97,11 @@ $settings = [
 		"type"	=> TEXT,
 		"label"	=> "Cena řešení (v céčkách)",
 		"desc"  => "navíc k ceně postupu"
+	],
+	[
+		"var"	=> "imunityCCodes",
+		"type"	=> TEXT,
+		"label"	=> "Cena imunity (v céčkách)"
 	]
 ];
 
