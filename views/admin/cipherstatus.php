@@ -1,3 +1,7 @@
+<?php if (empty($progress)) { ?>
+<p>Žádný tým ještě nevyluštil šifru.</p>
+<?php } ?>
+
 <table id="progress">
 <?php for ($row = 0; $row < count($progress); $row += 4) { ?>
   <tr>

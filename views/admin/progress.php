@@ -1,3 +1,7 @@
+<?php if (empty($progress)) { ?>
+<p>Žádný tým není ve hře.</p>
+<?php } else { ?>
+
 <table id="progress">
 <?php for ($row = 0; $row < count($progress); $row += 4) { ?>
   <tr>
@@ -23,6 +27,8 @@
   </tr>
 <?php } ?>
 </table>
+
+<?php } ?>
 
 <script type="text/javascript">
 setTimeout(function() { window.location.reload(); }, 10000);

@@ -24,6 +24,9 @@ class Progress extends ModelBase {
 	public function locStatus() {
 		$locs = (new LocRepo())->listAsArray(Game::current());
 		$status = $this->repo->locStatus(Game::current());
+		if (empty($status)) {
+			return null;
+		}
 		$ret = [];
 		foreach ($locs as $id => $name) {
 			$teams = [];
@@ -50,7 +53,9 @@ class Progress extends ModelBase {
 			}
 			$current["teams"][] = ["name" => $cipher["team_name"], "time" => $cipher["time"], "recent" => $cipher["recent"], "hint_type" => $cipher["hint_type"]];
 		}
-		$ret[] = $current;
+		if ($current != null) {
+			$ret[] = $current;
+		}
 		return $ret;
 	}
 
