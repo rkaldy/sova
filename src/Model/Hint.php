@@ -81,7 +81,7 @@ class Hint extends ModelBase {
 			case HintRepo::HOWTO: $type = "postup"; $nextType = "řešení"; break;
 		}
 		if ($appliedHintType == HintRepo::NONE) {
-			return [true, [new Text("hint.apply.$unit", $nextType, $price)]];
+			return [true, [new Text("hint.apply.no-history", $cipherName), new Text("hint.apply.$unit", $nextType, $price)]];
 		} else {
 			return [true, [new Text("hint.apply.history", $cipherName, $type), new Text("hint.apply.$unit", $nextType, $price)]];
 		}

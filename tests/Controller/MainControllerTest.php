@@ -45,7 +45,7 @@ class MainControllerTest extends GameTestBase {
         $this->checkView($view, "Na šifru S4a jste se ještě nemohli dostat, protože jste nevyluštili žádnou předchozí šifru. ", 0, 0);
         
         $view = $this->controller->checkhint([], ["cipher" => "S1"]);
-        $this->checkView($view, "Nyní můžete zažádat o nápovědu. Protože nemáte dostatek céček, bude vás to stát 10 bodů. ", 0, 0);
+        $this->checkView($view, "Pro šifru S1 jste ještě žádnou nápovědu nedostali. Nyní můžete zažádat o nápovědu. Protože nemáte dostatek céček, bude vás to stát 10 bodů. ", 0, 0);
         $view = $this->controller->applyhint([], ["cipher" => "S1"]);
         $this->checkView($view, "Nápověda k šifře S1: Čárka tečka čárka, tak začíná Klárka", -10, 0);
         
@@ -76,7 +76,7 @@ class MainControllerTest extends GameTestBase {
         $this->checkView($view, "Šifru S1 jste již vyluštili. ", 10, 1);
 
         $view = $this->controller->checkhint([], ["cipher" => "S2"]);
-        $this->checkView($view, "Nyní můžete zažádat o nápovědu za 1 céček. ", 10, 1);
+        $this->checkView($view, "Pro šifru S2 jste ještě žádnou nápovědu nedostali. Nyní můžete zažádat o nápovědu za 1 céček. ", 10, 1);
         $view = $this->controller->applyhint([], ["cipher" => "S2"]);
         $this->checkView($view, "Nápověda k šifře S2: Krzyz", 10, 0);
     }

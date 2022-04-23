@@ -77,11 +77,11 @@ class HintTest extends GameTestBase {
 
 	function testCheckHint() {
 		$ret = $this->hint->check("S1");
-		$this->assertEquals([true, [new Text("hint.apply.points", "nápovědu", 10)]], $ret);
+		$this->assertEquals([true, [new Text("hint.apply.no-history", "S1"), new Text("hint.apply.points", "nápovědu", 10)]], $ret);
 		
 		$this->hint->addCCode(1);
 		$ret = $this->hint->check("S1");
-		$this->assertEquals([true, [new Text("hint.apply.ccodes", "nápovědu", 1)]], $ret);
+		$this->assertEquals([true, [new Text("hint.apply.no-history", "S1"), new Text("hint.apply.ccodes", "nápovědu", 1)]], $ret);
 	}
 
 	function testCheckHowto() {
