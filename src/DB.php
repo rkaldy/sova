@@ -35,7 +35,7 @@ class DB extends PDO {
 			$value = json_encode($value, JSON_UNESCAPED_UNICODE);
 			$type = PDO::PARAM_STR;
 		} else {
-			$type = preg_match("/^[0-9]+$/", $value) ? PDO::PARAM_INT : PDO::PARAM_STR;
+			$type = (preg_match("/^[1-9][0-9]*$/", $value) || $value == "0") ? PDO::PARAM_INT : PDO::PARAM_STR;
 		}
 		$stmt->bindValue($name, $value, $type);
 		$this->lastParams[] = $value;
