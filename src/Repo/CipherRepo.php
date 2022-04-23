@@ -75,7 +75,7 @@ class CipherRepo extends PointRepo {
 		try {
 			$this->db->execute("INSERT INTO point (game_id, name, points) VALUES (:game_id, :name, :points)", $cipher, true);
 			$cipher["point_id"] = $this->db->lastInsertId();
-			$this->db->execute("INSERT INTO cipher (point_id, name_int, activity, hint) VALUES (:point_id, :name_int, :activity, :hint)", $cipher, true);
+			$this->db->execute("INSERT INTO cipher (point_id, name_int, activity, hint, howto) VALUES (:point_id, :name_int, :activity, :hint, :howto)", $cipher, true);
 			$this->db->execute("INSERT INTO code (game_id, point_id, code) VALUES (:game_id, :point_id, :code)", $cipher, true);
 			$this->addPrevNextLocs($cipher);
 		} catch (DBException $ex) {
