@@ -11,6 +11,7 @@ if ($superuser) {
 		"ccodes" => "Céčka",
 		"texts" => "Texty",
 		"teams" => "Týmy",
+		"graph" => "Schéma",
 		"progress" => "Postup týmů",
 		"cipherstatus" => "Postup podle šifer",
 		"rank" => "Pořadí",
