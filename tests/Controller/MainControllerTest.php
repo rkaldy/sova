@@ -14,7 +14,7 @@ class MainControllerTest extends GameTestBase {
 
 		Settings::set("hintCCodes", 1);
 		Settings::set("howtoCCodes", 2);
-		Settings::set("solutionCCodes", 3);
+		Settings::set("solutionCCodes", 0);
 		Settings::set("hintPoints", 10);
 		Settings::set("howtoPoints", 20);
 		Settings::set("solutionPoints", 30);
@@ -62,7 +62,7 @@ class MainControllerTest extends GameTestBase {
         $this->checkView($view, "Postup k šifře S1: Použij morseovku", -10, 1);
 
         $view = $this->controller->checkhint([], ["cipher" => "S1"]);
-        $this->checkView($view, "Pro šifru S1 jste již dostali postup. Nyní můžete zažádat o řešení. Protože nemáte dostatek céček, bude vás to stát 30 bodů. ", -10, 1);
+        $this->checkView($view, "Pro šifru S1 jste již dostali postup. Nyní můžete zažádat o řešení za 30 bodů. ", -10, 1);
         $view = $this->controller->applyhint([], ["cipher" => "S1"]);
         $this->checkView($view, "Řešení šifry S1: ABERACE", -40, 1);
 

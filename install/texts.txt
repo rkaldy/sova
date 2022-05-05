@@ -25,7 +25,8 @@ hint.apply.solved;Šifru %s jste již vyluštili.
 hint.apply.already;Pro šifru %s jste již dostali řešení. Podívejte se do přehledu šifer.
 hint.apply.history;Pro šifru %s jste již dostali %s.
 hint.apply.ccodes;Nyní můžete zažádat o %s za %s céček.
-hint.apply.points;Nyní můžete zažádat o %s. Protože nemáte dostatek céček, bude vás to stát %s bodů.
+hint.apply.points;Nyní můžete zažádat o %s za %s bodů.
+hint.apply.points.no-ccode;Nyní můžete zažádat o %s. Protože nemáte dostatek céček, bude vás to stát %s bodů.
 hint.text.hint;Nápověda k šifře %s: %s
 hint.text.howto;Postup k šifře %s: %s
 hint.text.solution;Řešení šifry %s: %s
