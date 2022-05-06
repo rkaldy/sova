@@ -2,8 +2,7 @@
 
 <ul>
   <li><a href="stat?type=rank">Pořadí týmů</a></li>
-  <li><a href="stat?type=ciphers">Časy luštění</a></li>
-  <li><a href="stat?type=hints">Statistiky šifer</a></li>
+  <li><a href="stat?type=ciphers">Statistiky šifer</a></li>
   <li><a href="stat?type=ccodes">Céčka</a></li>
   <li><a href="stat?type=barchart">Barchart race</a> (zdrojové CSV)</li>
 </ul>

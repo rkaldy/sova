@@ -246,8 +246,8 @@ class CodeControllerTest extends GameTestBase {
 		$this->sendCode(3, "kalendar");
 		$this->sendCode(3, "salvej");
 		$this->assertEquals([
-			["name" => "Parta Nic", "points" => 185, "finish_time" => "-"],
 			["name" => "abpopa", "points" => 185, "finish_time" => "-"],
+			["name" => "Parta Nic", "points" => 185, "finish_time" => "-"],
 			["name" => "Redwool", "points" => 95, "finish_time" => "-"],
 		], self::stripTimes($this->progressRepo->rankTotal(1)));
 

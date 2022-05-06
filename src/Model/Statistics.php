@@ -16,28 +16,29 @@ class Statistics {
 
 	public function rank() {
 		return array_merge(
-			[["Tým", "Počet bodů", "Příchod do cíle", "Čas poslední vyřešené šifry/aktivity", "Poslední navštívené stanoviště", "Imunita?"]],
+			[["Tým", "Počet bodů", "Příchod do cíle", "Čas poslední vyřešené šifry/aktivity", "Imunita?"]],
 			(new ProgressRepo())->rankTotal(Game::current())
 		);
 	}
 
 	public function ciphers() {
-		return array_merge(
-			[["Šifra", "Tým", "Doba luštění"]],
-			$this->repo->ciphers(Game::current())
-		);
-	}
-
-	public function hints() {
-		return array_merge(
-			[["Šifra", "Vyluštili", "Vyluštili s nápovědou", "Vyluštili s postupem", "Vyluštili s řešením", "Nevyluštili"]],
-			$this->repo->hints(Game::current())
-		);
+		$ciphers = $this->repo->ciphers(Game::current());
+		$hints = $this->repo->hints(Game::current());
+		$ret = [["Šifra", "Vyluštili", "Vyluštili s nápovědou", "Vyluštili s postupem", "Vyluštili s řešením", "Nevyluštili", "Nejrychlejší tým", "Nejrychejší čas"]];
+		$cid = null;
+		foreach ($ciphers as $cipher) {
+			if ($cipher["point_id"] != $cid) {
+				$cid = $cipher["point_id"];
+				$hint = $hints[$cid];
+				$ret[] = array_merge($hints[$cid], [$cipher["team_name"], $cipher["solve_time"]]);
+			}
+		}
+		return $ret;
 	}
 
 	public function ccodes() {
 		return array_merge(
-			[["Tým", "Počet céček"]],
+			[["Tým", "Počet céček", "Čas nalezení posledního céčka"]],
 			$this->repo->ccodes(Game::current())
 		);
 	}
@@ -52,7 +53,10 @@ class Statistics {
 		}
 		$progress = (new ProgressRepo())->cipherProgress(Game::current());
 		$prog = $progress->fetch(PDO::FETCH_ASSOC);
-		for ($t = Settings::get("gameStartTimestamp") + 3600*3; $t < Settings::get("gameEndTimestamp"); $t += 60) {
+
+		$from = \DateTime::createFromFormat("Y-m-d H:i:s", Settings::get("gameStart"), new \DateTimeZone("Europe/Prague"))->getTimestamp();
+		$to = \DateTime::createFromFormat("Y-m-d H:i:s", Settings::get("gameEnd"), new \DateTimeZone("Europe/Prague"))->getTimestamp();
+		for ($t = $from; $t <= $to; $t += 60) {
 			while ($prog != null && $prog["time"] <= $t) {
 				$solved[$prog["team_id"]]++;
 				$prog = $progress->fetch(PDO::FETCH_ASSOC);
@@ -63,9 +67,6 @@ class Statistics {
 			}
 			if ($prog == null) {
 				break;
-			}
-			if ($t >= strtotime("2022-01-22 00:00:00") && $t < strtotime("2022-01-22 07:00:00")) {
-				$t += 60*9;
 			}
 		}
 		return $ret;

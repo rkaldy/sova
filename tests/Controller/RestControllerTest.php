@@ -124,8 +124,7 @@ class RestControllerTest extends TestBase {
 	}
 
 	function testFKViolation() {
-		$_SESSION["team_id"] = 99;
-		list($status, $data) = $this->rest("POST", "progress", ["point_id" => 99]);
+		list($status, $data) = $this->rest("POST", "message", ["team_id" => 99, "direction" => 0, "text" => "test"]);
 		$this->assertEquals(422, $status);
 		$this->assertEquals(1452, $data["code"]);
 	}

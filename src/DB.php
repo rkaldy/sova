@@ -121,7 +121,7 @@ class DB extends PDO {
 		$ret = [];
 		$stmt = self::execute($sql, $params);
 		while ($row = $stmt->fetch(PDO::FETCH_NUM)) {
-			$ret[row[0]] = array_slice($row, 1);
+			$ret[$row[0]] = array_slice($row, 1);
 		}
 		return $ret;
 	}

@@ -44,7 +44,7 @@ class ProgressRepo extends RepoBase {
 			SELECT 
 				team.name, 
 				team.points,
-                IFNULL(DATE_FORMAT(finish.time, '%H:%i:%s'), '-') AS finish_time, 
+				IFNULL(DATE_FORMAT(finish.time, '%H:%i:%s'), '-') AS finish_time,
 				IFNULL(DATE_FORMAT(last_cipher.time, '%H:%i:%s'), '-') AS last_cipher_time,
 				imunity.team_id IS NOT NULL AS imunity
             FROM team
@@ -67,7 +67,7 @@ class ProgressRepo extends RepoBase {
 				FROM hint
 				WHERE type = 4
 			) imunity ON imunity.team_id = team.team_id
-            ORDER BY finish_time = '-', points DESC, -finish.time DESC, last_cipher.time, team.name
+            ORDER BY ISNULL(finish.time), points DESC, -finish.time DESC, last_cipher.time, team.name
         ", ["game_id" => $gameId]);
 	}
 
