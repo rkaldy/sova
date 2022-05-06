@@ -68,4 +68,26 @@ class StatisticsRepo extends RepoBase {
 			ORDER BY count DESC, last_time
 		", $gameId);
 	}
+
+	public function barchartRace(int $gameId) {
+		return $this->db->query("
+				SELECT team_id, UNIX_TIMESTAMP(time) AS time, point.points
+				FROM progress
+				NATURAL JOIN point
+				WHERE game_id = :gameId AND points != 0
+			UNION ALL
+				SELECT team_id, UNIX_TIMESTAMP(time) AS time,
+					CASE
+						WHEN hint.type = 1 THEN -hintPoints
+						WHEN hint.type = 2 THEN -howtoPoints
+						WHEN hint.type = 3 THEN -solutionPoints
+				END AS points
+				FROM hint
+				NATURAL JOIN team
+				JOIN settings ON settings.game_id = :gameId
+				WHERE team.game_id = :gameId AND hint.ccode_id IS NULL
+			ORDER BY time
+		", ["gameId" => $gameId]);
+	}
+
 }

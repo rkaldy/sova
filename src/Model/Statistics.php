@@ -3,7 +3,9 @@ namespace Sova\Model;
 
 use Sova\Repo\StatisticsRepo;
 use Sova\Repo\ProgressRepo;
-use \PDO;
+use DateTime;
+use DateTimeZone;
+use PDO;
 
 
 class Statistics {
@@ -44,26 +46,26 @@ class Statistics {
 	}
 
 	public function barchart() {
-		$solved = [];
+		$points = [];
 		$ret = [];
 		$ret[0] = [""];
 		foreach ((new Team())->list() as $team) {
-			$solved[$team["team_id"]] = 0;
 			$ret[$team["team_id"]] = [$team["name"]];
+			$points[$team["team_id"]] = 0;
 		}
-		$progress = (new ProgressRepo())->cipherProgress(Game::current());
+		$progress = $this->repo->barchartRace(Game::current());
 		$prog = $progress->fetch(PDO::FETCH_ASSOC);
 
-		$from = \DateTime::createFromFormat("Y-m-d H:i:s", Settings::get("gameStart"), new \DateTimeZone("Europe/Prague"))->getTimestamp();
-		$to = \DateTime::createFromFormat("Y-m-d H:i:s", Settings::get("gameEnd"), new \DateTimeZone("Europe/Prague"))->getTimestamp();
+		$from = DateTime::createFromFormat("Y-m-d H:i:s", Settings::get("gameStart"), new DateTimeZone("Europe/Prague"))->getTimestamp();
+		$to = DateTime::createFromFormat("Y-m-d H:i:s", Settings::get("gameEnd"), new DateTimeZone("Europe/Prague"))->getTimestamp();
 		for ($t = $from; $t <= $to; $t += 60) {
 			while ($prog != null && $prog["time"] <= $t) {
-				$solved[$prog["team_id"]]++;
+				$points[$prog["team_id"]] += $prog["points"];
 				$prog = $progress->fetch(PDO::FETCH_ASSOC);
 			}
 			$ret[0][] = date("H:i", $t);
-			foreach (array_keys($solved) as $teamId) {
-				$ret[$teamId][] = $solved[$teamId];
+			foreach (array_keys($points) as $teamId) {
+				$ret[$teamId][] = $points[$teamId];
 			}
 			if ($prog == null) {
 				break;
