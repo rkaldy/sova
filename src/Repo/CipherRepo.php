@@ -57,6 +57,20 @@ class CipherRepo extends PointRepo {
 	}
 
 
+	function listAsArray(int $gameId) {
+		return $this->db->dquery("
+            SELECT point.point_id, point.name
+			FROM cipher
+			NATURAL JOIN point
+            LEFT JOIN step ON step.to_point_id = cipher.point_id
+			LEFT JOIN loc ON loc.point_id = step.from_point_id
+			WHERE point.game_id = ?
+            GROUP BY cipher.point_id
+            ORDER BY MIN(loc.order_id), point.name
+		", $gameId);
+	}
+
+
 	protected function addPrevNextLocs($cipher) {
 		$this->db->execute("DELETE FROM step WHERE from_point_id = :point_id OR to_point_id = :point_id", $cipher);
 		if (isset($cipher["prev"])) {

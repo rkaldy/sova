@@ -19,7 +19,7 @@
           else if ($team["hint_type"] == 1) echo ' class="withhint"';
           else if ($team["hint_type"] == 2) echo ' class="withhint_absolute"';
         ?>>
-          <th><?php echo $team["name"] ?></th>
+          <th><?php echo $team["team_name"] ?></th>
           <td><?php echo $team["time"] ?></td>
         </tr>
       <?php } ?>

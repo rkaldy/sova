@@ -41,7 +41,7 @@ class ProgressRepo extends RepoBase {
 
 	public function rankTotal(int $gameId): array {
 		return $this->db->aquery("
-            SELECT 
+			SELECT 
 				team.name, 
 				team.points,
                 IFNULL(DATE_FORMAT(finish.time, '%H:%i:%s'), '-') AS finish_time, 
@@ -67,7 +67,7 @@ class ProgressRepo extends RepoBase {
 				FROM hint
 				WHERE type = 4
 			) imunity ON imunity.team_id = team.team_id
-            ORDER BY points DESC, -finish.time DESC, last_cipher.time, team.name
+            ORDER BY finish_time = '-', points DESC, -finish.time DESC, last_cipher.time, team.name
         ", ["game_id" => $gameId]);
 	}
 
@@ -108,21 +108,21 @@ class ProgressRepo extends RepoBase {
                 WHERE game_id = :game_id
                 GROUP BY team_id
             ) last
-            ORDER BY point_id, time
+            ORDER BY point_id, progress.time
         ", ["game_id" => $gameId]);
     }
 
 	public function cipherStatus(int $gameId) {
 		return $this->db->aquery("
-			SELECT point.point_id, point.name, team.name AS team_name, DATE_FORMAT(progress.time, '%H:%i:%s') AS time, progress.time >=DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL 1 MINUTE) AS recent, IFNULL(MAX(hint.type), 0) AS hint_type
-            FROM progress
-            JOIN point ON point.point_id = progress.point_id
-			JOIN cipher ON cipher.point_id = point.point_id
+			SELECT point.point_id, team.name AS team_name, DATE_FORMAT(progress.time, '%H:%i:%s') AS time, progress.time >=DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL 1 MINUTE) AS recent, IFNULL(MAX(hint.type), 0) AS hint_type
+			FROM point
+			NATURAL JOIN cipher
+			JOIN progress ON progress.point_id = point.point_id
             JOIN team ON team.team_id = progress.team_id
 			LEFT JOIN hint ON hint.team_id = progress.team_id AND hint.cipher_id = progress.point_id
             WHERE point.game_id = ?
-			GROUP BY point.point_id, progress.team_id
-	        ORDER BY point.point_id, time
+			GROUP BY progress.point_id, progress.team_id
+	        ORDER BY progress.point_id, progress.time
 		", $gameId);
 	}
 }
