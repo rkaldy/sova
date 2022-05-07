@@ -66,6 +66,10 @@ class Progress extends ModelBase {
 	}
 
 
+	public static function getFakeTimeOffset() {
+		return self::$fakeTimeOffset;
+	}
+
 	public static function addFakeTime($minutes) {
 		self::$fakeTimeOffset += $minutes;
 	}

@@ -102,11 +102,12 @@ class Hint extends ModelBase {
 		list($price, $unit) = $this->price($type);
 		$teamId = Team::current();
 
+		$timeOffset = (new Progress())->getFakeTimeOffset();
 		if ($unit == "ccodes") {
-			$this->repo->applyByCCodes($teamId, $cipher["point_id"], $type, $price);
+			$this->repo->applyByCCodes($teamId, $cipher["point_id"], $type, $price, $timeOffset);
 		} else {
 			(new TeamRepo())->addPoints($teamId, -$price);
-			$this->repo->applyByPoints($teamId, $cipher["point_id"], $type);
+			$this->repo->applyByPoints($teamId, $cipher["point_id"], $type, $timeOffset);
 		}
 
 		switch ($type) {
