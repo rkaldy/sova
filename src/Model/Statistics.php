@@ -2,6 +2,7 @@
 namespace Sova\Model;
 
 use Sova\Repo\StatisticsRepo;
+use Sova\Repo\CipherRepo;
 use Sova\Repo\ProgressRepo;
 use DateTime;
 use DateTimeZone;
@@ -24,15 +25,48 @@ class Statistics {
 	}
 
 	public function ciphers() {
-		$ciphers = $this->repo->ciphers(Game::current());
-		$hints = $this->repo->hints(Game::current());
-		$ret = [["Šifra", "Vyluštili", "Vyluštili s nápovědou", "Vyluštili s postupem", "Vyluštili s řešením", "Nevyluštili", "Nejrychlejší tým", "Nejrychejší čas"]];
-		$cid = null;
-		foreach ($ciphers as $cipher) {
-			if ($cipher["point_id"] != $cid) {
-				$cid = $cipher["point_id"];
-				$hint = $hints[$cid];
-				$ret[] = array_merge($hints[$cid], [$cipher["team_name"], $cipher["solve_time"]]);
+		$ret = [];
+		for ($activity = 0; $activity <= 1; $activity++) {
+			$ciphers = (new CipherRepo())->listAsArray(Game::current(), $activity);
+			$stat = $this->repo->ciphers(Game::current(), $activity);
+			if ($activity == 0) {
+				$ret[] = ["Šifra", "Vyluštili", "Vyluštili s nápovědou", "Vyluštili s postupem", "Vyluštili s řešením", "Nevyluštili"];
+			} else {
+				$ret[] = [];
+				$ret[] = ["Aktivita", "Dokončili", "", "", "", "Nedokončili"];
+			}
+			foreach ($ciphers as $cid => $name) {
+				$ret[] = array_merge([$name], array_values($stat[$cid]));
+			}
+		}
+		return $ret;
+	}
+
+	public function fastestsolved() {
+		$ret = [];
+		for ($activity = 0; $activity <= 1; $activity++) {
+			$ciphers = (new CipherRepo())->listAsArray(Game::current(), $activity);
+			$stat = $this->repo->fastestSolved(Game::current(), $activity);
+			$map = [];
+			$cid = null;
+			while ($row = $stat->fetch(PDO::FETCH_ASSOC)) {
+				if ($row["point_id"] != $cid) {
+					$cid = $row["point_id"];
+					$map[$cid] = [$row["team_name"], $row["solve_time"]];
+				}
+			}
+			if ($activity == 0) {
+				$ret[] = ["Šifra", "Nejrychlejší tým", "Čas vyluštění"];
+			} else {
+				$ret[] = [];
+				$ret[] = ["Aktivita", "Nejrychlejší tým", "Čas dokončení"];
+			}
+			foreach ($ciphers as $cid => $name) {
+				if (isset($map[$cid])) {
+					$ret[] = array_merge([$name], array_values($map[$cid]));
+				} else {
+					$ret[] = [$name, "-", "-"];
+				}
 			}
 		}
 		return $ret;
@@ -40,7 +74,7 @@ class Statistics {
 
 	public function ccodes() {
 		return array_merge(
-			[["Tým", "Počet céček", "Čas nalezení posledního céčka"]],
+			[["Tým", "Počet céček"]],
 			$this->repo->ccodes(Game::current())
 		);
 	}
