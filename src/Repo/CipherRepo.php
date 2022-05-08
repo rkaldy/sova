@@ -57,17 +57,17 @@ class CipherRepo extends PointRepo {
 	}
 
 
-	function listAsArray(int $gameId) {
+	function listAsArray(int $gameId, $activity = null) {
 		return $this->db->dquery("
-            SELECT point.point_id, point.name
+            SELECT point.point_id, CONCAT(point.name, ' / ', cipher.name_int) AS name
 			FROM cipher
 			NATURAL JOIN point
             LEFT JOIN step ON step.to_point_id = cipher.point_id
 			LEFT JOIN loc ON loc.point_id = step.from_point_id
-			WHERE point.game_id = ?
+			WHERE point.game_id = ?" . (isset($activity) ? " AND cipher.activity = ?" : "") . "
             GROUP BY cipher.point_id
             ORDER BY MIN(loc.order_id), point.name
-		", $gameId);
+		", isset($activity) ? [$gameId, $activity] : [$gameId]);
 	}
 
 
