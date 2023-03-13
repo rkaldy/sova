@@ -66,6 +66,7 @@ class ProgressRepo extends RepoBase {
 				FROM hint
 				WHERE type = 4
 			) imunity ON imunity.team_id = team.team_id
+            WHERE game_id = :game_id
             ORDER BY ISNULL(finish.time), points DESC, -finish.time DESC, last_cipher.time, team.name
         ", ["game_id" => $gameId]);
 	}
