@@ -49,7 +49,7 @@ class MainControllerTest extends GameTestBase {
         $view = $this->controller->applyhint([], ["cipher" => "S1"]);
         $this->checkView($view, "Nápověda k šifře S1: Čárka tečka čárka, tak začíná Klárka", -10, 0);
         
-        $view = $this->controller->code([], ["code" => "divizna"]);
+		$view = $this->controller->code([], ["code" => "divizna"]);
         $this->assertEquals("Získali jste céčko. Aktuálně máte 1 nevyužitých céček.", $view->fields["response"][0]);
         $view = $this->controller->code([], ["code" => "vcela"]);
         $this->assertEquals("Získali jste céčko. Aktuálně máte 2 nevyužitých céček.", $view->fields["response"][0]);

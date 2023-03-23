@@ -140,7 +140,8 @@ CREATE TABLE `text` (
 
 CREATE TABLE ccode (
   ccode_id int(11) NOT NULL,
-  game_id int(11) NOT NULL
+  game_id int(11) NOT NULL,
+  cond_loc_id int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
 
 CREATE TABLE wordlist (
@@ -267,7 +268,8 @@ ALTER TABLE `text`
   ADD CONSTRAINT text_ibfk_1 FOREIGN KEY (game_id) REFERENCES game (game_id) ON DELETE CASCADE;
 
 ALTER TABLE ccode
-  ADD CONSTRAINT ccode_ibfk_1 FOREIGN KEY (game_id) REFERENCES game (game_id) ON DELETE CASCADE;
+  ADD CONSTRAINT ccode_ibfk_1 FOREIGN KEY (game_id) REFERENCES game (game_id) ON DELETE CASCADE,
+  ADD CONSTRAINT ccode_ibfk_2 FOREIGN KEY (cond_loc_id) REFERENCES loc (point_id) ON DELETE CASCADE;
 SET FOREIGN_KEY_CHECKS=1;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

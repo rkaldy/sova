@@ -8,21 +8,6 @@ use Sova\Repo\ProgressRepo;
 
 class Hint extends ModelBase {
 
-	public function addCCode(int $ccodeId) {
-		$hint = ["team_id" => Team::current(), "ccode_id" => $ccodeId];
-		if (!$this->repo->addCCode($hint)) {
-			return new Text("ccode.add.already");
-		} 
-		$count = $this->repo->getUnusedCCodeCount($hint["team_id"]);
-		return new Text("ccode.add.success", $count);
-	}
-
-	
-	public function unusedCCodeCount() {
-		return $this->repo->getUnusedCCodeCount(Team::current());
-	}
-
-
 	protected function price(int $type) {
 		switch ($type) {
 			case HintRepo::HINT: $typeStr = "hint"; break;

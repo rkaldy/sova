@@ -11,6 +11,7 @@ use Sova\Model\Game;
 use Sova\Model\Code;
 use Sova\Model\Cipher;
 use Sova\Model\Hint;
+use Sova\Model\Ccode;
 use Sova\Model\Message;
 use Sova\Model\Progress;
 use Sova\Model\Text;
@@ -89,9 +90,8 @@ class MainController {
 
 
 	public function hints($params, $data) {
-		$hint = new Hint();
-		$ccodeCount = $hint->unusedCCodeCount();
-		list($imunityAvailable, $imunityMsg) = $hint->imunityStatus($ccodeCount);
+		$ccodeCount = (new Ccode())->unusedCount();
+		list($imunityAvailable, $imunityMsg) = (new Hint())->imunityStatus($ccodeCount);
 		return new View("main/hints", ["points" => (new Team())->points(), "ccodes" => $ccodeCount, "imunityAvailable" => $imunityAvailable, "imunityMsg" => $imunityMsg->format()]);
 	}
 
@@ -114,7 +114,7 @@ class MainController {
 		$message->sendToTeam($response);
 
 		if ($ok) {
-			return new View("main/applyhint", ["response" => $response, "cipher" => $cipherName, "points" => (new Team())->points(), "ccodes" => $hint->unusedCCodeCount()]);
+			return new View("main/applyhint", ["response" => $response, "cipher" => $cipherName, "points" => (new Team())->points(), "ccodes" => (new Ccode())->unusedCount()]);
 		} else {
 			return new Redirect("hints", $response);
 		}

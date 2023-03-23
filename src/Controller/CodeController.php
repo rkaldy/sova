@@ -2,6 +2,7 @@
 namespace Sova\Controller;
 
 use Sova\Model\Code;
+use Sova\Model\Ccode;
 use Sova\Model\Loc;
 use Sova\Model\Cipher;
 use Sova\Model\Hint;
@@ -30,8 +31,7 @@ class CodeController {
 			$response = new Text("code.unknown", $code);
 		} 
 		else if (isset($entity["ccode_id"])) {
-			$hint = new Hint();
-			$response = $hint->addCCode($entity["ccode_id"]);
+			$response = (new Ccode())->add($entity["ccode_id"]);
 		} 
 		else if (isset($entity["point_id"])) {
 			$id = $entity["point_id"];

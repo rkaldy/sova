@@ -9,13 +9,16 @@ class CcodeCrudTest extends CrudTestBase {
 		parent::setUp();
 		$this->db->execute("INSERT INTO ccode (game_id, ccode_id) VALUES (1, 1)");
 		$this->db->execute("INSERT INTO code (game_id, ccode_id, code) VALUES (1, 1, 'BUBEN')");
+		$this->db->execute("INSERT INTO point (point_id, game_id, name) VALUES (1, 1, '1a')");
+		$this->db->execute("INSERT INTO point (point_id, game_id, name) VALUES (2, 1, '1b')");
+		$this->db->execute("INSERT INTO loc (point_id) VALUES (1), (2)");
 	}
 
 	function testCreate() {
-		$ccode = $this->create(array("code" => "divizna"));
+		$ccode = $this->create(array("code" => "divizna", "cond_loc_id" => 2));
 		$this->assertEquals(array(
-			array("ccode_id" => 1, "code" => "BUBEN"),
-			array("ccode_id" => $ccode["ccode_id"], "code" => "DIVIZNA")
+			array("ccode_id" => 1, "code" => "BUBEN", "cond_loc_id" => null),
+			array("ccode_id" => $ccode["ccode_id"], "code" => "DIVIZNA", "cond_loc_id" => 2)
 		), $this->list());
 	}
 
@@ -27,7 +30,7 @@ class CcodeCrudTest extends CrudTestBase {
 			$this->assertEquals(1062, $ex->getCode());
 		}
 		$this->assertEquals(array(
-			array("ccode_id" => 1, "code" => "BUBEN")
+			array("ccode_id" => 1, "code" => "BUBEN", "cond_loc_id" => null)
 		), $this->list());
 	}
 
@@ -39,9 +42,10 @@ class CcodeCrudTest extends CrudTestBase {
 	function testUpdate() {
 		$ccode = $this->list()[0];
 		$ccode["code"] = "divizna ";
+		$ccode["cond_loc_id"] = 2;
 		$this->update($ccode);
 		$this->assertEquals(array(
-			array("ccode_id" => 1, "code" => "DIVIZNA")
+			array("ccode_id" => 1, "code" => "DIVIZNA", "cond_loc_id" => 2)
 		), $this->list());
 	}
 
