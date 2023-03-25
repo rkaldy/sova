@@ -105,8 +105,10 @@ class Hint extends ModelBase {
 
 	public function imunityStatus(int $ccodeCount) {
 		$price = Settings::get("imunityCCodes");
-        $available = false;
-        if ($this->repo->haveImunity(Team::current())) {
+		$available = false;
+		if ($price == 0) {
+			$ret = new Text("");
+        } else if ($this->repo->haveImunity(Team::current())) {
             $ret = new Text("imunity.already");
         } else if ($ccodeCount < $price) {
             $ret = new Text("imunity.insufficient");
