@@ -16,7 +16,7 @@ if (!isset($page)) $page = 1;
 
 <?php foreach($messages as $msg) { ?>
   <div class="message <?php echo $msg["direction"] == Message::FROM_TEAM ? "from-team" : "to-team" ?>">
-	<span class="dir"><?php echo $msg["direction"] == Message::FROM_TEAM ? "😎" : "🦉" ?></span>&nbsp;
+	<span class="dir"><?php echo $msg["direction"] == Message::FROM_TEAM ? "😎" : "🚀" ?></span>&nbsp;
 	<span class="time"><?php echo $msg["time"] ?></span><br>
     <span class="text"><?php echo $msg["text"]; ?></span>
   </div>

@@ -9,7 +9,8 @@ body {
 	font-family: sans-serif;
 	font-size: 11pt;
 	font-weight: lighter;
-	color: #808080;
+	color: #d0d0d0;
+	background-color: black;
 }
 
 b {
@@ -17,7 +18,7 @@ b {
 }
 
 a {
-	color: #306080;
+	color: #60a0d0;
 }
 
 .clear {
@@ -29,8 +30,8 @@ a {
 /* Header */
 
 header {
-	border: solid 1px #203060;
-	background-color: #203060;
+	border: solid 1px #202020;
+	background-color: #202020;
 	color: white;
 	border-radius: 0ex 0ex 1.5ex 1.5ex;
 	padding: 0.3ex;
@@ -84,7 +85,7 @@ h1 {
 }
 
 #version {
-	color: #e0e0ff;
+	color: #c0c0c0;
 }
 
 #section {
@@ -99,7 +100,7 @@ h1 {
 /* Navigation */
 
 nav {
-	background-color: #306080;
+	background-color: #404040;
 	border-radius: 1ex;
 	color: white;
 	padding: 1ex 2ex;
@@ -117,7 +118,7 @@ nav a {
 }
 
 nav a.selected {
-	background-color: #a040a0;
+	background-color: #587088;
 }
 
 
@@ -133,7 +134,8 @@ h2 {
 }
 
 #flash {
-	color: #a07070;
+	color: #f08080;
+	font-weight: bold;
 }
 
 
@@ -148,8 +150,10 @@ label {
 }
 
 input, textarea {
-	border: solid 1px rgb(0, 0, 0, 0.15);
+	border: solid 1px rgb(224, 224, 224, 0.15);
 	border-radius: 4px;
+	color: white;
+	background-color: #404040;
 	font-family: sans-serif;
 	font-size: 11pt;
 	font-weight: lighter;
@@ -160,7 +164,7 @@ input[type="submit"] {
 	padding: 0.6ex;
 	border-radius: 0.6ex;
 	font-weight: normal;
-	color: black;
+	color: white;
 }
 
 
@@ -177,7 +181,7 @@ thead  {
 	color: white;
 }
 
-.alt-row, .jsgrid-alt-row {	background-color: #e0e0e0; }
+.alt-row, .jsgrid-alt-row {	background-color: #202020; }
 
 
 td {
@@ -195,15 +199,15 @@ td {
 a.pgbutton {
 	color: black;
 	text-decoration: none;
-	background-color: #e0e0e0;
+	background-color: #b0b0b0;
 }
 
 a.pgbutton:hover {
-	background-color: #e8e8e8;
+	background-color: #d0d0d0;
 }
 
 span.pgbutton {
-	background: #808080;
+	background: #404040;
 	color: white;
 }
 
@@ -217,8 +221,8 @@ span.pgbutton {
 	line-height: 1.5;
 }
 
-.to-team { background-color: white !important; }
-.from-team { background-color: #e0e0e0 !important; }
+.to-team { background-color: black !important; }
+.from-team { background-color: #303030 !important; }
 
 .message .time {
 	font-weight: bold;
@@ -236,12 +240,12 @@ span.pgbutton {
 	width: 20em;
 	height: 5em;
 	background-color: white;
-	border: solid 3px #003d5b;
+	border: solid 3px #606060;
 	display: none;
 }
 
 #notif-title {
-	background-color: #003d5b;
+	background-color: #606060;
 	color: white;
 	font-weight: bold;
 	padding: 0.1ex;

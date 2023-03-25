@@ -35,8 +35,8 @@ if ($superuser) {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jsgrid/1.5.3/jsgrid.min.css">
 <?php } ?>
     <link rel="stylesheet" href="../static/selectpure.css">
-    <link rel="stylesheet" href="../static/sova.css">
-    <link rel="stylesheet" href="../static/admin.css">
+    <link rel="stylesheet" href="../static/sova.css<?php if (DEVELOPMENT) { echo "?v=".time(); } ?>">
+    <link rel="stylesheet" href="../static/admin.css<?php if (DEVELOPMENT) { echo "?v=".time(); } ?>">
     <link rel="icon" href="../static/favicon.png" sizes="32x32" type="image/png">
   </head>
   <body>
@@ -63,11 +63,11 @@ if ($superuser) {
     <header>
       <a href=".">
         <div id="logo">
-          <img src="../static/owl.png" height="30">
+          <img src="../static/nostromo.png" height="30">
         </div>
       </a>
       <div id="title">
-        <h1>SOVA <span id="version">2.0</span> <span id="section">admin</span></h1>
+        <h1>MATKA <span id="section">admin</span></h1>
       </div>
       <div id="user"><?php 
 	    if ($superuser) {

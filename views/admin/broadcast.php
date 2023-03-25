@@ -18,7 +18,7 @@
       </tbody>
 	</table>
   </div>
-  <div class="left">
+  <div class="left" style="padding-left: 2em">
   <h3>Zpráva</h3>
   <p><textarea rows="4" cols="80" name="message"></textarea></p>
   <p><input type="submit" value="Rozeslat"></p>

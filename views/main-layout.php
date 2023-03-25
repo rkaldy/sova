@@ -18,7 +18,7 @@ if (isset($team)) {
   <head>
     <title>Sova 2.0</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="static/sova.css">
+	<link rel="stylesheet" href="static/sova.css<?php if (DEVELOPMENT) { echo "?v=".time(); } ?>">
     <link rel="stylesheet" href="static/mobile.css">
 	<link rel="icon" href="static/favicon.png" sizes="32x32" type="image/png">
   </head>
@@ -28,7 +28,7 @@ if (isset($team)) {
 
     <header>
       <div id="logo">
-        <img src="static/owl.png">
+        <img src="static/nostromo.png">
       </div>
 	  <div id="menubtn" <?php if (!isset($team)) { echo 'style="display:none"'; } ?>>
         <img src="static/menu.png">
@@ -39,7 +39,7 @@ if (isset($team)) {
 if (isset($team)) {
     echo '<span id="version">'.$game.'</span>';
 } else {
-    echo 'SOVA <span id="version">2.0</span>';
+    echo 'MATKA';
 }
 ?>
         </h1>

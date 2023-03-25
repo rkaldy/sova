@@ -41,7 +41,7 @@ $(function() {
 				height: height + "px",
 				physics: { enabled: true, wind: { x: 1, y: 0 }},
 				nodes: { shape: "box", margin: 15 },
-				edges: { arrows: "to", color: "#000000", smooth: false, length: 100 }
+				edges: { arrows: "to", color: "#a0a0a0", smooth: false, length: 100 }
 			}
 		);
 	});
