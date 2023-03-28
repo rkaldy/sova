@@ -16,7 +16,7 @@ if (isset($team)) {
 <!doctype html>
 <html lang="cs">
   <head>
-    <title>Sova 2.0</title>
+    <title>Matka</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="static/sova.css<?php if (DEVELOPMENT) { echo "?v=".time(); } ?>">
     <link rel="stylesheet" href="static/mobile.css">

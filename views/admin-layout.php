@@ -26,7 +26,7 @@ if ($superuser) {
 <!doctype html>
 <html lang="cs">
   <head>
-    <title>Sova 2.0 | admin</title>
+    <title>Matka | admin</title>
 <?php if (DEVELOPMENT) { ?>
     <link rel="stylesheet" href="../node_modules/jquery-datetimepicker/jquery.datetimepicker.css">
     <link rel="stylesheet" href="../node_modules/jsgrid/dist/jsgrid.css">

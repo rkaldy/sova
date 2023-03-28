@@ -43,13 +43,15 @@ textarea { 	font-weight: normal; }
 
 #time {
 	width: 100%;
-	font-size: 9pt;
+	font-size: 7pt;
+	text-align: right;
 	float: none;
+	clear: both;
 	padding: 0.4ex 0ex;
 }
 
 #time small {
-	font-size: 9pt;
+	font-size: 7pt;
 }
 
 #menubtn {
