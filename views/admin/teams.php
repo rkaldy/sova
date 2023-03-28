@@ -12,11 +12,11 @@ $(function() {
 			{ name: "phone", title: "Telefon", type: "text", width: "15ex" },
 			{ name: "email", title: "Email", type: "text", width: "30ex" },
 			{ name: "members", title: "Členové", type: "array", width: "40ex", validate: "required" },
-			{ name: "accomodation", title: "Ubytování", type: "checkbox", width: "10ex" },
+			{ name: "accomodation", title: "Ubytování", type: "checkbox", width: "15ex" },
 			{ name: "tshirt", title: "Triček", type: "text", width: "10ex" },
 			{ name: "fee", title: "Platba", type: "text", width: "10ex", readOnly: true},		
 			{ name: "paid", title: "Zaplatil?", type: "checkbox", width: "10ex" },
-			{ name: "remarks", title: "Poznámky", type: "text", width: "20ex", readOnly: true },
+			{ name: "remarks", title: "Poznámky", type: "text", width: "40ex", readOnly: true },
 			{ type: "control", width: "10ex" }
 		]
 	});

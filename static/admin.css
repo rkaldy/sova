@@ -5,7 +5,7 @@
 	text-align: right;
 	margin: 0.2ex 2ex;
 	font-size: 15pt;
-	font-weight: lighter;
+	font-weight: normal;
 }
 
 #gentime {
@@ -18,7 +18,7 @@
 
 h3 {
 	font-size: 15pt;
-	font-weight: lighter;
+	font-weight: normal;
 	margin: 1.5ex 0ex 0.5ex 0ex;
 }
 
