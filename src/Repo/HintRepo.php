@@ -10,7 +10,6 @@ class HintRepo extends RepoBase {
     public const HINT = 1;
 	public const HOWTO = 2;
 	public const SOLUTION = 3;
-    public const IMUNITY = 4;
 
 
 	public function addCCode(array $hint) {
@@ -44,9 +43,4 @@ class HintRepo extends RepoBase {
 			$this->db->execute("UPDATE hint SET cipher_id = ?, time = DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL ? MINUTE), type = ? WHERE team_id = ? AND ccode_id = ?", [$cipherId, $timeOffset, $type, $teamId, $ccode["ccode_id"]]);
 		}
 	}
-	
-	public function haveImunity(int $teamId) {
-		return $this->db->equery("SELECT COUNT(*) FROM hint WHERE team_id = ? AND type = ?", $teamId, self::IMUNITY) != 0;
-	}
-
 }

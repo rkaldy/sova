@@ -21,7 +21,6 @@ class HintTest extends GameTestBase {
 		Settings::set("hintPoints", 10);
 		Settings::set("howtoPoints", 20);
 		Settings::set("solutionPoints", 30);
-		Settings::set("imunityCCodes", 2);
 	}
 
 	function testCheckUnknownCipher() {
@@ -137,21 +136,5 @@ class HintTest extends GameTestBase {
 		
         $resp = $this->hint->apply("S1");
 		$this->assertEquals(new Text("hint.apply.already", "S1"), $resp);
-	}
-
-	function testImunityStatus() {
-		$this->assertEquals([false, new Text("imunity.insufficient")], $this->hint->imunityStatus(0));
-		$this->assertEquals([true, new Text("imunity.available", 2)], $this->hint->imunityStatus(5));
-	}
-
-	function testImunity() {
-		$this->assertEquals(new Text("imunity.insufficient"), $this->hint->applyImunity());
-		$this->ccode->add(1);
-		$this->ccode->add(2);
-		$this->ccode->add(3);
-		$this->assertEquals(new Text("imunity.success"), $this->hint->applyImunity());
-		$this->assertEquals(1, $this->ccode->unusedCount());
-		$this->assertEquals(new Text("imunity.already"), $this->hint->applyImunity());
-		$this->assertEquals([false, new Text("imunity.already")], $this->hint->imunityStatus(5));
 	}
 }

@@ -97,11 +97,6 @@ $settings = [
 		"type"	=> TEXT,
 		"label"	=> "Cena řešení (v céčkách)",
 		"desc"  => "navíc k ceně postupu"
-	],
-	[
-		"var"	=> "imunityCCodes",
-		"type"	=> TEXT,
-		"label"	=> "Cena imunity (v céčkách)"
 	]
 ];
 

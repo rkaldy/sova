@@ -44,8 +44,7 @@ class ProgressRepo extends RepoBase {
 				team.name, 
 				team.points,
 				IFNULL(DATE_FORMAT(finish.time, '%H:%i:%s'), '-') AS finish_time,
-				IFNULL(DATE_FORMAT(last_cipher.time, '%H:%i:%s'), '-') AS last_cipher_time,
-				imunity.team_id IS NOT NULL AS imunity
+				IFNULL(DATE_FORMAT(last_cipher.time, '%H:%i:%s'), '-') AS last_cipher_time
             FROM team
             LEFT JOIN (
                 SELECT team_id, MAX(time) as time
@@ -61,11 +60,6 @@ class ProgressRepo extends RepoBase {
                 JOIN progress ON progress.point_id = settings.locFinish
                 WHERE settings.game_id = :game_id
 			) finish ON finish.team_id = team.team_id
-			LEFT JOIN (
-				SELECT DISTINCT team_id
-				FROM hint
-				WHERE type = 4
-			) imunity ON imunity.team_id = team.team_id
             WHERE game_id = :game_id
             ORDER BY ISNULL(finish.time), points DESC, -finish.time DESC, last_cipher.time, team.name
         ", ["game_id" => $gameId]);

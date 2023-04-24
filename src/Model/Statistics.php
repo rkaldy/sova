@@ -19,7 +19,7 @@ class Statistics {
 
 	public function rank() {
 		return array_merge(
-			[["Tým", "Počet bodů", "Příchod do cíle", "Čas poslední vyřešené šifry/aktivity", "Imunita?"]],
+			[["Tým", "Počet bodů", "Příchod do cíle", "Čas poslední vyřešené šifry/aktivity"]],
 			(new ProgressRepo())->rankTotal(Game::current())
 		);
 	}

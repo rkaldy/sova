@@ -91,8 +91,7 @@ class MainController {
 
 	public function hints($params, $data) {
 		$ccodeCount = (new Ccode())->unusedCount();
-		list($imunityAvailable, $imunityMsg) = (new Hint())->imunityStatus($ccodeCount);
-		return new View("main/hints", ["points" => (new Team())->points(), "ccodes" => $ccodeCount, "imunityAvailable" => $imunityAvailable, "imunityMsg" => $imunityMsg->format()]);
+		return new View("main/hints", ["points" => (new Team())->points(), "ccodes" => $ccodeCount]);
 	}
 
 	public function checkhint($params, $data) {
@@ -133,10 +132,6 @@ class MainController {
 		$message->sendToTeam($response);
 
 		return new Redirect("hints", $response);
-	}
-
-	public function imunity($params, $data) {
-		return new Redirect("hints", (new Hint())->applyImunity()->format());
 	}
 
 

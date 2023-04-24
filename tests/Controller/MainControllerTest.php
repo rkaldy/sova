@@ -18,14 +18,13 @@ class MainControllerTest extends GameTestBase {
 		Settings::set("hintPoints", 10);
 		Settings::set("howtoPoints", 20);
 		Settings::set("solutionPoints", 30);
-		Settings::set("imunityCCodes", 2);
 	}
 
 	function tearDown(): void {
 		parent::tearDown();
 	}
 
-	function checkView($view, ?string $response, int $points, int $ccodes, bool $imunityAvailable = null, string $imunityMsg = null) {
+	function checkView($view, ?string $response, int $points, int $ccodes) {
 		if ($view instanceof Redirect) {
 			$view = $this->controller->hints([], []);
         	$this->assertEquals($response, $_SESSION["flash"]);
@@ -34,10 +33,6 @@ class MainControllerTest extends GameTestBase {
 		}
         $this->assertEquals($points, $view->fields["points"]);
 		$this->assertEquals($ccodes, $view->fields["ccodes"]);
-		if (isset($imunityAvailable) && isset($imunityMsg)) {
-			$this->assertEquals($imunityAvailable, $view->fields["imunityAvailable"]);
-			$this->assertEquals($imunityMsg, $view->fields["imunityMsg"]);
-		}
 	}
 
     function testHint() {
@@ -80,18 +75,4 @@ class MainControllerTest extends GameTestBase {
         $view = $this->controller->applyhint([], ["cipher" => "S2"]);
         $this->checkView($view, "Nápověda k šifře S2: Krzyz", 10, 0);
     }
-
-	function testImunity() {
-		$view = $this->controller->hints([], []);
-		$this->checkView($view, null, 0, 0, false, "Nemáte dostatek céček pro získání imunity.");
-		
-		$this->controller->code([], ["code" => "buben"]);
-		$this->controller->code([], ["code" => "divizna"]);
-		$this->controller->code([], ["code" => "vcela"]);
-		$view = $this->controller->hints([], []);
-		$this->checkView($view, null, 0, 3, true, "Můžete si zakoupit imunitu za 2 céček.");
-
-		$view = $this->controller->imunity([], []);
-		$this->checkView($view, "Získali jste imunitu. Kdyby na vás při vyhlášení padlo organizování příštího ročníku, můžete ho odmítnout.", 0, 1, false, "Imunitu jste již dostali.");
-	}
 }
