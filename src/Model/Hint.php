@@ -114,6 +114,6 @@ class Hint extends ModelBase {
 
 		$team->addPoints($points * $sign);
 		$this->repo->applyByCCodes($teamId, null, HintRepo::POINTS, 1, $timeOffset);
-		return new Text("ccode.sell." . ($sign == 1 ? "add" : "sub"), $points, $team->points());
+		return new Text("ccode.sell." . ($sign == 1 ? "add" : "sub"), $points);
 	}
 }

@@ -1,4 +1,4 @@
-<p id="hintcount">Aktuálně máte <?php echo $points ?> bodů a <?php echo $ccodes ?> nevyužitých céček.</p>
+<p id="hintcount"><?php echo $hintStatus ?></p>
 
 <p id="flash"><?php if (isset($flash)) echo $flash; ?></p>
 
@@ -16,7 +16,7 @@
 
 <form method="POST" action="sellccode">
   <p>
-	<legend>Můžete prodat céčko za <?php echo $pointsForCCode ?> bodů. Tyto body chcete:</legend>
+	<legend><?php echo $sellStatus ?></legend>
     <fieldset>
 	  <input type="radio" name="sign" id="sell_add" value="1" checked>
       <label for="sell_add">přičíst</label>

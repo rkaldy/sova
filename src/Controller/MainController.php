@@ -90,8 +90,9 @@ class MainController {
 
 
 	public function hints($params, $data) {
-		$ccodeCount = (new Ccode())->unusedCount();
-		return new View("main/hints", ["points" => (new Team())->points(), "ccodes" => $ccodeCount, "pointsForCCode" => Settings::get("pointsForCCode")]);
+		$hintStatus = new Text("hint.status", (new Team())->points(), (new Ccode())->unusedCount());
+		$sellStatus = new Text("ccode.sell.status",  Settings::get("pointsForCCode"));
+		return new View("main/hints", ["hintStatus" => $hintStatus->format(), "sellStatus" => $sellStatus->format()]);
 	}
 
 	public function checkhint($params, $data) {
@@ -113,7 +114,8 @@ class MainController {
 		$message->sendToTeam($response);
 
 		if ($ok) {
-			return new View("main/applyhint", ["response" => $response, "cipher" => $cipherName, "points" => (new Team())->points(), "ccodes" => (new Ccode())->unusedCount()]);
+			$hintStatus = new Text("hint.status", (new Team())->points(), (new Ccode())->unusedCount());
+			return new View("main/applyhint", ["response" => $response, "cipher" => $cipherName, "hintStatus" => $hintStatus->format()]);
 		} else {
 			return new Redirect("hints", $response);
 		}

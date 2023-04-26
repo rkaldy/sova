@@ -31,8 +31,7 @@ class MainControllerTest extends GameTestBase {
 		} else if (isset($response)) {
 	        $this->assertEquals($response, $view->fields["response"]);
 		}
-        $this->assertEquals($points, $view->fields["points"]);
-		$this->assertEquals($ccodes, $view->fields["ccodes"]);
+        $this->assertEquals("Aktuálně máte $points bodů a $ccodes nevyužitých céček.", $view->fields["hintStatus"]);
 	}
 
     function testHint() {

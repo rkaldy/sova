@@ -17,6 +17,7 @@ cipher.solution;Řešení šifry %s: %s
 activity.solved;Úspěšně jste zvládli aktivitu %s. Máte %s bodů.
 activity.already;Tento kód aktivity jste již zadali.
 activity.rank;Jste %s. První ji dal tým %s v %s.
+hint.status;Aktuálně máte %s bodů a %s nevyužitých céček.
 hint.check;(Kontrola nápovědy na %s)
 hint.request;(Žádost o nápovědu na %s)
 hint.apply.activity;K aktivitám žádné nápovědy nejsou.
@@ -32,6 +33,7 @@ hint.text.howto;Postup k šifře %s: %s
 hint.text.solution;Řešení šifry %s: %s
 ccode.add.already;Toto céčko jste již zadali.
 ccode.add.success;Získali jste céčko. Aktuálně máte %s nevyužitých céček.
+ccode.sell.status;Můžete prodat céčko za %s bodů. Tyto body chcete:
 ccode.sell.request;(Prodej céčka)
 ccode.sell.none;Nemáte žádná nepoužitá céčka.
 ccode.sell.add;Prodali jste céčko. Přičetli jsme vám %s bodů.
