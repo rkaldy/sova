@@ -74,5 +74,21 @@ class MainControllerTest extends GameTestBase {
         $this->checkView($view, "Pro šifru S2 jste ještě žádnou nápovědu nedostali. Nyní můžete zažádat o nápovědu za 1 céček. ", 10, 1);
         $view = $this->controller->applyhint([], ["cipher" => "S2"]);
         $this->checkView($view, "Nápověda k šifře S2: Krzyz", 10, 0);
-    }
+	}
+
+	function testSellCCode() {
+		Settings::set("pointsForCCode", 5);
+		
+		$view = $this->controller->sellccode([], ["sign" => "1"]);
+		$this->checkView($view, "Nemáte žádná nepoužitá céčka.", 0, 0);
+		
+		$this->controller->code([], ["code" => "divizna"]);
+        $this->controller->code([], ["code" => "vcela"]);
+
+		$view = $this->controller->sellccode([], ["sign" => "1"]);
+		$this->checkView($view, "Prodali jste céčko. Přičetli jsme vám 5 bodů.", 5, 1);
+
+		$view = $this->controller->sellccode([], ["sign" => "-1"]);
+		$this->checkView($view, "Prodali jste céčko. Odečetli jsme vám 5 bodů.", 0, 0);
+	}
 }

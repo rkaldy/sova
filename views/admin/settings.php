@@ -97,6 +97,12 @@ $settings = [
 		"type"	=> TEXT,
 		"label"	=> "Cena řešení (v céčkách)",
 		"desc"  => "navíc k ceně postupu"
+	],
+	[
+		"var"	=> "pointsForCCode",
+		"type"	=> TEXT,
+		"label"	=> "Počet bodů za prodané céčko",
+		"desc"  => "Tyto body si může tým přičíst anebo odečíst."
 	]
 ];
 

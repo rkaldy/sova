@@ -14,7 +14,7 @@ class HintTest extends GameTestBase {
 		parent::setUp();
 		$this->progressRepo->create(1, 1);
 		$this->hint = new Hint();
-		$this->ccode = new CCode();
+		$this->ccode = new Ccode();
 		Settings::set("hintCCodes", 1);
 		Settings::set("howtoCCodes", 2);
 		Settings::set("solutionCCodes", 0);
@@ -136,5 +136,25 @@ class HintTest extends GameTestBase {
 		
         $resp = $this->hint->apply("S1");
 		$this->assertEquals(new Text("hint.apply.already", "S1"), $resp);
+	}
+
+	function testSellCCode() {
+		Settings::set("pointsForCCode", 5);
+		$team = new Team();
+		$this->ccode->add(1);
+		$this->ccode->add(2);
+
+		$resp = $this->hint->sellCCode(1);
+		$this->assertEquals(new Text("ccode.sell.add", 5, 5), $resp);
+		$this->assertEquals(5, $team->points());
+        $this->assertEquals(1, $this->ccode->unusedCount());
+
+		$resp = $this->hint->sellCCode(-1);
+		$this->assertEquals(new Text("ccode.sell.sub", 5, 0), $resp);
+		$this->assertEquals(0, $team->points());
+        $this->assertEquals(0, $this->ccode->unusedCount());
+
+		$resp = $this->hint->sellCCode(1);
+		$this->assertEquals(new Text("ccode.sell.none"), $resp);
 	}
 }

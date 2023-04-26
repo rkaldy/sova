@@ -101,4 +101,19 @@ class Hint extends ModelBase {
 			case HintRepo::SOLUTION: return new Text("hint.text.solution", $cipher["name"], $cipher["code"]);
 		}
 	}
+
+
+	public function sellCCode(int $sign) {
+		$team = new Team();
+		$teamId = Team::current();
+		if ($this->repo->getUnusedCCodeCount($teamId) <= 0) {
+			return new Text("ccode.sell.none");
+		}
+		$timeOffset = (new Progress())->getFakeTimeOffset();
+		$points = Settings::get("pointsForCCode");
+
+		$team->addPoints($points * $sign);
+		$this->repo->applyByCCodes($teamId, null, HintRepo::POINTS, 1, $timeOffset);
+		return new Text("ccode.sell." . ($sign == 1 ? "add" : "sub"), $points, $team->points());
+	}
 }

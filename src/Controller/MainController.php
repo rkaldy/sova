@@ -91,7 +91,7 @@ class MainController {
 
 	public function hints($params, $data) {
 		$ccodeCount = (new Ccode())->unusedCount();
-		return new View("main/hints", ["points" => (new Team())->points(), "ccodes" => $ccodeCount]);
+		return new View("main/hints", ["points" => (new Team())->points(), "ccodes" => $ccodeCount, "pointsForCCode" => Settings::get("pointsForCCode")]);
 	}
 
 	public function checkhint($params, $data) {
@@ -120,15 +120,30 @@ class MainController {
 	}
 
 	public function applyhint($params, $data) {
-		if (Game::state() != Game::CURRENT) {
-			throw new HttpException(403);
-		}
+		$this->checkGameState();
 		$hint = new Hint();
 		$message = new Message();
 
 		$cipherName = Code::polish($data["cipher"]);
 		$message->sendToSova((new Text("hint.request", $cipherName))->format());
 		$response = $hint->apply($cipherName)->format();
+		$message->sendToTeam($response);
+
+		return new Redirect("hints", $response);
+	}
+
+	public function sellccode($params, $data) {
+		$this->checkGameState();
+		$hint = new Hint();
+		$message = new Message();
+		
+		$sign = (int)$data["sign"];
+		if ($sign != 1 && $sign != -1) {
+			throw new HttpException(422);
+		}
+		$message->sendToSova((new Text("ccode.sell.request"))->format());
+		$response = $hint->sellCCode($sign);
+		$response = $response->format();
 		$message->sendToTeam($response);
 
 		return new Redirect("hints", $response);
@@ -151,5 +166,12 @@ class MainController {
 
 	public function settings($params, $data) {
 		return new View("main/settings", []);
+	}
+
+
+	public function checkGameState() {
+		if (Game::state() != Game::CURRENT) {
+			throw new HttpException(403);
+		}
 	}
 }

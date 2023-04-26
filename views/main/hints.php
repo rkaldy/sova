@@ -12,6 +12,21 @@
   </p>
 </form>
 
+<hr>
+
+<form method="POST" action="sellccode">
+  <p>
+	<legend>Můžete prodat céčko za <?php echo $pointsForCCode ?> bodů. Tyto body chcete:</legend>
+    <fieldset>
+	  <input type="radio" name="sign" id="sell_add" value="1" checked>
+      <label for="sell_add">přičíst</label>
+	  <input type="radio" name="sign" id="sell_sub" value="-1">
+      <label for="sell_sub">odečíst</label>
+    </fieldset>
+	<input type="submit" value="Prodat">
+  </p>
+</form>
+
 <?php } else if ($gameState == \Sova\Model\Game::FUTURE) { ?>
 <p>Hra ještě nezačala.</p>
 <?php } else if ($gameState == \Sova\Model\Game::PAST) { ?>

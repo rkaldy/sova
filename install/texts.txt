@@ -32,4 +32,8 @@ hint.text.howto;Postup k šifře %s: %s
 hint.text.solution;Řešení šifry %s: %s
 ccode.add.already;Toto céčko jste již zadali.
 ccode.add.success;Získali jste céčko. Aktuálně máte %s nevyužitých céček.
+ccode.sell.request;(Prodej céčka)
+ccode.sell.none;Nemáte žádná nepoužitá céčka.
+ccode.sell.add;Prodali jste céčko. Přičetli jsme vám %s bodů.
+ccode.sell.sub;Prodali jste céčko. Odečetli jsme vám %s bodů.
 hint.apply.no-history;Pro šifru %s jste ještě žádnou nápovědu nedostali.

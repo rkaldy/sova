@@ -18,6 +18,10 @@ class Text extends ModelBase {
 	}
 
 	public function format() {
-		return vsprintf($this->repo->get(Game::current(), $this->code), $this->args);
+		$pattern = $this->repo->get(Game::current(), $this->code);
+		if (!isset($pattern)) {
+			throw new \Exception("No text pattern defined for $this->code");
+		}
+		return vsprintf($pattern, $this->args);
 	}
 }

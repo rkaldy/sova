@@ -103,7 +103,8 @@ CREATE TABLE settings (
   solutionPoints int(11) NOT NULL DEFAULT 0,
   hintCCodes int(11) NOT NULL DEFAULT 0,
   howtoCCodes int(11) NOT NULL DEFAULT 0,
-  solutionCCodes int(11) NOT NULL DEFAULT 0
+  solutionCCodes int(11) NOT NULL DEFAULT 0,
+  pointsForCCode int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE step (
