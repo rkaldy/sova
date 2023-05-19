@@ -145,12 +145,12 @@ class HintTest extends GameTestBase {
 		$this->ccode->add(2);
 
 		$resp = $this->hint->sellCCode(1);
-		$this->assertEquals(new Text("ccode.sell.add", 5, 5), $resp);
+		$this->assertEquals(new Text("ccode.sell.add", 5), $resp);
 		$this->assertEquals(5, $team->points());
         $this->assertEquals(1, $this->ccode->unusedCount());
 
 		$resp = $this->hint->sellCCode(-1);
-		$this->assertEquals(new Text("ccode.sell.sub", 5, 0), $resp);
+		$this->assertEquals(new Text("ccode.sell.sub", 5), $resp);
 		$this->assertEquals(0, $team->points());
         $this->assertEquals(0, $this->ccode->unusedCount());
 
