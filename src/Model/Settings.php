@@ -38,6 +38,11 @@ class Settings extends ModelBase {
 		return "Nastavení bylo uloženo";
 	}
 
+	public function reset() {
+		$this->repo->reset(Game::current());
+	}
+
+
 	public static function isset(string $key) {
 		return isset($_SESSION["settings"][$key]);
 	}

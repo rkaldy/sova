@@ -102,4 +102,9 @@ class AdminController {
 		}
 		return new View("admin/settings", ["fields" => $_SESSION["settings"], "locs" => (new Loc())->locs(), "flash" => $flash]);
 	}
+
+	public function reset() {
+		(new Settings())->reset();
+		return new Redirect("admin/settings", "Hra byla restartována.");
+	}
 }
