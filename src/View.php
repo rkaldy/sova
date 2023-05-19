@@ -17,6 +17,10 @@ class View {
 
 	public function render(string $layout) {
 		extract($this->fields, EXTR_SKIP);
+        if (!isset($flash) && isset($_SESSION["flash"])) {
+            $flash = $_SESSION["flash"];
+            unset($_SESSION["flash"]);
+        }
 
 		ob_start();
 		include("views/$this->template.php");
