@@ -10,8 +10,8 @@ class GameTestBase extends TestBase {
 	protected $progressRepo;
 
 /* 
- * (Start)--> S1a -> (1a) --> S2 -> (Turniket) -> (3) -> S3 -> (4) --> S4a --> (Cíl)
- *        \-> A1  -> (1b) -/                                       \-> S4b -/
+ * (Start)--> S1 -> (1a) --> S2 -> (Turniket) -> (3) -> S3 -> (4) --> S4a --> (Cíl)
+ *        \-> A1 -> (1b) -/                                       \-> S4b -/
  */
 
 	function setUp(): void {
@@ -53,7 +53,7 @@ class GameTestBase extends TestBase {
 		$this->db->execute("INSERT INTO cipher (point_id, name_int, activity) VALUES (12, 'Slaňování', 1)");
 		$this->db->execute("INSERT INTO cipher (point_id, name_int, hint) VALUES (13, 'Polský kříž', 'Krzyz')");
 		$this->db->execute("INSERT INTO cipher (point_id, name_int, hint) VALUES (14, 'Vlajková abeceda', NULL)");
-		$this->db->execute("INSERT INTO cipher (point_id, name_int, hint) VALUES (15, 'Semafor', 'Křižovatka, železnice, Suchý')");
+		$this->db->execute("INSERT INTO cipher (point_id, name_int, hint, price_multiplier) VALUES (15, 'Semafor', 'Křižovatka, železnice, Suchý', 1.5)");
 		$this->db->execute("INSERT INTO cipher (point_id, name_int, hint) VALUES (16, 'Binárka', 'Jedničky a nuly')");
 		$this->db->execute("INSERT INTO code (game_id, point_id, code) VALUES (1, 11, 'ABERACE')");
 		$this->db->execute("INSERT INTO code (game_id, point_id, code) VALUES (1, 12, 'ZABRADLI')");

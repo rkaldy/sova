@@ -17,7 +17,7 @@ $(function() {
 			{ name: "fee", title: "Platba", type: "text", width: "10ex", readOnly: true},		
 			{ name: "paid", title: "Zaplatil?", type: "checkbox", width: "10ex" },
 			{ name: "remarks", title: "Poznámky", type: "text", width: "40ex", readOnly: true },
-			{ type: "control", width: "10ex" }
+			{ type: "control", width: "12ex" }
 		]
 	});
 });

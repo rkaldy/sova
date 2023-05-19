@@ -89,7 +89,7 @@ class CipherRepo extends PointRepo {
 		try {
 			$this->db->execute("INSERT INTO point (game_id, name, points) VALUES (:game_id, :name, :points)", $cipher, true);
 			$cipher["point_id"] = $this->db->lastInsertId();
-			$this->db->execute("INSERT INTO cipher (point_id, name_int, activity, hint, howto) VALUES (:point_id, :name_int, :activity, :hint, :howto)", $cipher, true);
+			$this->db->execute("INSERT INTO cipher (point_id, name_int, activity, hint, howto, price_multiplier) VALUES (:point_id, :name_int, :activity, :hint, :howto, :price_multiplier)", $cipher, true);
 			$this->db->execute("INSERT INTO code (game_id, point_id, code) VALUES (:game_id, :point_id, :code)", $cipher, true);
 			$this->addPrevNextLocs($cipher);
 		} catch (DBException $ex) {
@@ -100,7 +100,7 @@ class CipherRepo extends PointRepo {
 
 	function update(array &$cipher) {
 		$this->db->execute("UPDATE point SET name = :name, points = :points WHERE point_id = :point_id", $cipher);
-		$this->db->execute("UPDATE cipher SET name_int = :name_int, activity = :activity, hint = :hint, howto = :howto WHERE point_id = :point_id", $cipher);
+		$this->db->execute("UPDATE cipher SET name_int = :name_int, activity = :activity, hint = :hint, howto = :howto, price_multiplier = :price_multiplier WHERE point_id = :point_id", $cipher);
 		$this->db->execute("UPDATE code SET code = :code WHERE point_id = :point_id", $cipher);
 		$this->addPrevNextLocs($cipher);
 	}

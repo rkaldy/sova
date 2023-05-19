@@ -22,10 +22,11 @@ $(function() {
 			{ name: "code", title: "Řešení", type: "text", width: "20ex", validate: codeValidator },
 			{ name: "hint", title: "Nápověda", type: "textarea", width: "30ex" },
 			{ name: "howto", title: "Postup", type: "textarea", width: "40ex" },
+			{ name: "price_multiplier", title: "Nápovědní multiplikátor", type: "text", width: "20ex", validate: coordValidator },
 			{ name: "points", title: "Body", type: "text", width: "10ex", validate: integerValidator },
 			{ name: "prev", title: "Umístění", type: "multiselect", width: "15ex", items: locs, valueField: "point_id", textField: "name", longTextField: longText },
 			{ name: "next", title: "Následující stanoviště", type: "multiselect", width: "20ex", items: locs, valueField: "point_id", textField: "name", longTextField: longText },
-			{ type: "control", width: "10ex" }
+			{ type: "control", width: "12ex" }
 		]
 	});
 });
@@ -57,6 +58,10 @@ $(function() {
   <tr>
     <th>Body</th>
     <td>Týmu se přičtou po odeslání řešení do Sovy <i>(nepovinné)</i></td>
+  </tr>
+  <tr>
+    <th>Nápovědní multiplikátor</th>
+    <td>Cena nápovědy, postupu a řešení šifry (jak v bodech, tak v céčkách) se násobí tímto multiplikátorem. Může být i necelé číslo, Sova si výsledné hodnoty zaokrouhlí.</td>
   </tr>
   <tr>
     <th>Umístění</h3>

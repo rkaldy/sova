@@ -8,20 +8,28 @@ use Sova\Repo\ProgressRepo;
 
 class Hint extends ModelBase {
 
-	protected function price(int $type) {
+	protected function price(array $cipher, int $type) {
 		switch ($type) {
 			case HintRepo::HINT: $typeStr = "hint"; break;
 			case HintRepo::HOWTO: $typeStr = "howto"; break;
 			case HintRepo::SOLUTION: $typeStr = "solution"; break;
 		}
-		if (Settings::get("${typeStr}CCodes") == 0) {
-			return [Settings::get("${typeStr}Points"), "points"];
+		$pointPrice = Settings::get("${typeStr}Points");
+		$ccodePrice = Settings::get("${typeStr}CCodes");
+		$multiplier = $cipher["price_multiplier"];
+		if (isset($multiplier)) {
+			$pointPrice = (int)round($pointPrice * $multiplier);
+			$ccodePrice = (int)round($ccodePrice * $multiplier);
 		}
+
+		if (Settings::get("${typeStr}CCodes") == 0) {
+			return [$pointPrice, "points"];
+		} 
 		$ccodes = $this->repo->getUnusedCCodeCount(Team::current());
-		if ($ccodes >= Settings::get("${typeStr}CCodes")) {
-			return [Settings::get("${typeStr}CCodes"), "ccodes"];
+		if ($ccodes >= $ccodePrice) {
+			return [$ccodePrice, "ccodes"];
 		} else {
-			return [Settings::get("${typeStr}Points"), "points.no-ccode"];
+			return [$pointPrice, "points.no-ccode"];
 		}
 	}
 
@@ -62,7 +70,7 @@ class Hint extends ModelBase {
 		} 
 		list($cipher, $appliedHintType) = $ret;
 
-		list($price, $unit) = $this->price($appliedHintType + 1);
+		list($price, $unit) = $this->price($cipher, $appliedHintType + 1);
 		switch ($appliedHintType) {
 			case HintRepo::NONE: $nextType = "nápovědu"; break;
 			case HintRepo::HINT: $type = "nápovědu"; $nextType = "postup"; break;
@@ -84,7 +92,7 @@ class Hint extends ModelBase {
 		
 		list($cipher, $appliedHintType) = $ret;
 		$type = $appliedHintType + 1;
-		list($price, $unit) = $this->price($type);
+		list($price, $unit) = $this->price($cipher, $type);
 		$teamId = Team::current();
 
 		$timeOffset = (new Progress())->getFakeTimeOffset();

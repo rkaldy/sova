@@ -65,6 +65,19 @@ class HintTest extends GameTestBase {
 		$this->assertEquals([true, [new Text("hint.apply.no-history", "S1"), new Text("hint.apply.ccodes", "nápovědu", 1)]], $ret);
 	}
 
+	function testCheckHintWithMultiplier() {
+		$this->progressRepo->create(1, 14);
+		$this->progressRepo->create(1, 6);
+		
+		$this->ccode->add(1);
+		$ret = $this->hint->check("S4a");
+		$this->assertEquals([true, [new Text("hint.apply.no-history", "S4a"), new Text("hint.apply.points.no-ccode", "nápovědu", 15)]], $ret);
+		
+		$this->ccode->add(2);
+		$ret = $this->hint->check("S4a");
+		$this->assertEquals([true, [new Text("hint.apply.no-history", "S4a"), new Text("hint.apply.ccodes", "nápovědu", 2)]], $ret);
+	}
+
 	function testCheckHowto() {
 		$this->db->execute("INSERT INTO hint (team_id, cipher_id, time, type) VALUES (1, 11, NOW(), 1)");
 		

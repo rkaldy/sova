@@ -15,7 +15,7 @@ $(function() {
 		[
 			{ name: "code", title: "C-kód", type: "text", width: "10ex", validate: codeValidator },
 			{ name: "cond_loc_id", title: "Po stanovišti", type: "select", width: "15ex", items: locs, valueField: "point_id", textField: "name", longTextField: "description" },
-			{ type: "control", width: "10ex" }
+			{ type: "control", width: "12ex" }
 		]
 	});
 });

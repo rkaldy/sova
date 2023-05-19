@@ -19,7 +19,7 @@ $(function() {
 			{ name: "code", title: "Vstupní kód", type: "text", width: "20ex", validate: codeValidator },
 			{ name: "points", title: "Body", type: "text", width: "10ex", validate: integerValidator },
 			{ name: "next", title: "Následující stanoviště", type: "multiselect", width: "20ex", items: locs, valueField: "point_id", textField: "name", longTextField: "description" },
-			{ type: "control", width: "10ex" }
+			{ type: "control", width: "12ex" }
 		]
 	});
 });
