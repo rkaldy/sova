@@ -21,6 +21,9 @@ class TeamRepo extends RepoBase {
 
 	function create(array &$team) {
 		try {
+			if (empty($team["tshirt"])) {
+				$team["tshirt"] = 0;
+			}
 			$this->db->execute("INSERT INTO team (game_id, name, phone, email, members, accomodation, paid, tshirt, remarks, additional) VALUES (:game_id, :name, :phone, :email, :members, :accomodation, :paid, :tshirt, :remarks, :additional)", $team, true);
 			$team["team_id"] = $this->db->lastInsertId();
 			$this->db->execute("INSERT INTO code (game_id, team_id, code) VALUES (:game_id, :team_id, :pswd)", $team, true);

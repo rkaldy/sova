@@ -13,9 +13,9 @@ class Team extends ModelBase {
 	public function list(int $from = null, $limit = null): array {
 		$teams = $this->repo->list(Game::current());
 		foreach ($teams as &$team) {
-			$team["fee"] = Settings::get("gamePrice") + Settings::get("tshirtPrice") * $team["tshirt"];
+			$team["fee"] = (int)Settings::get("gamePrice") + (int)Settings::get("tshirtPrice") * (int)$team["tshirt"];
 			if ($team["accomodation"] && !empty($team["members"])) {
-				$team["fee"] += Settings::get("accomodationPrice") * count($team["members"]);
+				$team["fee"] += (int)Settings::get("accomodationPrice") * count($team["members"]);
 			}
 		}
 		return $teams;
