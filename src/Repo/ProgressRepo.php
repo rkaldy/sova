@@ -22,11 +22,8 @@ class ProgressRepo extends RepoBase {
     }
 
     public function rankAtPoint(int $teamId, int $pointId) {
-        return $this->db->equery("
-            SELECT rank FROM
-              (SELECT team_id, ROW_NUMBER() OVER (ORDER BY time) AS rank FROM progress WHERE point_id = ?) rank_table
-            WHERE team_id = ?
-        ", $pointId, $teamId);
+		$myTime = $this->db->equery("SELECT time FROM progress WHERE point_id = ? AND team_id = ?", $pointId, $teamId);
+		return $this->db->equery("SELECT COUNT(*) FROM progress WHERE point_id = ? AND time < ?", $pointId, $myTime) + 1;
     }
 
     public function firstTeamAtPoint(int $pointId) {
