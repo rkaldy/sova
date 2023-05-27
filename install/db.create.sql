@@ -123,7 +123,7 @@ CREATE TABLE team (
   name varchar(100) COLLATE utf8mb4_czech_ci NOT NULL,
   phone varchar(20) COLLATE utf8mb4_czech_ci DEFAULT NULL,
   email varchar(50) COLLATE utf8mb4_czech_ci DEFAULT NULL,
-  members varchar(200) COLLATE utf8mb4_czech_ci DEFAULT NULL,
+  members varchar(200) COLLATE utf8mb4_czech_ci NOT NULL DEFAULT '[]',
   accomodation tinyint(1) NOT NULL DEFAULT 1,
   paid tinyint(1) NOT NULL DEFAULT 0,
   tshirt int(11) NOT NULL DEFAULT 0,
