@@ -38,4 +38,8 @@ ccode.sell.request;(Prodej céčka)
 ccode.sell.none;Nemáte žádná nepoužitá céčka.
 ccode.sell.add;Prodali jste céčko. Přičetli jsme vám %s bodů.
 ccode.sell.sub;Prodali jste céčko. Odečetli jsme vám %s bodů.
+imunity.available;Můžete si zakoupit imunitu za %s céček.
+imunity.already;Imunitu jste již dostali.
+imunity.insufficient;Nemáte dostatek céček pro získání imunity.
+imunity.success;Získali jste imunitu. Kdyby na vás při vyhlášení padlo organizování příštího ročníku, můžete ho odmítnout.
 hint.apply.no-history;Pro šifru %s jste ještě žádnou nápovědu nedostali.

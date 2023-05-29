@@ -167,6 +167,7 @@ class CodeControllerTest extends GameTestBase {
 	private static function stripTimes($ranks) {
 		foreach ($ranks as &$rank) {
 			unset($rank["last_cipher_time"]);
+			unset($rank["imunity"]);
 			if ($rank["finish_time"] != "-") {
 				$rank["finish_time"] = "+";
 			}

@@ -92,8 +92,11 @@ class MainController {
 	public function hints($params, $data) {
 		$hintStatus = new Text("hint.status", (new Team())->points(), (new Ccode())->unusedCount());
 		$sellStatus = new Text("ccode.sell.status",  Settings::get("pointsForCCode"));
-		return new View("main/hints", ["hintStatus" => $hintStatus->format(), "sellStatus" => $sellStatus->format()]);
+		$ccodeCount = (new Ccode())->unusedCount();
+		list($imunityAvailable, $imunityMsg) = (new Hint())->imunityStatus($ccodeCount);
+		return new View("main/hints", ["hintStatus" => $hintStatus->format(), "sellStatus" => $sellStatus->format(), "imunityAvailable" => $imunityAvailable, "imunityMsg" => $imunityMsg->format()]);
 	}
+
 
 	public function checkhint($params, $data) {
 		if (Game::state() != Game::CURRENT) {
@@ -121,6 +124,7 @@ class MainController {
 		}
 	}
 
+
 	public function applyhint($params, $data) {
 		$this->checkGameState();
 		$hint = new Hint();
@@ -134,6 +138,7 @@ class MainController {
 		return new Redirect("hints", $response);
 	}
 
+	
 	public function sellccode($params, $data) {
 		$this->checkGameState();
 		$hint = new Hint();
@@ -149,6 +154,11 @@ class MainController {
 		$message->sendToTeam($response);
 
 		return new Redirect("hints", $response);
+	}
+
+	
+	public function imunity($params, $data) {
+		return new Redirect("hints", (new Hint())->applyImunity()->format());
 	}
 
 

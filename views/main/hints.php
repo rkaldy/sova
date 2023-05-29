@@ -27,6 +27,15 @@
   </p>
 </form>
 
+<hr>
+
+<p><?php echo $imunityMsg ?></p>
+<?php if ($imunityAvailable) { ?>
+<form method="POST" action="imunity">
+  <input type="submit" value="Koupit imunitu">
+</form>
+<?php } ?>
+
 <?php } else if ($gameState == \Sova\Model\Game::FUTURE) { ?>
 <p>Hra ještě nezačala.</p>
 <?php } else if ($gameState == \Sova\Model\Game::PAST) { ?>

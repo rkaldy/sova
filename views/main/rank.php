@@ -5,6 +5,7 @@
 	<td>Počet bodů</td>
 	<td>Příchod do cíle</td>
 	<td>Poslední šifra vyluštěna</td>
+    <td>Imunita?</td>
   </thead>
   <tbody>
 <?php for ($i = 0; $i < count($teams); $i++) { ?>
@@ -14,6 +15,7 @@
 	  <td><?php echo $teams[$i]["points"] ?></td>
 	  <td><?php echo $teams[$i]["finish_time"] ?></td>
 	  <td><?php echo $teams[$i]["last_cipher_time"] ?></td>
+      <td><?php echo $teams[$i]["imunity"] ? "ano" : "-" ?></td>
 	</tr>
 <?php } ?>
   </tbody>

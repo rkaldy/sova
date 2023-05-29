@@ -103,6 +103,11 @@ $settings = [
 		"type"	=> TEXT,
 		"label"	=> "Počet bodů za prodané céčko",
 		"desc"  => "Tyto body si může tým přičíst anebo odečíst."
+	],
+	[
+		"var"	=> "imunityCCodes",
+		"type"	=> TEXT,
+		"label"	=> "Cena imunity (v céčkách)"
 	]
 ];
 

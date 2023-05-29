@@ -124,4 +124,33 @@ class Hint extends ModelBase {
 		$this->repo->applyByCCodes($teamId, null, HintRepo::POINTS, 1, $timeOffset);
 		return new Text("ccode.sell." . ($sign == 1 ? "add" : "sub"), $points);
 	}
+
+	
+	public function imunityStatus(int $ccodeCount) {
+		$price = Settings::get("imunityCCodes");
+		$available = false;
+		if ($price == 0) {
+			$ret = new Text("");
+        } else if ($this->repo->haveImunity(Team::current())) {
+            $ret = new Text("imunity.already");
+        } else if ($ccodeCount < $price) {
+            $ret = new Text("imunity.insufficient");
+        } else {
+            $available = true;
+            $ret = new Text("imunity.available", $price);
+		}
+		return [$available, $ret];
+	}
+
+
+	public function applyImunity() {
+		$price = Settings::get("imunityCCodes");
+		if ($this->repo->haveImunity(Team::current())) {
+			return new Text("imunity.already");
+		} else if ($this->repo->getUnusedCCodeCount(Team::current()) < $price) {
+			return new Text("imunity.insufficient");
+		}
+		$this->repo->applyByCCodes(Team::current(), null, HintRepo::IMUNITY, $price);
+		return new Text("imunity.success");
+	}
 }

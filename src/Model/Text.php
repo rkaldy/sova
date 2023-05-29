@@ -18,6 +18,9 @@ class Text extends ModelBase {
 	}
 
 	public function format() {
+		if (empty($this->code)) {
+			return "";
+		}
 		$pattern = $this->repo->get(Game::current(), $this->code);
 		if (!isset($pattern)) {
 			throw new \Exception("No text pattern defined for $this->code");
