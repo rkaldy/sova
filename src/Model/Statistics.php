@@ -36,7 +36,9 @@ class Statistics {
 				$ret[] = ["Aktivita", "Dokončili", "", "", "", "Nedokončili"];
 			}
 			foreach ($ciphers as $cid => $name) {
-				$ret[] = array_merge([$name], array_values($stat[$cid]));
+				if (isset($stat[$cid])) {
+					$ret[] = array_merge([$name], array_values($stat[$cid]));
+				}
 			}
 		}
 		return $ret;
