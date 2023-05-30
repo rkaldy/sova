@@ -22,6 +22,6 @@
 <?php } else if ($gameState == \Sova\Model\Game::FUTURE) { ?>
 <p>Hra ještě nezačala.</p>
 <?php } else if ($gameState == \Sova\Model\Game::PAST) { ?>
-<p>Hra již skončila.</p>
+<p>Hra již skončila. Vraťte se do cíle..</p>
 <?php } ?>
 

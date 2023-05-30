@@ -1,5 +1,5 @@
 <?php if ($gameState == \Sova\Model\Game::PAST) { ?>
-<p>Hra již skončila.</p>
+<p>Hra již skončila. Vraťte se do cíle..</p>
 <?php } else { ?>
 
 <p id="response"><?php echo join("<br>", $response) ?></p>
