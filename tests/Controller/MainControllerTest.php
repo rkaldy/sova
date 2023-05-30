@@ -13,11 +13,9 @@ class MainControllerTest extends GameTestBase {
         $this->controller = new MainController();
 
         Settings::set("hintCCodes", 1);
-        Settings::set("howtoCCodes", 2);
-        Settings::set("solutionCCodes", 3);
+        Settings::set("solutionCCodes", 2);
         Settings::set("hintPoints", 10);
-        Settings::set("howtoPoints", 20);
-        Settings::set("solutionPoints", 30);
+        Settings::set("solutionPoints", 20);
         Settings::set("imunityCCodes", 2);
     }
 
@@ -45,7 +43,7 @@ class MainControllerTest extends GameTestBase {
         
         $view = $this->controller->checkhint([], ["cipher" => "S1"]);
         $this->checkView($view, "Pro šifru S1 jste ještě žádnou nápovědu nedostali. Nyní můžete zažádat o nápovědu za 10 bodů nebo 1 céček. ", 0, 0);
-        $view = $this->controller->applyhint([], ["cipher" => "S1", "for" => "points"]);
+        $view = $this->controller->applyhint([], ["cipher" => "S1", "for" => "Koupit za body"]);
         $this->checkView($view, "Nápověda k šifře S1: Čárka tečka čárka, tak začíná Klárka", -10, 0);
         
         $view = $this->controller->code([], ["code" => "divizna"]);
@@ -56,41 +54,36 @@ class MainControllerTest extends GameTestBase {
         $this->assertEquals("Získali jste céčko. Aktuálně máte 3 nevyužitých céček.", $view->fields["response"][0]);
 
         $view = $this->controller->checkhint([], ["cipher" => "S1"]);
-        $this->checkView($view, "Pro šifru S1 jste již dostali nápovědu. Nyní můžete zažádat o postup za 20 bodů nebo 2 céček. ", -10, 3);
-        $view = $this->controller->applyhint([], ["cipher" => "S1", "for" => "ccodes"]);
-        $this->checkView($view, "Postup k šifře S1: Použij morseovku", -10, 1);
+        $this->checkView($view, "Pro šifru S1 jste již dostali nápovědu. Nyní můžete zažádat o řešení za 20 bodů nebo 2 céček. ", -10, 3);
+        $view = $this->controller->applyhint([], ["cipher" => "S1", "for" => "Koupit za céčka"]);
+        $this->checkView($view, "Řešení šifry S1: ABERACE", -10, 1);
 
         $view = $this->controller->checkhint([], ["cipher" => "S1"]);
-        $this->checkView($view, "Pro šifru S1 jste již dostali postup. Nyní můžete zažádat o řešení za 30 bodů nebo 3 céček. ", -10, 1);
-        $view = $this->controller->applyhint([], ["cipher" => "S1", "for" => "points"]);
-        $this->checkView($view, "Řešení šifry S1: ABERACE", -40, 1);
-
-        $view = $this->controller->checkhint([], ["cipher" => "S1"]);
-        $this->checkView($view, "Pro šifru S1 jste již dostali řešení. Podívejte se do přehledu šifer. ", -40, 1);
+        $this->checkView($view, "Pro šifru S1 jste již dostali řešení. Podívejte se do přehledu šifer. ", -10, 1);
 
         $view = $this->controller->code([], ["code" => "aberace"]);
         $view = $this->controller->code([], ["code" => "zabradli"]);
 
         $view = $this->controller->checkhint([], ["cipher" => "S1"]);
-        $this->checkView($view, "Šifru S1 jste již vyluštili. ", 10, 1);
+        $this->checkView($view, "Šifru S1 jste již vyluštili. ", 40, 1);
 
         $view = $this->controller->checkhint([], ["cipher" => "S2"]);
-        $this->checkView($view, "Pro šifru S2 jste ještě žádnou nápovědu nedostali. Nyní můžete zažádat o nápovědu za 10 bodů nebo 1 céček. ", 10, 1);
-        $view = $this->controller->applyhint([], ["cipher" => "S2", "for" => "ccodes"]);
-        $this->checkView($view, "Nápověda k šifře S2: Krzyz", 10, 0);
+        $this->checkView($view, "Pro šifru S2 jste ještě žádnou nápovědu nedostali. Nyní můžete zažádat o nápovědu za 10 bodů nebo 1 céček. ", 40, 1);
+        $view = $this->controller->applyhint([], ["cipher" => "S2", "for" => "Koupit za céčka"]);
+        $this->checkView($view, "Nápověda k šifře S2: Krzyz", 40, 0);
         
         $view = $this->controller->code([], ["code" => "kobliha"]);
         $view = $this->controller->code([], ["code" => "medved"]);
         $view = $this->controller->code([], ["code" => "zidle"]);
 
         $view = $this->controller->checkhint([], ["cipher" => "S3"]);
-        $this->checkView($view, "K této šifře žádná nápověda není. ", 40, 0);
+        $this->checkView($view, "K této šifře žádná nápověda není. ", 70, 0);
 
         $view = $this->controller->code([], ["code" => "priboj"]);
         $view = $this->controller->code([], ["code" => "tabulka"]);
 
         $view = $this->controller->checkhint([], ["cipher" => "S4a"]);
-        $this->checkView($view, "Pro šifru S4A jste ještě žádnou nápovědu nedostali. Nyní můžete zažádat o nápovědu za 15 bodů nebo 2 céček. ", 70, 0);
+        $this->checkView($view, "Pro šifru S4A jste ještě žádnou nápovědu nedostali. Nyní můžete zažádat o nápovědu za 15 bodů nebo 2 céček. ", 100, 0);
     }
 
     function testSellCCode() {

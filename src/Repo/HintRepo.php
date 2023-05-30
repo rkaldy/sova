@@ -7,11 +7,11 @@ use Sova\DBException;
 class HintRepo extends RepoBase {
 
 	public const NONE = 0;
-        public const HINT = 1;
+    public const HINT = 1;
 	public const HOWTO = 2;
 	public const SOLUTION = 3;
 	public const POINTS = 4;
-        public const IMUNITY = 5;
+    public const IMUNITY = 5;
 
 
 	public function addCCode(array $hint) {

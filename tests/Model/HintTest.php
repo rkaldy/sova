@@ -16,11 +16,9 @@ class HintTest extends GameTestBase {
         $this->hint = new Hint();
         $this->ccode = new Ccode();
         Settings::set("hintCCodes", 1);
-        Settings::set("howtoCCodes", 2);
-        Settings::set("solutionCCodes", 3);
+        Settings::set("solutionCCodes", 2);
         Settings::set("hintPoints", 10);
-        Settings::set("howtoPoints", 20);
-        Settings::set("solutionPoints", 30);
+        Settings::set("solutionPoints", 20);
         Settings::set("imunityCCodes", 2);
     }
 
@@ -69,16 +67,10 @@ class HintTest extends GameTestBase {
         $this->assertEquals([true, [new Text("hint.apply.no-history", "S4a"), new Text("hint.apply.price", "nápovědu", 15, 2)]], $ret);
     }
 
-    function testCheckHowto() {
+    function testCheckSolution() {
         $this->db->execute("INSERT INTO hint (team_id, cipher_id, time, type) VALUES (1, 11, NOW(), 1)");
         $ret = $this->hint->check("S1");
-        $this->assertEquals([true, [new Text("hint.apply.history", "S1", "nápovědu"), new Text("hint.apply.price", "postup", 20, 2)]], $ret);
-    }
-
-    function testCheckSolution() {
-        $this->db->execute("INSERT INTO hint (team_id, cipher_id, time, type) VALUES (1, 11, NOW(), 2)");
-        $ret = $this->hint->check("S1");
-        $this->assertEquals([true, [new Text("hint.apply.history", "S1", "postup"), new Text("hint.apply.price", "řešení", 30, 3)]], $ret);
+        $this->assertEquals([true, [new Text("hint.apply.history", "S1", "nápovědu"), new Text("hint.apply.price", "řešení", 20, 2)]], $ret);
     }
 
     function testCheckAlready() {
@@ -95,12 +87,8 @@ class HintTest extends GameTestBase {
         $this->assertEquals(-10, $team->points());
 
         $resp = $this->hint->apply("S1", false);
-        $this->assertEquals(new Text("hint.text.howto", "S1", "Použij morseovku"), $resp);
-        $this->assertEquals(-30, $team->points());
-
-        $resp = $this->hint->apply("S1", false);
         $this->assertEquals(new Text("hint.text.solution", "S1", "ABERACE"), $resp);
-        $this->assertEquals(-60, $team->points());
+        $this->assertEquals(-30, $team->points());
         $this->assertEquals(0, $this->ccode->unusedCount());
         
         $resp = $this->hint->apply("S1", false);
@@ -122,7 +110,7 @@ class HintTest extends GameTestBase {
 
         $this->ccode->add(3);
         $resp = $this->hint->apply("S1", true);
-        $this->assertEquals(new Text("hint.text.howto", "S1", "Použij morseovku"), $resp);
+        $this->assertEquals(new Text("hint.text.solution", "S1", "ABERACE"), $resp);
         $this->assertEquals(0, $this->ccode->unusedCount());
         $this->assertEquals(0, $team->points());
     }

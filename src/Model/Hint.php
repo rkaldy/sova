@@ -8,6 +8,14 @@ use Sova\Repo\ProgressRepo;
 
 class Hint extends ModelBase {
 
+	protected static function nextType(int $type) {
+		switch ($type) {
+			case HintRepo::NONE: return HintRepo::HINT;
+			case HintRepo::HINT: return HintRepo::SOLUTION;
+		}
+		return -1;
+	}
+
 	protected function price(array $cipher, int $type) {
 		switch ($type) {
 			case HintRepo::HINT: $typeStr = "hint"; break;
@@ -62,11 +70,11 @@ class Hint extends ModelBase {
 		} 
 		list($cipher, $appliedHintType) = $ret;
 
-		list($pointPrice, $ccodePrice) = $this->price($cipher, $appliedHintType + 1);
+		list($pointPrice, $ccodePrice) = $this->price($cipher, self::nextType($appliedHintType));
 		switch ($appliedHintType) {
 			case HintRepo::NONE: $nextType = "nápovědu"; break;
-			case HintRepo::HINT: $type = "nápovědu"; $nextType = "postup"; break;
-			case HintRepo::HOWTO: $type = "postup"; $nextType = "řešení"; break;
+			case HintRepo::HINT: $type = "nápovědu"; $nextType = "řešení"; break;
+#			case HintRepo::HOWTO: $type = "postup"; $nextType = "řešení"; break;
 		}
 		if ($appliedHintType == HintRepo::NONE) {
 			$history = new Text("hint.apply.no-history", $cipherName);
@@ -84,7 +92,7 @@ class Hint extends ModelBase {
 		} 
 		
 		list($cipher, $appliedHintType) = $ret;
-		$type = $appliedHintType + 1;
+		$type = self::nextType($appliedHintType);
 		list($pointPrice, $ccodePrice) = $this->price($cipher, $type);
 		$teamId = Team::current();
 

@@ -70,12 +70,6 @@ $settings = [
 		"label"	=> "Cena nápovědy (v bodech)"
 	],
 	[
-		"var"	=> "howtoPoints",
-		"type"	=> TEXT,
-		"label"	=> "Cena postupu (v bodech)",
-		"desc"  => "navíc k ceně nápovědy"
-	],
-	[
 		"var"	=> "solutionPoints",
 		"type"	=> TEXT,
 		"label"	=> "Cena řešení (v bodech)",
@@ -85,12 +79,6 @@ $settings = [
 		"var"	=> "hintCCodes",
 		"type"	=> TEXT,
 		"label"	=> "Cena nápovědy (v céčkách)"
-	],
-	[
-		"var"	=> "howtoCCodes",
-		"type"	=> TEXT,
-		"label"	=> "Cena postupu (v céčkách)",
-		"desc"  => "navíc k ceně nápovědy"
 	],
 	[
 		"var"	=> "solutionCCodes",

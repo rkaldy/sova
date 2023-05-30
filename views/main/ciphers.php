@@ -13,9 +13,6 @@ for ($i = 0; $i < count($ciphers); $i++) {
 	if ($ciphers[$i]["hint"] != "-") {
 		echo "Nápověda: {$ciphers[$i]["hint"]}<br>\n";
 	}
-	if ($ciphers[$i]["howto"] != "-") {
-		echo "Postup: {$ciphers[$i]["howto"]}<br>\n";
-	}
 	if ($ciphers[$i]["solution"] != "-") {
 		echo "Řešení: {$ciphers[$i]["solution"]}<br>\n";
 	}
