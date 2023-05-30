@@ -7,7 +7,8 @@
 <form method="POST" action="applyhint">
   <input type="hidden" name="cipher" value="<?php echo $cipher ?>">
   <p>
-    <input type="submit" value="Zažádat">
+    <input type="submit" name="for" value="Koupit za body">
+    <input type="submit" name="for" value="Koupit za céčka">
   </p>
 </form>
 

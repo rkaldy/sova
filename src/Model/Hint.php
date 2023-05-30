@@ -22,15 +22,7 @@ class Hint extends ModelBase {
 			$ccodePrice = (int)round($ccodePrice * $multiplier);
 		}
 
-		if (Settings::get("${typeStr}CCodes") == 0) {
-			return [$pointPrice, "points"];
-		} 
-		$ccodes = $this->repo->getUnusedCCodeCount(Team::current());
-		if ($ccodes >= $ccodePrice) {
-			return [$ccodePrice, "ccodes"];
-		} else {
-			return [$pointPrice, "points.no-ccode"];
-		}
+		return [$pointPrice, $ccodePrice];
 	}
 
 
@@ -70,21 +62,22 @@ class Hint extends ModelBase {
 		} 
 		list($cipher, $appliedHintType) = $ret;
 
-		list($price, $unit) = $this->price($cipher, $appliedHintType + 1);
+		list($pointPrice, $ccodePrice) = $this->price($cipher, $appliedHintType + 1);
 		switch ($appliedHintType) {
 			case HintRepo::NONE: $nextType = "nápovědu"; break;
 			case HintRepo::HINT: $type = "nápovědu"; $nextType = "postup"; break;
 			case HintRepo::HOWTO: $type = "postup"; $nextType = "řešení"; break;
 		}
 		if ($appliedHintType == HintRepo::NONE) {
-			return [true, [new Text("hint.apply.no-history", $cipherName), new Text("hint.apply.$unit", $nextType, $price)]];
+			$history = new Text("hint.apply.no-history", $cipherName);
 		} else {
-			return [true, [new Text("hint.apply.history", $cipherName, $type), new Text("hint.apply.$unit", $nextType, $price)]];
+			$history = new Text("hint.apply.history", $cipherName, $type);
 		}
+		return [true, [$history, new Text("hint.apply.price", $nextType, $pointPrice, $ccodePrice)]];
 	}
 
 
-	public function apply(string $cipherName) {
+	public function apply(string $cipherName, bool $forCCodes) {
 		$ret = $this->doCheck($cipherName);
 		if ($ret instanceof Text) {
 			return $ret;
@@ -92,14 +85,18 @@ class Hint extends ModelBase {
 		
 		list($cipher, $appliedHintType) = $ret;
 		$type = $appliedHintType + 1;
-		list($price, $unit) = $this->price($cipher, $type);
+		list($pointPrice, $ccodePrice) = $this->price($cipher, $type);
 		$teamId = Team::current();
 
+		if ($forCCodes && ($ccodePrice > $this->repo->getUnusedCCodeCount($teamId))) {
+			return new Text("hint.apply.no-ccode");
+		}
+
 		$timeOffset = (new Progress())->getFakeTimeOffset();
-		if ($unit == "ccodes") {
-			$this->repo->applyByCCodes($teamId, $cipher["point_id"], $type, $price, $timeOffset);
+		if ($forCCodes) {
+			$this->repo->applyByCCodes($teamId, $cipher["point_id"], $type, $ccodePrice, $timeOffset);
 		} else {
-			(new TeamRepo())->addPoints($teamId, -$price);
+			(new TeamRepo())->addPoints($teamId, -$pointPrice);
 			$this->repo->applyByPoints($teamId, $cipher["point_id"], $type, $timeOffset);
 		}
 

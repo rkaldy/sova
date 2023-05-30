@@ -132,7 +132,7 @@ class MainController {
 
 		$cipherName = Code::polish($data["cipher"]);
 		$message->sendToSova((new Text("hint.request", $cipherName))->format());
-		$response = $hint->apply($cipherName)->format();
+		$response = $hint->apply($cipherName, $data["for"] == "Koupit za céčka")->format();
 		$message->sendToTeam($response);
 
 		return new Redirect("hints", $response);
