@@ -22,11 +22,8 @@ class ProgressRepo extends RepoBase {
     }
 
     public function rankAtPoint(int $teamId, int $pointId) {
-        return $this->db->equery("
-            SELECT rank FROM
-              (SELECT team_id, ROW_NUMBER() OVER (ORDER BY time) AS rank FROM progress WHERE point_id = ?) rank_table
-            WHERE team_id = ?
-        ", $pointId, $teamId);
+	$time = $this->db->equery("SELECT time FROM progress WHERE team_id = ? AND point_id = ?", $teamId, $pointId);
+        return $this->db->equery("SELECT COUNT(*) FROM progress WHERE point_id = ? AND time <= ?", $pointId, $time);
     }
 
     public function firstTeamAtPoint(int $pointId) {
@@ -38,14 +35,14 @@ class ProgressRepo extends RepoBase {
         ", $pointId);
     }
 
-	public function rankTotal(int $gameId): array {
-		return $this->db->aquery("
-			SELECT 
-				team.name, 
-				team.points,
-				IFNULL(DATE_FORMAT(finish.time, '%H:%i:%s'), '-') AS finish_time,
-				IFNULL(DATE_FORMAT(last_cipher.time, '%H:%i:%s'), '-') AS last_cipher_time,
-				imunity.team_id IS NOT NULL AS imunity
+    public function rankTotal(int $gameId): array {
+        return $this->db->aquery("
+            SELECT 
+                team.name, 
+                team.points,
+                IFNULL(DATE_FORMAT(finish.time, '%H:%i:%s'), '-') AS finish_time,
+                IFNULL(DATE_FORMAT(last_cipher.time, '%H:%i:%s'), '-') AS last_cipher_time,
+                imunity.team_id IS NOT NULL AS imunity
             FROM team
             LEFT JOIN (
                 SELECT team_id, MAX(time) as time
@@ -60,16 +57,16 @@ class ProgressRepo extends RepoBase {
                 FROM settings
                 JOIN progress ON progress.point_id = settings.locFinish
                 WHERE settings.game_id = :game_id
-			) finish ON finish.team_id = team.team_id
-			LEFT JOIN (
-				SELECT DISTINCT team_id
-				FROM hint
-				WHERE type = 4
-			) imunity ON imunity.team_id = team.team_id
+            ) finish ON finish.team_id = team.team_id
+            LEFT JOIN (
+                SELECT DISTINCT team_id
+                FROM hint
+                WHERE type = 4
+            ) imunity ON imunity.team_id = team.team_id
             WHERE game_id = :game_id
             ORDER BY ISNULL(finish.time), points DESC, -finish.time DESC, last_cipher.time, team.name
         ", ["game_id" => $gameId]);
-	}
+    }
 
     public function progressByTeam(int $gameId) {
         return $this->db->aquery("
@@ -100,17 +97,17 @@ class ProgressRepo extends RepoBase {
         ", ["game_id" => $gameId]);
     }
 
-	public function cipherStatus(int $gameId) {
-		return $this->db->aquery("
-			SELECT point.point_id, team.name AS team_name, DATE_FORMAT(progress.time, '%H:%i:%s') AS time, progress.time >=DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL 1 MINUTE) AS recent, IFNULL(MAX(hint.type), 0) AS hint_type
-			FROM point
-			NATURAL JOIN cipher
-			JOIN progress ON progress.point_id = point.point_id
+    public function cipherStatus(int $gameId) {
+        return $this->db->aquery("
+            SELECT point.point_id, team.name AS team_name, DATE_FORMAT(progress.time, '%H:%i:%s') AS time, progress.time >=DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL 1 MINUTE) AS recent, IFNULL(MAX(hint.type), 0) AS hint_type
+            FROM point
+            NATURAL JOIN cipher
+            JOIN progress ON progress.point_id = point.point_id
             JOIN team ON team.team_id = progress.team_id
-			LEFT JOIN hint ON hint.team_id = progress.team_id AND hint.cipher_id = progress.point_id
+            LEFT JOIN hint ON hint.team_id = progress.team_id AND hint.cipher_id = progress.point_id
             WHERE point.game_id = ?
-			GROUP BY progress.point_id, progress.team_id
-	        ORDER BY progress.point_id, progress.time
-		", $gameId);
-	}
+            GROUP BY progress.point_id, progress.team_id
+            ORDER BY progress.point_id, progress.time
+        ", $gameId);
+    }
 }

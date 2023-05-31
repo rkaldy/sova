@@ -7,9 +7,6 @@ if (isset($team)) {
 		"messages" => "Historie zpráv",
 		"settings" => "Nastavení"
 	];
-	if ($showRank) {
-		$menu["rank"] = "Pořadí";
-	}
 	$menu["logout"] = "Logout";
 }
 ?>
