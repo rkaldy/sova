@@ -168,9 +168,9 @@ class MainController {
 		return new View("main/messages", ["messages" => $messages, "totalCount" => $count, "page" => $page]);
 	}
 
-	public function rank($params, $data) {
-		return new View("main/rank", ["teams" => (new Progress())->rankTotal()]);
-	}
+#	public function rank($params, $data) {
+#		return new View("main/rank", ["teams" => (new Progress())->rankTotal()]);
+#	}
 
 	public function ciphers($params, $data) {
 		return new View("main/ciphers", ["ciphers" => (new Cipher())->teamCipherStatus()]);
