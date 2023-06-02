@@ -82,11 +82,12 @@ class CipherTest extends GameTestBase {
 		], $this->cipher->solve($cipher, "ABERACE"));
 	}
 
-	function testSolvedNextLocAlreadyVisited() {
+	function testSolvedNextLoc() {
 		$this->progressRepo->create(1, 2);
 		$cipher = $this->cipherRepo->get(11);
 		$this->assertEquals([
-			new Text("cipher.solved", "S1", 30) 
+			new Text("cipher.solved", "S1", 30),
+			new Text("loc.next", "1a", "na vrcholu Bílé hory") 
 		], $this->cipher->solve($cipher, "ABERACE"));
 	}
 }

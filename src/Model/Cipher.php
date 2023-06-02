@@ -40,7 +40,7 @@ class Cipher extends ModelBase {
 			$progress->create($loc);
 		}
 
-        $team = new Team();
+                $team = new Team();
 		$team->addPoints($cipher["points"]);
 
 		$ret = [new Text("$type.solved", $cipher["name"], $team->points())];
@@ -48,7 +48,7 @@ class Cipher extends ModelBase {
 			list($rank, $firstTeam, $firstTime) = $progress->getRank($cipher);
 			$ret[] = new Text("$type.rank", $rank, $firstTeam, $firstTime);
 		}
-		foreach ($this->repo->getNextLocsNotVisited(Team::current(), $cipher) as $loc) {
+		foreach ($this->repo->getNextLocs($cipher) as $loc) {
 			$ret[] = new Text("loc.next", $loc["name"], Loc::getDescription($loc));
 		}
 		
