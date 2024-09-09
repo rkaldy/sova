@@ -1,0 +1,37 @@
+services:
+  web:
+    image: php:7.4-apache
+    ports:
+      - "8080:80"
+    depends_on:
+      - db
+    command: /bin/bash -c "a2enmod rewrite; docker-php-ext-install pdo_mysql; apachectl -D FOREGROUND"
+    volumes:
+      - ./src:/var/www/html/src
+      - ./vendor:/var/www/html/vendor
+      - ./node_modules:/var/www/html/node_modules
+      - ./install:/var/www/html/install
+      - ./views:/var/www/html/views
+      - ./static:/var/www/html/static
+      - type: bind
+        source: ./index.php
+        target: /var/www/html/index.php
+      - type: bind
+        source: ./.htaccess
+        target: /var/www/html/.htaccess
+      - type: bind
+        source: ./config.php.docker
+        target: /var/www/html/config.php
+  db:
+    image: mysql:8.1.0
+    environment:
+      MYSQL_ROOT_PASSWORD: swordfish
+#      MYSQL_DATABASE: sova
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - "8090:80"
+    depends_on:
+      - db
+    environment:
+      PMA_HOST: db
