@@ -9,7 +9,8 @@ class TeamRepo extends RepoBase {
 			SELECT team.*, code AS pswd 
 			FROM team 
 			NATURAL JOIN code
-			WHERE team.game_id = ? ORDER BY name
+			WHERE team.game_id = ? 
+			ORDER BY team_id
 		", $gameId);
 		foreach ($teams as &$team) {
 			$team["members"] = json_decode($team["members"], true);
