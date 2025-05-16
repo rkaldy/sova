@@ -10,7 +10,7 @@ class TeamRepo extends RepoBase {
 			FROM team 
 			NATURAL JOIN code
 			WHERE team.game_id = ? 
-			ORDER BY team_id
+			ORDER BY paid DESC, team_id
 		", $gameId);
 		foreach ($teams as &$team) {
 			$team["members"] = json_decode($team["members"], true);
