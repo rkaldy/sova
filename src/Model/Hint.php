@@ -70,6 +70,24 @@ class Hint extends ModelBase {
 	}
 
 
+	protected function nextHint(int $hintType) {
+		while ($hintType <= HintRepo::IMUNITY) {
+			$hintType += 1;
+			if ($this->price($hintType)[0] != 0) {
+				return $hintType;
+			}
+		}
+		return null;
+	}
+
+
+	protected const HINT_WORD = [ 
+		HintRepo::NONE => "",
+		HintRepo::HINT => "nápovědu",
+		HintRepo::HOWTO => "postup",
+		HintRepo::SOLUTION => "řešení"
+	];
+
 	public function check(string $cipherName) {
 		$ret = $this->doCheck($cipherName);
 		if ($ret instanceof Text) {
@@ -77,16 +95,12 @@ class Hint extends ModelBase {
 		} 
 		list($cipher, $appliedHintType) = $ret;
 
-		list($price, $unit) = $this->price($appliedHintType + 1);
-		switch ($appliedHintType) {
-			case HintRepo::NONE: $nextType = "nápovědu"; break;
-			case HintRepo::HINT: $type = "nápovědu"; $nextType = "postup"; break;
-			case HintRepo::HOWTO: $type = "postup"; $nextType = "řešení"; break;
-		}
+		$nextHintType = $this->nextHint($appliedHintType);
+		list($price, $unit) = $this->price($nextHintType);
 		if ($appliedHintType == HintRepo::NONE) {
-			return [true, [new Text("hint.apply.no-history", $cipherName), new Text("hint.apply.$unit", $nextType, $price)]];
+			return [true, [new Text("hint.apply.no-history", $cipherName), new Text("hint.apply.$unit", self::HINT_WORD[$nextHintType], $price)]];
 		} else {
-			return [true, [new Text("hint.apply.history", $cipherName, $type), new Text("hint.apply.$unit", $nextType, $price)]];
+			return [true, [new Text("hint.apply.history", $cipherName, self::HINT_WORD[$appliedHintType]), new Text("hint.apply.$unit", self::HINT_WORD[$nextHintType], $price)]];
 		}
 	}
 

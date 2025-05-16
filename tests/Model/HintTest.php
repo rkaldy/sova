@@ -106,54 +106,66 @@ class HintTest extends GameTestBase {
 		$this->assertEquals([true, [new Text("hint.apply.history", "S1", "postup"), new Text("hint.apply.points", "řešení", 30)]], $ret);
 	}
 
+	function testCheckDisabledHowto() {
+		Settings::set("howtoCCodes", 0);
+		Settings::set("howtoPoints", 0);
+		$this->db->execute("INSERT INTO hint (team_id, cipher_id, time, type) VALUES (1, 11, NOW(), 1)");
+		
+		$this->hint->addCCode(1);
+		$this->hint->addCCode(2);
+		$this->hint->addCCode(3);
+		$ret = $this->hint->check("S1");
+		$this->assertEquals([true, [new Text("hint.apply.history", "S1", "nápovědu"), new Text("hint.apply.points", "řešení", 30)]], $ret);
+	}
+
 	function testCheckAlready() {
 		$this->db->execute("INSERT INTO hint (team_id, cipher_id, time, type) VALUES (1, 11, NOW(), 3)");
 		$ret = $this->hint->check("S1");
 		$this->assertEquals([false, [new Text("hint.apply.already", "S1")]], $ret);
 	}
 
-    function testApplyPoints() {
-        $team = new Team();
+	function testApplyPoints() {
+		$team = new Team();
 
 		$resp = $this->hint->apply("S1");
-        $this->assertEquals(new Text("hint.text.hint", "S1", "Čárka tečka čárka, tak začíná Klárka"), $resp);
-        $this->assertEquals(-10, $team->points());
+		$this->assertEquals(new Text("hint.text.hint", "S1", "Čárka tečka čárka, tak začíná Klárka"), $resp);
+		$this->assertEquals(-10, $team->points());
 
 		$resp = $this->hint->apply("S1");
-        $this->assertEquals(new Text("hint.text.howto", "S1", "Použij morseovku"), $resp);
-        $this->assertEquals(-30, $team->points());
+		$this->assertEquals(new Text("hint.text.howto", "S1", "Použij morseovku"), $resp);
+		$this->assertEquals(-30, $team->points());
 
 		$resp = $this->hint->apply("S1");
-        $this->assertEquals(new Text("hint.text.solution", "S1", "ABERACE"), $resp);
-        $this->assertEquals(-60, $team->points());
-        $this->assertEquals(0, $this->hint->unusedCCodeCount());
+		$this->assertEquals(new Text("hint.text.solution", "S1", "ABERACE"), $resp);
+		$this->assertEquals(-60, $team->points());
+		$this->assertEquals(0, $this->hint->unusedCCodeCount());
 		
-        $resp = $this->hint->apply("S1");
+		$resp = $this->hint->apply("S1");
 		$this->assertEquals(new Text("hint.apply.already", "S1"), $resp);
-    }
+	}
 
-    function testApplyCCodes() {
-        $team = new Team();
+	function testApplyCCodes() {
+		$team = new Team();
 		$this->hint->addCCode(1);
 		$this->hint->addCCode(2);
 
 		$resp = $this->hint->apply("S1");
-        $this->assertEquals(new Text("hint.text.hint", "S1", "Čárka tečka čárka, tak začíná Klárka"), $resp);
-        $this->assertEquals(1, $this->hint->unusedCCodeCount());
-        $this->assertEquals(0, $team->points());
+		$this->assertEquals(new Text("hint.text.hint", "S1", "Čárka tečka čárka, tak začíná Klárka"), $resp);
+		$this->assertEquals(1, $this->hint->unusedCCodeCount());
+		$this->assertEquals(0, $team->points());
 
 		$resp = $this->hint->apply("S1");
-        $this->assertEquals(new Text("hint.text.howto", "S1", "Použij morseovku"), $resp);
-        $this->assertEquals(1, $this->hint->unusedCCodeCount());
-        $this->assertEquals(-20, $team->points());
+		$this->assertEquals(new Text("hint.text.howto", "S1", "Použij morseovku"), $resp);
+		$this->assertEquals(1, $this->hint->unusedCCodeCount());
+		$this->assertEquals(-20, $team->points());
 
 		$this->hint->addCCode(3);
 		$resp = $this->hint->apply("S1");
-        $this->assertEquals(new Text("hint.text.solution", "S1", "ABERACE"), $resp);
-        $this->assertEquals(2, $this->hint->unusedCCodeCount());
-        $this->assertEquals(-50, $team->points());
+		$this->assertEquals(new Text("hint.text.solution", "S1", "ABERACE"), $resp);
+		$this->assertEquals(2, $this->hint->unusedCCodeCount());
+		$this->assertEquals(-50, $team->points());
 		
-        $resp = $this->hint->apply("S1");
+		$resp = $this->hint->apply("S1");
 		$this->assertEquals(new Text("hint.apply.already", "S1"), $resp);
 	}
 
@@ -172,4 +184,5 @@ class HintTest extends GameTestBase {
 		$this->assertEquals(new Text("imunity.already"), $this->hint->applyImunity());
 		$this->assertEquals([false, new Text("imunity.already")], $this->hint->imunityStatus(5));
 	}
+
 }
