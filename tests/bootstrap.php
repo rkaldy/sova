@@ -11,5 +11,4 @@ $pdo = new PDO("mysql:host=".DB_HOST, DB_USER, DB_PASS);
 echo "Preparing database...";
 $pdo->exec("USE ".DB_NAME);
 $pdo->exec("DELETE FROM game");
-$pdo->exec("DELETE FROM user");
 echo "done\n";

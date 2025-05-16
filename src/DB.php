@@ -2,9 +2,9 @@
 namespace Sova;
 
 use PDO;
+use PDOException;
 
 class DB extends PDO {
-	
 	protected static $instance;
 	protected $lastQuery;
 	protected $lastParams;
@@ -31,7 +31,9 @@ class DB extends PDO {
 
 	
 	public function bindValue(&$stmt, $name, $value) {
-		if (is_array($value)) {
+		if (is_null($value)) {
+			$type = PDO::PARAM_STR;
+		} else if (is_array($value)) {
 			$value = json_encode($value, JSON_UNESCAPED_UNICODE);
 			$type = PDO::PARAM_STR;
 		} else {
@@ -77,9 +79,10 @@ class DB extends PDO {
 				echo var_export($this->lastParams, true)."\n";
 			}
 		}
-		$ok = $stmt->execute();
-		if (!$ok) {
-			throw new DBException($stmt->errorInfo()[2], $stmt->errorInfo()[1]);
+		try {
+			$stmt->execute();
+		} catch (PDOException $ex) {
+			throw new DBException($ex->errorInfo[2], $ex->errorInfo[1]);
 		}
 		if ($checkAffectedRows && $stmt->rowCount() == 0) {
 			throw new DBException("No row affected");
@@ -87,6 +90,7 @@ class DB extends PDO {
 		return $stmt;
 	}
 
+	#[\ReturnTypeWillChange]
 	public function query($sql, ...$params) {
 		return self::execute($sql, $params);
 	}

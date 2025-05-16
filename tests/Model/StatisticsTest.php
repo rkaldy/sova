@@ -8,6 +8,7 @@ use PDO;
 class StatisticsTest extends GameTestBase {
 
 	protected $statistics;
+	protected $progress;
 	protected $repo;
 
 	function setUp(): void {

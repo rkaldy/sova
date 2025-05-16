@@ -7,10 +7,12 @@ use Sova\Redirect;
 use Sova\Model\Settings;
 
 class MainControllerTest extends GameTestBase {
+	
+	private $controller;
 
 	function setUp(): void {
 		parent::setUp();
-        $this->controller = new MainController();
+	        $this->controller = new MainController();
 
 		Settings::set("hintCCodes", 1);
 		Settings::set("howtoCCodes", 2);

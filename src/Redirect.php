@@ -3,7 +3,7 @@ namespace Sova;
 
 class Redirect {
 
-	protected $url;
+	protected $uri;
 
 	public function __construct($uri, $flash = null) {
 		$this->uri = $uri;

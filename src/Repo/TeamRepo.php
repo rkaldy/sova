@@ -14,7 +14,7 @@ class TeamRepo extends RepoBase {
 		", $gameId);
 		foreach ($teams as &$team) {
 			$team["members"] = json_decode($team["members"], true);
-			$team["additional"] = json_decode($team["additional"], true);
+			$team["additional"] = is_null($team["additional"]) ? null : json_decode($team["additional"], true);
 			self::convertBooleans($team, ["accomodation", "paid"]);
 		}
 		return $teams;
@@ -24,6 +24,9 @@ class TeamRepo extends RepoBase {
 		try {
 			if (empty($team["tshirt"])) {
 				$team["tshirt"] = 0;
+			}
+			if (!isset($team["members"])) {
+				$team["members"] = [];
 			}
 			$this->db->execute("INSERT INTO team (game_id, name, phone, email, members, accomodation, paid, tshirt, remarks, additional) VALUES (:game_id, :name, :phone, :email, :members, :accomodation, :paid, :tshirt, :remarks, :additional)", $team, true);
 			$team["team_id"] = $this->db->lastInsertId();
@@ -60,7 +63,9 @@ class TeamRepo extends RepoBase {
 			", $team_id, $pswd);
 		if ($team) {
 			$team["members"] = json_decode($team["members"], true);
-			$team["additional"] = json_decode($team["additional"], true);
+			if ($team["additional"]) {
+				$team["additional"] = json_decode($team["additional"], true);
+			}
 		}
 		return $team;
 	}

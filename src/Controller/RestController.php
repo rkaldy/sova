@@ -15,9 +15,9 @@ class RestController {
 	public function process(Request $req, array $path): Response {
 		try {
 			if (empty($path)) {
-                throw new HttpException(400, "No resource specified");
-            }
-            $resource = $path[0];
+				throw new HttpException(400, "No resource specified");
+			}
+			$resource = $path[0];
 
 			$this->authenticate();
 			$this->authorize($resource, $req->method);
@@ -49,16 +49,16 @@ class RestController {
 		catch (\Throwable $ex) {
 			$status = 500;
 			if (DEVELOPMENT) {
-			    $ret = ["error" => $ex->getMessage(), "file" => $ex->getFile(), "line" => $ex->getLine(), "trace" => $ex->getTraceAsString()];
+				$ret = ["error" => $ex->getMessage(), "file" => $ex->getFile(), "line" => $ex->getLine(), "trace" => $ex->getTraceAsString()];
 			} else {
-                $ret = ["error" => "Internal server error" ];
-            }
+				$ret = ["error" => "Internal server error" ];
+			}
 		}
 		
 		$jsonFlags = JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE;
-        if (isset($req->params["pretty"])) {
-            $jsonFlags |= JSON_PRETTY_PRINT;
-        }
+		if (isset($req->params["pretty"])) {
+			$jsonFlags |= JSON_PRETTY_PRINT;
+		}
 		$resp = new Response($status, json_encode($ret, $jsonFlags));
 		$resp->addHeader("Content-Type", "application/json; charset=UTF-8");
 		return $resp;

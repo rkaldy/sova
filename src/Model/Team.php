@@ -13,10 +13,7 @@ class Team extends ModelBase {
 	public function list(int $from = null, $limit = null): array {
 		$teams = $this->repo->list(Game::current());
 		foreach ($teams as &$team) {
-			$team["fee"] = (int)Settings::get("gamePrice") + (int)Settings::get("tshirtPrice") * (int)$team["tshirt"];
-			if ($team["accomodation"] && !empty($team["members"])) {
-				$team["fee"] += (int)Settings::get("accomodationPrice") * count($team["members"]);
-			}
+			$this->computeFee($team);
 		}
 		return $teams;
 	}
@@ -25,6 +22,7 @@ class Team extends ModelBase {
 		$this->prepare($team);
 		(new Code())->prepare($team["pswd"]);
 		$this->repo->create($team);
+		$this->computeFee($team);
 	}
 
 	public function login(int $team_id, string $pswd): bool {
@@ -48,6 +46,14 @@ class Team extends ModelBase {
 	public static function logout() { 
         $_SESSION = [];
         session_destroy(); 
+	}
+
+
+	public function computeFee(array &$team) {
+		$team["fee"] = (int)Settings::get("gamePrice") + (int)Settings::get("tshirtPrice") * (int)$team["tshirt"];
+		if ($team["accomodation"] && !empty($team["members"])) {
+			$team["fee"] += (int)Settings::get("accomodationPrice") * count($team["members"]);
+		}
 	}
 
 

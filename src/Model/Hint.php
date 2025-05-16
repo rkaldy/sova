@@ -29,14 +29,14 @@ class Hint extends ModelBase {
 			case HintRepo::HOWTO: $typeStr = "howto"; break;
 			case HintRepo::SOLUTION: $typeStr = "solution"; break;
 		}
-		if (Settings::get("${typeStr}CCodes") == 0) {
-			return [Settings::get("${typeStr}Points"), "points"];
+		if (Settings::get("{$typeStr}CCodes") == 0) {
+			return [Settings::get("{$typeStr}Points"), "points"];
 		}
 		$ccodes = $this->repo->getUnusedCCodeCount(Team::current());
-		if ($ccodes >= Settings::get("${typeStr}CCodes")) {
-			return [Settings::get("${typeStr}CCodes"), "ccodes"];
+		if ($ccodes >= Settings::get("{$typeStr}CCodes")) {
+			return [Settings::get("{$typeStr}CCodes"), "ccodes"];
 		} else {
-			return [Settings::get("${typeStr}Points"), "points.no-ccode"];
+			return [Settings::get("{$typeStr}Points"), "points.no-ccode"];
 		}
 	}
 
