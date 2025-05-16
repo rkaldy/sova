@@ -41,7 +41,12 @@ class Cipher extends ModelBase {
 		}
 
                 $team = new Team();
-		$team->addPoints($cipher["points"]);
+		$points = $cipher["points"];
+		if ($cipher["points_by_rank"]) {
+			$rank = (new ProgressRepo())->rankAtPoint(Team::current(), $cipher["point_id"]);
+			$points -= ($rank - 1) * $cipher["points_by_rank"];
+		}
+		$team->addPoints($points);
 
 		$ret = [new Text("$type.solved", $cipher["name"], $team->points())];
 		if (Settings::get("showRank")) {

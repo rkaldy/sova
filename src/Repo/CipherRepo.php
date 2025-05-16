@@ -6,7 +6,7 @@ use Sova\DBException;
 class CipherRepo extends PointRepo {
 
 	protected const SQL = "
-		    SELECT cipher.*, name, code, points,
+		    SELECT cipher.*, name, code, points, points_by_rank,
 			  GROUP_CONCAT(DISTINCT prev.from_point_id ORDER BY prev.from_point_id SEPARATOR ',') AS prev,
 			  GROUP_CONCAT(DISTINCT next.to_point_id ORDER BY next.to_point_id SEPARATOR ',') AS next
 			FROM cipher 

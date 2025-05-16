@@ -23,6 +23,7 @@ $(function() {
 			{ name: "hint", title: "Nápověda", type: "textarea", width: "30ex" },
 			{ name: "howto", title: "Postup", type: "textarea", width: "40ex" },
 			{ name: "points", title: "Body", type: "text", width: "10ex", validate: integerValidator },
+			{ name: "points_by_rank", title: "Body dle pořadí", type: "text", width: "10ex", validate: integerValidator },
 			{ name: "prev", title: "Umístění", type: "multiselect", width: "15ex", items: locs, valueField: "point_id", textField: "name", longTextField: longText },
 			{ name: "next", title: "Následující stanoviště", type: "multiselect", width: "20ex", items: locs, valueField: "point_id", textField: "name", longTextField: longText },
 			{ type: "control", width: "10ex" }
@@ -59,11 +60,15 @@ $(function() {
     <td>Týmu se přičtou po odeslání řešení do Sovy <i>(nepovinné)</i></td>
   </tr>
   <tr>
+    <th>Body dle pořadí</th>
+    <td>Je-li zadané, pak první tým, který vyluští šifru, dostane plný počet bodů, druhý o zadaný počet méně a další podobně <i>(nepovinné)</i><br>Ověřte si, že základní počet bodů je natolik velký, že i poslední tým dostane kladné body.</td>
+  </tr>
+  <tr>
     <th>Umístění</h3>
-	<td>Stanoviště, na němž se šifra či aktivita nachází. Stanovišť může být i více, pokud se šifra skládá z více částí na různých místech</td>
+    <td>Stanoviště, na němž se šifra či aktivita nachází. Stanovišť může být i více, pokud se šifra skládá z více částí na různých místech</td>
   </tr>
   <tr>
     <th>Následující stanoviště</th>
-	<td>Stanoviště, na které šifra ukazuje. Stanovišť může být i více, v takovém případě po vyřešení šifry/aktivity Sova vrátí polohu všech těchto stanovišť.</td>
+    <td>Stanoviště, na které šifra ukazuje. Stanovišť může být i více, v takovém případě po vyřešení šifry/aktivity Sova vrátí polohu všech těchto stanovišť.</td>
   </tr>
 </table>

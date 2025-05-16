@@ -63,7 +63,7 @@ class CipherTest extends GameTestBase {
 	}
 
 	function testSolveRank() {
-        Settings::set("showRank", true);
+		Settings::set("showRank", true);
 		$cipher = $this->cipherRepo->get(11);
 		$this->assertEquals([
 			new Text("cipher.solved", "S1", 30), 
@@ -73,7 +73,7 @@ class CipherTest extends GameTestBase {
 	}
 
 	function testSolveActivityRank() {
-        Settings::set("showRank", true);
+		Settings::set("showRank", true);
 		$cipher = $this->cipherRepo->get(12);
 		$this->assertEquals([
 			new Text("activity.solved", "A1", 20), 
@@ -88,6 +88,20 @@ class CipherTest extends GameTestBase {
 		$this->assertEquals([
 			new Text("cipher.solved", "S1", 30),
 			new Text("loc.next", "1a", "na vrcholu Bílé hory") 
+		], $this->cipher->solve($cipher, "ABERACE"));
+	}
+
+	function testPointsByRank() {
+		$cipher = $this->cipherRepo->get(11);
+		$cipher["points_by_rank"] = 5;
+		$this->assertEquals([
+			new Text("cipher.solved", "S1", 30), 
+			new Text("loc.next", "1a", "na vrcholu Bílé hory")
+		], $this->cipher->solve($cipher, "ABERACE"));
+		$_SESSION["team_id"] = 2;
+		$this->assertEquals([
+			new Text("cipher.solved", "S1", 25), 
+			new Text("loc.next", "1a", "na vrcholu Bílé hory")
 		], $this->cipher->solve($cipher, "ABERACE"));
 	}
 }

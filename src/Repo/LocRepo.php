@@ -11,7 +11,7 @@ class LocRepo extends PointRepo {
 
 	public function get(int $id) {
 		$loc = $this->db->squery("
-			SELECT loc.*, point.name, point.points,
+			SELECT loc.*, point.name, point.points, point.points_by_rank,
 			  GROUP_CONCAT(DISTINCT prev.from_point_id ORDER BY prev.from_point_id SEPARATOR ',') AS prev,
 			  GROUP_CONCAT(DISTINCT next.to_point_id ORDER BY next.to_point_id SEPARATOR ',') AS next
 			FROM loc 
@@ -26,7 +26,7 @@ class LocRepo extends PointRepo {
 
 	public function list($gameId) {
 		$locs = $this->db->aquery("
-			SELECT loc.*, point.name, point.points, code,
+			SELECT loc.*, point.name, point.points, point.points_by_rank, code,
 			  GROUP_CONCAT(DISTINCT next.point_id ORDER BY next.order_id, name SEPARATOR ',') AS next			
 			FROM loc
 			NATURAL JOIN point

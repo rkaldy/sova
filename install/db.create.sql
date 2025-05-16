@@ -78,7 +78,8 @@ CREATE TABLE `point` (
   point_id int(11) NOT NULL,
   game_id int(11) NOT NULL,
   name varchar(40) COLLATE utf8mb4_czech_ci NOT NULL,
-  points int(11) DEFAULT 0
+  points int(11) DEFAULT 0,
+  points_by_rank int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
 
 CREATE TABLE progress (

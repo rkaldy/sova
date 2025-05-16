@@ -24,10 +24,10 @@ class CipherCrudTest extends CrudTestBase {
 		$cipher1 = $this->create(["name" => "S3", "name_int" => "semafor", "activity" => false, "code" => "javor", "prev" => [2], "next" => [4, 3]]);
 		$cipher2 = $this->create(["name" => "S4", "name_int" => "nahradni", "activity" => false, "code" => "soliter", "prev" => [], "points" => 1]);
 		$this->assertEquals([
-			["point_id" => 5, "name" => "S1", "name_int" => "Morseovka", "activity" => false, "hint" => null, "howto" => null, "code" => "ZABRADLI", "prev" => [1], "next" => [2], "points" => 0],
-			["point_id" => 6, "name" => "S2", "name_int" => "Braille", "activity" => false, "hint" => null, "howto" => null, "code" => "KOBLIHA", "prev" => [1], "next" => [3], "points" => 0],
-			["point_id" => $cipher1["point_id"], "name" => "S3", "name_int" => "semafor", "activity" => false, "hint" => null, "howto" => null, "code" => "JAVOR", "prev" => [2], "next" => [3, 4], "points" => 0],
-			["point_id" => $cipher2["point_id"], "name" => "S4", "name_int" => "nahradni", "activity" => false, "hint" => null, "howto" => null, "code" => "SOLITER", "prev" => [], "next" => [], "points" => 1]
+			["point_id" => 5, "name" => "S1", "name_int" => "Morseovka", "activity" => false, "hint" => null, "howto" => null, "code" => "ZABRADLI", "prev" => [1], "next" => [2], "points" => 0, "points_by_rank" => 0],
+			["point_id" => 6, "name" => "S2", "name_int" => "Braille", "activity" => false, "hint" => null, "howto" => null, "code" => "KOBLIHA", "prev" => [1], "next" => [3], "points" => 0, "points_by_rank" => 0],
+			["point_id" => $cipher1["point_id"], "name" => "S3", "name_int" => "semafor", "activity" => false, "hint" => null, "howto" => null, "code" => "JAVOR", "prev" => [2], "next" => [3, 4], "points" => 0, "points_by_rank" => 0],
+			["point_id" => $cipher2["point_id"], "name" => "S4", "name_int" => "nahradni", "activity" => false, "hint" => null, "howto" => null, "code" => "SOLITER", "prev" => [], "next" => [], "points" => 1, "points_by_rank" => 0]
 		], $this->list());
 		$this->assertEquals(8, $this->db->equery("SELECT COUNT(*) FROM point"));
 		$this->assertEquals(4, $this->db->equery("SELECT COUNT(*) FROM cipher"));
@@ -43,8 +43,8 @@ class CipherCrudTest extends CrudTestBase {
 			$this->assertEquals(1062, $ex->getCode());
 		}
 		$this->assertEquals([
-			["point_id" => 5, "name" => "S1", "name_int" => "Morseovka", "activity" => false, "hint" => null, "howto" => null, "code" => "ZABRADLI", "prev" => [1], "next" => [2], "points" => 0],
-			["point_id" => 6, "name" => "S2", "name_int" => "Braille", "activity" => false, "hint" => null, "howto" => null, "code" => "KOBLIHA", "prev" => [1], "next" => [3], "points" => 0]
+			["point_id" => 5, "name" => "S1", "name_int" => "Morseovka", "activity" => false, "hint" => null, "howto" => null, "code" => "ZABRADLI", "prev" => [1], "next" => [2], "points" => 0, "points_by_rank" => 0],
+			["point_id" => 6, "name" => "S2", "name_int" => "Braille", "activity" => false, "hint" => null, "howto" => null, "code" => "KOBLIHA", "prev" => [1], "next" => [3], "points" => 0, "points_by_rank" => 0]
 		], $this->list());
 		$this->assertEquals(6, $this->db->equery("SELECT COUNT(*) FROM point"));
 		$this->assertEquals(2, $this->db->equery("SELECT COUNT(*) FROM cipher"));
@@ -55,8 +55,8 @@ class CipherCrudTest extends CrudTestBase {
 	function testUpdate() {
 		$this->update(["point_id" => 6, "name" => "S3", "name_int" => "Caesar", "activity" => false, "code" => "RUBIKON", "prev" => [1, 2], "next" => [3, 4], "points" => 2]);
 		$this->assertEquals([
-			["point_id" => 5, "name" => "S1", "name_int" => "Morseovka", "activity" => false, "hint" => null, "howto" => null, "code" => "ZABRADLI", "prev" => [1], "next" => [2], "points" => 0],
-			["point_id" => 6, "name" => "S3", "name_int" => "Caesar", "activity" => false, "hint" => null, "howto" => null, "code" => "RUBIKON", "prev" => [1, 2], "next" => [3, 4], "points" => 2]
+			["point_id" => 5, "name" => "S1", "name_int" => "Morseovka", "activity" => false, "hint" => null, "howto" => null, "code" => "ZABRADLI", "prev" => [1], "next" => [2], "points" => 0, "points_by_rank" => 0],
+			["point_id" => 6, "name" => "S3", "name_int" => "Caesar", "activity" => false, "hint" => null, "howto" => null, "code" => "RUBIKON", "prev" => [1, 2], "next" => [3, 4], "points" => 2, "points_by_rank" => 0]
 		], $this->list());
 		$this->assertEquals(6, $this->db->equery("SELECT COUNT(*) FROM point"));
 		$this->assertEquals(2, $this->db->equery("SELECT COUNT(*) FROM cipher"));
@@ -67,7 +67,7 @@ class CipherCrudTest extends CrudTestBase {
 	function testDelete() {
 		$this->delete(["point_id" => 6]);
 		$this->assertEquals([
-			["point_id" => 5, "name" => "S1", "name_int" => "Morseovka", "activity" => false, "hint" => null, "howto" => null, "code" => "ZABRADLI", "prev" => [1], "next" => [2], "points" => 0]
+			["point_id" => 5, "name" => "S1", "name_int" => "Morseovka", "activity" => false, "hint" => null, "howto" => null, "code" => "ZABRADLI", "prev" => [1], "next" => [2], "points" => 0, "points_by_rank" => 0]
 		], $this->list());
 		$this->assertEquals(5, $this->db->equery("SELECT COUNT(*) FROM point"));
 		$this->assertEquals(1, $this->db->equery("SELECT COUNT(*) FROM cipher"));
