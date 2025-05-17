@@ -164,6 +164,13 @@ foreach ($settings as $item) {
 </table>
 </form>
 
+<h2>Reset hry</h2>
+<p>Reset smaže všechna dynamická data v dané hře (postup týmů, nápovědy, zprávy, body, popř. získaná céčka), ale ponechá statická data (týmy, stanoviště, šifry). Použijte jej na vyčištění databáze po anuálním testování Sovy.</p>
+<form method="POST" action="reset">
+  <input type="submit" value="Reset">
+</form>
+
+
 <script type="text/javascript">
 <?php
 foreach ($settings as $item) {

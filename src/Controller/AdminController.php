@@ -105,6 +105,6 @@ class AdminController {
 
 	public function reset() {
 		(new Settings())->reset();
-		return new Redirect("admin/settings", "Hra byla restartována.");
+		return new Redirect("settings", "Hra byla restartována.");
 	}
 }

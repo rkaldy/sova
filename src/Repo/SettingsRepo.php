@@ -22,7 +22,7 @@ class SettingsRepo extends RepoBase {
 
 	public function reset(int $gameId) {
 		$this->db->execute("UPDATE team SET points = 0 WHERE game_id = ?", $gameId);
-		$this->db->execute("DELETE FROM hints WHERE team_id IN (SELECT team_id FROM team WHERE game_id = ?)", $gameId);
+		$this->db->execute("DELETE FROM hint WHERE team_id IN (SELECT team_id FROM team WHERE game_id = ?)", $gameId);
 		$this->db->execute("DELETE FROM progress WHERE team_id IN (SELECT team_id FROM team WHERE game_id = ?)", $gameId);
 		$this->db->execute("DELETE FROM message WHERE team_id IN (SELECT team_id FROM team WHERE game_id = ?)", $gameId);
 	}
