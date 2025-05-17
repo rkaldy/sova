@@ -29,7 +29,7 @@ class Application {
 
 	public function run() {
 		if (DEVELOPMENT) {
-			set_error_handler(function($errno, $errstr, $errfile, $errline, $errcontext) {
+			set_error_handler(function($errno, $errstr, $errfile = "", $errline = 0, $errcontext = null) {
 				throw new PHPException($errstr, $errno, $errfile, $errline, $errcontext);
 			});
 		}

@@ -3,8 +3,8 @@ namespace Sova;
 
 class PHPException extends \Exception {
 	
-	public $file;
-	public $line;
+	public string $file;
+	public int $line;
 	public $context;
 	
 	public function __construct($message, $code, $file, $line, $context) {

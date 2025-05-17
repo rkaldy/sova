@@ -137,13 +137,13 @@ class Hint extends ModelBase {
 		$available = false;
 		if ($price == 0) {
 			$ret = new Text("");
-        } else if ($this->repo->haveImunity(Team::current())) {
-            $ret = new Text("imunity.already");
-        } else if ($ccodeCount < $price) {
-            $ret = new Text("imunity.insufficient");
-        } else {
-            $available = true;
-            $ret = new Text("imunity.available", $price);
+		} else if ($this->repo->haveImunity(Team::current())) {
+			$ret = new Text("imunity.already");
+		} else if ($ccodeCount < $price) {
+			$ret = new Text("imunity.insufficient");
+		} else {
+			$available = true;
+			$ret = new Text("imunity.available", $price);
 		}
 		return [$available, $ret];
 	}

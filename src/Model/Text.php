@@ -18,6 +18,9 @@ class Text extends ModelBase {
 	}
 
 	public function format() {
+		if (empty($this->code)) {
+			return "";
+		}
 		return vsprintf($this->repo->get(Game::current(), $this->code), $this->args);
 	}
 }
