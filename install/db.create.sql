@@ -105,7 +105,8 @@ CREATE TABLE settings (
   hintCCodes int(11) NOT NULL DEFAULT 0,
   howtoCCodes int(11) NOT NULL DEFAULT 0,
   solutionCCodes int(11) NOT NULL DEFAULT 0,
-  imunityCCodes int(11) DEFAULT 0
+  imunityCCodes int(11) DEFAULT 0,
+  deductPoints tinyint(4) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE step (

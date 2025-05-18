@@ -59,9 +59,9 @@ class CodeControllerTest extends GameTestBase {
 	function testVisitLocRank() {
 		Settings::set("showRank", true);
 		$this->assertEquals([
-            "Vítejte na stanovišti Start. Máte 15 bodů.", 
-            "Jste tu 1. První tu byl tým Parta Nic v ".$this->dbNow()."."
-        ], CodeController::process("pralinka"));
+			"Vítejte na stanovišti Start. Máte 15 bodů.", 
+			"Jste tu 1. První tu byl tým Parta Nic v ".$this->dbNow()."."
+		], CodeController::process("pralinka"));
 	}
 
 	function testVisitFinish() {
@@ -91,7 +91,7 @@ class CodeControllerTest extends GameTestBase {
 		Settings::set("showRank", true);
 		$this->assertEquals([
 			"Úspěšně jste vyluštili šifru S1. Máte 30 bodů.",
-            "Jste 1. První ji vyluštil tým Parta Nic v {$this->dbNow()}.", 
+			"Jste 1. První ji vyluštil tým Parta Nic v {$this->dbNow()}.", 
 			"Další stanoviště 1a se nachází na vrcholu Bílé hory."
 		], CodeController::process("aberace"));
 	}
@@ -100,7 +100,7 @@ class CodeControllerTest extends GameTestBase {
 		Settings::set("showRank", true);
 		$this->assertEquals([
 			"Úspěšně jste zvládli aktivitu A1. Máte 20 bodů.",
-            "Jste 1. První ji dal tým Parta Nic v {$this->dbNow()}.", 
+			"Jste 1. První ji dal tým Parta Nic v {$this->dbNow()}.", 
 			"Další stanoviště 1b se nachází na vrcholu Černé hory."
 		], CodeController::process("zabradli"));
 	}
@@ -124,32 +124,32 @@ class CodeControllerTest extends GameTestBase {
 		Settings::set("showRank", true);
 		$this->db->execute("INSERT INTO team (team_id, game_id, name) VALUES (3, 1, 'abpopa')");
 
-        $this->assertEquals([
-            "Vítejte na stanovišti Start. Máte 15 bodů.", 
-            "Jste tu 1. První tu byl tým Parta Nic v {$this->dbNow(1)}."
-        ], $this->sendCode(1, "pralinka"));
-        $this->assertEquals([
-            "Vítejte na stanovišti Start. Máte 15 bodů.", 
-            "Jste tu 2. První tu byl tým Parta Nic v {$this->dbNow(1)}."
-        ], $this->sendCode(3, "pralinka"));
-        $this->assertEquals([
-            "Vítejte na stanovišti Start. Máte 15 bodů.", 
-            "Jste tu 3. První tu byl tým Parta Nic v {$this->dbNow(1)}."
-        ], $this->sendCode(2, "pralinka"));
+		$this->assertEquals([
+			"Vítejte na stanovišti Start. Máte 15 bodů.", 
+			"Jste tu 1. První tu byl tým Parta Nic v {$this->dbNow(1)}."
+		], $this->sendCode(1, "pralinka"));
+		$this->assertEquals([
+			"Vítejte na stanovišti Start. Máte 15 bodů.", 
+			"Jste tu 2. První tu byl tým Parta Nic v {$this->dbNow(1)}."
+		], $this->sendCode(3, "pralinka"));
+		$this->assertEquals([
+			"Vítejte na stanovišti Start. Máte 15 bodů.", 
+			"Jste tu 3. První tu byl tým Parta Nic v {$this->dbNow(1)}."
+		], $this->sendCode(2, "pralinka"));
 		
 		$this->assertEquals([
 			"Úspěšně jste vyluštili šifru S1. Máte 45 bodů.",
-            "Jste 1. První ji vyluštil tým Redwool v {$this->dbNow(4)}.", 
+			"Jste 1. První ji vyluštil tým Redwool v {$this->dbNow(4)}.", 
 			"Další stanoviště 1a se nachází na vrcholu Bílé hory."
 		], $this->sendCode(2, "aberace"));
 		$this->assertEquals([
 			"Úspěšně jste vyluštili šifru S1. Máte 45 bodů.",
-            "Jste 2. První ji vyluštil tým Redwool v {$this->dbNow(4)}.", 
+			"Jste 2. První ji vyluštil tým Redwool v {$this->dbNow(4)}.", 
 			"Další stanoviště 1a se nachází na vrcholu Bílé hory."
 		], $this->sendCode(1, "aberace"));
 		$this->assertEquals([
 			"Úspěšně jste vyluštili šifru S1. Máte 45 bodů.",
-            "Jste 3. První ji vyluštil tým Redwool v {$this->dbNow(4)}.", 
+			"Jste 3. První ji vyluštil tým Redwool v {$this->dbNow(4)}.", 
 			"Další stanoviště 1a se nachází na vrcholu Bílé hory."
 		], $this->sendCode(3, "aberace"));
 	}

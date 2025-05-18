@@ -6,6 +6,8 @@ use Sova\GameTestBase;
 use Sova\View;
 use Sova\Redirect;
 use Sova\Model\Settings;
+use Sova\Model\Team;
+
 
 class MainControllerTest extends GameTestBase {
 	
@@ -111,5 +113,16 @@ class MainControllerTest extends GameTestBase {
 		$this->assertEquals("Hra již skončila.", $view->fields["error"]);
 		$view = $this->controller->handleAction(new Request("GET", null, [], []), "messages");
 		$this->assertFalse(isset($view->fields["error"]));
+	}
+
+	function testDeductPoints() {
+		Settings::set("deductPoints", true);
+		$view = $this->controller->handleAction(new Request("GET", null, [], ["points" => 100]), "deduct");
+		$this->assertInstanceOf(Redirect::class, $view);
+		$this->assertEquals(-100, (new Team)->points());
+		$view = $this->controller->handleAction(new Request("GET", null, [], ["points" => -1]), "deduct");
+		$this->assertEquals("Počet odečtených bodů musí být kladný.", $view->fields["error"]);
+		$view = $this->controller->handleAction(new Request("GET", null, [], ["points" => "a"]), "deduct");
+		$this->assertEquals("Počet odečtených bodů musí být kladný.", $view->fields["error"]);
 	}
 }

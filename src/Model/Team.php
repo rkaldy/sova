@@ -44,8 +44,8 @@ class Team extends ModelBase {
 	}
 
 	public static function logout() { 
-        $_SESSION = [];
-        session_destroy(); 
+		$_SESSION = [];
+		session_destroy(); 
 	}
 
 
@@ -66,7 +66,7 @@ class Team extends ModelBase {
 	}
 
 
-	public static function logged() 	 { return isset($_SESSION['team_id']); }
-	public static function current() 	 { return $_SESSION['team_id']; }
-	public static function currentName() { return $_SESSION['team_name']; }
+	public static function logged() 	{ return isset($_SESSION['team_id']); }
+	public static function current() 	{ return $_SESSION['team_id']; }
+	public static function currentName() 	{ return $_SESSION['team_name']; }
 }

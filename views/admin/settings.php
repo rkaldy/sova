@@ -102,6 +102,11 @@ $settings = [
 		"var"	=> "imunityCCodes",
 		"type"	=> TEXT,
 		"label"	=> "Cena imunity (v céčkách)"
+	],
+	[
+		"var"	=> "deductPoints",
+		"type"	=> BOOL,
+		"label"	=> "Mají týmy možnost si samy odečíst body?"
 	]
 ];
 

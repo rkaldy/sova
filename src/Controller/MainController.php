@@ -110,7 +110,7 @@ class MainController {
 		$hint = new Hint();
 		$ccodeCount = $hint->unusedCCodeCount();
 		list($imunityAvailable, $imunityMsg) = $hint->imunityStatus($ccodeCount);
-		return new View("main/hints", ["points" => (new Team())->points(), "ccodes" => $ccodeCount, "imunityAvailable" => $imunityAvailable, "imunityMsg" => $imunityMsg->format()]);
+		return new View("main/hints", ["points" => (new Team())->points(), "ccodes" => $ccodeCount, "imunityAvailable" => $imunityAvailable, "imunityMsg" => $imunityMsg->format(), "deductPoints" => Settings::get("deductPoints")]);
 	}
 
 	public function checkhint($params, $data) {
@@ -149,6 +149,18 @@ class MainController {
 
 	public function imunity($params, $data) {
 		return new Redirect("hints", (new Hint())->applyImunity()->format());
+	}
+
+	public function deduct($params, $data) {
+		if (!Settings::get("deductPoints")) {
+			throw new AppException("Odečítání bodů není povoleno.");
+		}
+		$points = (int)$data["points"];
+		if ($points <= 0) {
+			throw new AppException("Počet odečtených bodů musí být kladný.");
+		}
+		(new Team())->addPoints(-$points);
+		return new Redirect("hints", "Bylo vám odečteno $points bodů.");;
 	}
 
 
