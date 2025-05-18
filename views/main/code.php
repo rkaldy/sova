@@ -1,7 +1,3 @@
-<?php if ($gameState == \Sova\Model\Game::PAST) { ?>
-<p>Hra již skončila. Vraťte se do cíle..</p>
-<?php } else { ?>
-
 <p id="response"><?php echo join("<br>", $response) ?></p>
 
 <h3>Zadej kód</h3>
@@ -9,5 +5,3 @@
   <input type="text" name="code" class="focused">
   <input type="submit" value="Odeslat">
 </form>
-
-<?php } ?>

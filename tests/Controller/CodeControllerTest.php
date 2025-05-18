@@ -114,15 +114,6 @@ class CodeControllerTest extends GameTestBase {
 		], CodeController::process("aberace"));
 	}
 
-	function testInactiveGame() {
-		$_SESSION["game_id"] = 2;
-		(new Settings())->load();
-		$this->expectException("\Sova\HttpException");
-		$this->expectExceptionCode(403);
-		CodeController::process("pralinka");
-	}
-
-
 	private function sendCode(int $teamId, string $code) {
 		$_SESSION["team_id"] = $teamId;
 		Progress::addFakeTime(1);

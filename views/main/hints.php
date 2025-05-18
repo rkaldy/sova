@@ -1,8 +1,8 @@
-<p id="hintcount">Aktuálně máte <?php echo $points ?> bodů a <?php echo $ccodes ?> nevyužitých céček.</p>
+<p id="hintcount">Aktuálně máte <?php echo $points ?> bodů
+<?php if ($ccodes) { echo "a $ccodes nevyužitých céček"; } ?>
+.</p>
 
 <p id="flash"><?php if (isset($flash)) echo $flash; ?></p>
-
-<?php if ($gameState == \Sova\Model\Game::CURRENT) { ?>
 
 <form method="POST" action="checkhint">
   <p>
@@ -17,11 +17,5 @@
 <form method="POST" action="imunity">
   <input type="submit" value="Koupit imunitu">
 </form>
-<?php } ?>
-
-<?php } else if ($gameState == \Sova\Model\Game::FUTURE) { ?>
-<p>Hra ještě nezačala.</p>
-<?php } else if ($gameState == \Sova\Model\Game::PAST) { ?>
-<p>Hra již skončila. Vraťte se do cíle..</p>
 <?php } ?>
 

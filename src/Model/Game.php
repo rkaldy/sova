@@ -5,9 +5,9 @@ use Sova\Repo\GameRepo;
 
 class Game extends ModelBase {
 
-    const CURRENT = 1;
-    const PAST = 2;
-    const FUTURE = 3;
+	const CURRENT = 1;
+	const PAST = 2;
+	const FUTURE = 3;
 
 
 	public function prepare(array &$game) {
@@ -35,7 +35,7 @@ class Game extends ModelBase {
 		}
 		$_SESSION["game_id"] = $game["game_id"];
 		$_SESSION["game_name"] = $game["name"];
-        (new Settings())->load();
+		(new Settings())->load();
 		return true;
 	}
 

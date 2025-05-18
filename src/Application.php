@@ -95,9 +95,9 @@ class Application {
 		foreach ($this->routes as list($route, $controllerClass, $fixTrailingSlash)) {
 			$routeLen = count($route);
 			if ($route == array_slice($routePart, 0, $routeLen)) {
-                if ($fixTrailingSlash && count($routePart) == $routeLen && substr($request->url, -1, 1) != "/") {
-                    return (new Redirect($request->url."/"))->buildResponse();
-                }
+				if ($fixTrailingSlash && count($routePart) == $routeLen && substr($request->url, -1, 1) != "/") {
+					return (new Redirect($request->url."/"))->buildResponse();
+				}
 				$path = array_slice($routePart, $routeLen);
 				return $this->runController($controllerClass, $request, $path);
 			}

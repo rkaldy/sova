@@ -1,6 +1,7 @@
 <?php
 namespace Sova\Controller;
 
+use \DateTime;
 use Sova\Request;
 use Sova\Response;
 use Sova\Redirect;
@@ -17,10 +18,14 @@ use Sova\Model\Text;
 use Sova\Model\Settings;
 
 
+class AppException extends \Exception {
+}
+
+
 class MainController {
 
 	const ACTIONS_PUBLIC = ["login"];
-	const ACTIONS_DURING_GAME = ["code", "hints"];
+	const ACTIONS_AFTER_GAME = ["hints", "ciphers", "messages", "rank", "settings"];
 
 	public function process(Request $req, array $path): Response {
 		if (empty($path)) {
@@ -28,15 +33,8 @@ class MainController {
 		} else {
 			$action = $path[0];
 		}
-		
-		if (!method_exists($this, $action)) {
-			$view = new View("error", ["error" => "Neznámá akce: '$action'"]);
-		} else if (!in_array($action, self::ACTIONS_PUBLIC) && !Team::logged()) {
-			$view = new View("main/login", ["flash" => "Platnost přihlášení vypršela. Přihlašte se prosím znovu."]);
-		} else {
-			$view = $this->$action($req->params, $req->data);
-		}
 
+		$view = $this->handleAction($req, $action);	
 		if ($view instanceof Redirect) {
 			return $view->buildResponse();
 		}
@@ -50,11 +48,31 @@ class MainController {
 		if (Team::logged()) {
 			$view->addField("team", Team::currentName());
 			$view->addField("game", Game::currentName());
-		    $view->addField("showRank", Settings::get("showRank"));
+			$view->addField("showRank", Settings::get("showRank"));
 		}
 
 		$output = $view->render("main-layout");
 		return new Response(200, $output);
+	}
+
+
+	public function handleAction(Request $req, string $action) {
+		try {
+			if (!method_exists($this, $action)) {
+				throw new AppException("Neznámá akce: '$action'");
+			} else if (!in_array($action, self::ACTIONS_PUBLIC) && !Team::logged()) {
+				return new View("main/login", ["flash" => "Platnost přihlášení vypršela. Přihlašte se prosím znovu."]);
+			} else if (Game::state() == Game::FUTURE) {
+				throw new AppException("Hra ještě nezačala.");
+			} else if (!in_array($action, self::ACTIONS_AFTER_GAME) && (Game::state() == Game::PAST)) {
+				throw new AppException("Hra již skončila.");
+			} else {
+				return $this->$action($req->params, $req->data);
+			}
+		} 
+		catch (AppException $ex) {
+			return new View("error", ["error" => $ex->getMessage()]);
+		}
 	}
 
 
@@ -96,9 +114,6 @@ class MainController {
 	}
 
 	public function checkhint($params, $data) {
-		if (Game::state() != Game::CURRENT) {
-			throw new HttpException(403);
-		}
 		$hint = new Hint();
 		$message = new Message();
 
@@ -121,9 +136,6 @@ class MainController {
 	}
 
 	public function applyhint($params, $data) {
-		if (Game::state() != Game::CURRENT) {
-			throw new HttpException(403);
-		}
 		$hint = new Hint();
 		$message = new Message();
 

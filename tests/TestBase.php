@@ -18,6 +18,7 @@ class TestBase extends TestCase {
 		$this->db->execute("INSERT INTO settings (game_id) VALUES (1)");
 		$this->db->execute("INSERT INTO settings (game_id, gameStart, gameEnd) VALUES (2, DATE_SUB(NOW(), INTERVAL 2 HOUR), DATE_SUB(NOW(), INTERVAL 1 HOUR))");
 		$_SESSION["game_id"] = 1;
+		$_SESSION["game_name"] = "test";
 		(new Settings())->load();
 	}
 

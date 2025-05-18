@@ -11,7 +11,7 @@ class GameTestBase extends TestBase {
 
 /* 
  * (Start)--> S1a -> (1a) --> S2 -> (Turniket) -> (3) -> S3 -> (4) --> S4a --> (Cíl)
- *        \-> A1  -> (1b) -/                                       \-> S4b -/
+ *		\-> A1  -> (1b) -/									   \-> S4b -/
  */
 
 	function setUp(): void {
@@ -74,6 +74,7 @@ class GameTestBase extends TestBase {
 		$this->progressRepo = new ProgressRepo();
 		Progress::resetFakeTime();
 		$_SESSION["team_id"] = 1;
-        (new Settings())->load();
+		$_SESSION["team_name"] = "test";
+		(new Settings())->load();
 	}
 }
