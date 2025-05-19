@@ -8,6 +8,7 @@ class SettingsRepo extends RepoBase {
 	}
 
 	public function set(int $gameId, array $settings) {
+		$settings["game_id"] = $gameId;
 		$sql = "UPDATE settings SET";
 		$first = true;
 		foreach ($settings as $key => $value) {
@@ -17,6 +18,7 @@ class SettingsRepo extends RepoBase {
 			$sql .= " $key = :$key";
 			$first = false;
 		}
+		$sql .= " WHERE game_id = :game_id";
 		$stmt = $this->db->execute($sql, $settings);
 	}
 
