@@ -31,13 +31,16 @@ class Cipher extends ModelBase {
 		$type = $cipher["activity"] ? "activity" : "cipher";
 
 		$progress = new Progress();
-		if (!$progress->create($cipher)) {
+		if ($progress->isDone($cipher)) {
 			return new Text("$type.already");
 		}
-
+		
+		$progress->create($cipher);
 		foreach ($cipher["prev"] AS $prev) {
 			$loc = ["point_id" => $prev];
-			$progress->create($loc);
+			if (!$progress->isDone($loc)) {
+				$progress->create($loc);
+			}
 		}
 
                 $team = new Team();

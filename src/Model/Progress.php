@@ -12,6 +12,11 @@ class Progress extends ModelBase {
 		return $this->repo->create(Team::current(), $obj["point_id"], self::$fakeTimeOffset);
 	}
 
+
+	public function isDone(array $point) {
+		return $this->repo->isDone(Team::current(), $point["point_id"]);
+	}
+
 	
 	public function getRank(array $obj) {
 		$rank = $this->repo->rankAtPoint(Team::current(), $obj["point_id"]);
