@@ -136,6 +136,15 @@ h2 {
 	color: #a07070;
 }
 
+#pointcount {
+	display: inline-block;
+	float: right;
+	padding: 0.5ex 1.5ex;
+	background-color: #203060;
+	color: white;
+	border-radius: 1ex;
+}
+
 
 /* Forms */
 
@@ -145,6 +154,7 @@ form th {
 
 label {
 	margin-right: 1ex;
+	font-weight: bold;
 }
 
 input, textarea {

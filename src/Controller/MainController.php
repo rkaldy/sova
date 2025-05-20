@@ -25,7 +25,8 @@ class AppException extends \Exception {
 class MainController {
 
 	const ACTIONS_PUBLIC = ["login"];
-	const ACTIONS_AFTER_GAME = ["hints", "ciphers", "messages", "rank", "settings"];
+	const ACTIONS_BEFORE_GAME = ["logout"];
+	const ACTIONS_AFTER_GAME = ["hints", "ciphers", "messages", "rank", "settings", "logout"];
 
 	public function process(Request $req, array $path): Response {
 		if (empty($path)) {
@@ -48,6 +49,8 @@ class MainController {
 		if (Team::logged()) {
 			$view->addField("team", Team::currentName());
 			$view->addField("game", Game::currentName());
+			$view->addField("points", (new Team())->points());
+			$view->addField("ccodes", (new Hint())->unusedCCodeCount());
 			$view->addField("showRank", Settings::get("showRank"));
 		}
 
@@ -62,7 +65,7 @@ class MainController {
 				throw new AppException("Neznámá akce: '$action'");
 			} else if (!in_array($action, self::ACTIONS_PUBLIC) && !Team::logged()) {
 				return new View("main/login", ["flash" => "Platnost přihlášení vypršela. Přihlašte se prosím znovu."]);
-			} else if (Game::state() == Game::FUTURE) {
+			} else if (!in_array($action, self::ACTIONS_BEFORE_GAME) && (Game::state() == Game::FUTURE)) {
 				throw new AppException("Hra ještě nezačala.");
 			} else if (!in_array($action, self::ACTIONS_AFTER_GAME) && (Game::state() == Game::PAST)) {
 				throw new AppException("Hra již skončila.");
@@ -110,7 +113,7 @@ class MainController {
 		$hint = new Hint();
 		$ccodeCount = $hint->unusedCCodeCount();
 		list($imunityAvailable, $imunityMsg) = $hint->imunityStatus($ccodeCount);
-		return new View("main/hints", ["points" => (new Team())->points(), "ccodes" => $ccodeCount, "imunityAvailable" => $imunityAvailable, "imunityMsg" => $imunityMsg->format(), "deductPoints" => Settings::get("deductPoints")]);
+		return new View("main/hints", ["imunityAvailable" => $imunityAvailable, "imunityMsg" => $imunityMsg->format(), "deductPoints" => Settings::get("deductPoints")]);
 	}
 
 	public function checkhint($params, $data) {
@@ -129,7 +132,7 @@ class MainController {
 		$message->sendToTeam($response);
 
 		if ($ok) {
-			return new View("main/applyhint", ["response" => $response, "cipher" => $cipherName, "points" => (new Team())->points(), "ccodes" => $hint->unusedCCodeCount()]);
+			return new View("main/applyhint", ["response" => $response, "cipher" => $cipherName]);
 		} else {
 			return new Redirect("hints", $response);
 		}

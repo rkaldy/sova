@@ -1,4 +1,4 @@
-@media only screen and (max-device-width: 700px) {
+@media only screen and (max-device-width: 768px) {
 
 body {
 	margin: 0;
@@ -29,10 +29,10 @@ body {		font-weight: normal; }
 h2 { 		font-weight: normal; }
 input { 	font-weight: normal; }
 textarea { 	font-weight: normal; }
-#ueer { 	font-weight: normal; }
 
 #user {
 	display: inline;
+	font-weight: normal;
 	font-size: 14pt;
 	padding: 0;
 }
@@ -76,6 +76,12 @@ nav a {
 	display: block;
 }
 
+#pointcount {
+	padding-right: 1ex;
+	border-radius: 0;
+	border-bottom-left-radius: 1.5ex;
+}
+
 @media (max-device-width: 360px) {
 	#time, #time small {
 		font-size: 8pt;
@@ -89,5 +95,7 @@ nav a {
 		padding-top: 0.5ex;
 	}
 }
+
+input#cipher, input#points { max-width: 6ex; }
 
 }

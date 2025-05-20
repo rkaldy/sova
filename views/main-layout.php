@@ -74,10 +74,15 @@ if (isset($team)) {
         echo " href=\"$act\">$label</a>";
     }
     echo "</nav>";
-} 
+    echo '<div id="pointcount">';
+    echo "$points bodů";
+    if ($ccodes > 0) { 
+        echo " | $ccodes céček";
+    }
+    echo "</div>";
+}
 ?>
-
-    <div id="contents">
+       <div id="contents">
 <?php echo $_contents; ?>
 	</div>
 
