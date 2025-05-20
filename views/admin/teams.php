@@ -16,7 +16,7 @@ $(function() {
 			{ name: "tshirt", title: "Triček", type: "text", width: "10ex" },
 			{ name: "fee", title: "Platba", type: "text", width: "10ex", readOnly: true},		
 			{ name: "paid", title: "Zaplatil?", type: "checkbox", width: "10ex" },
-			{ name: "remarks", title: "Poznámky", type: "text", width: "20ex", readOnly: true },
+			{ name: "remarks", title: "Poznámky", type: "text", width: "20ex" },
 			{ type: "control", width: "10ex" }
 		]
 	});
