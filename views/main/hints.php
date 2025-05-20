@@ -1,6 +1,4 @@
-<p id="hintcount">Aktuálně máte <?php echo $points ?> bodů
-<?php if ($ccodes) { echo "a $ccodes nevyužitých céček"; } ?>
-.</p>
+<p id="hintcount">Aktuálně máte <?php echo $points ?> bodů<?php if ($ccodes > 0) { echo " a $ccodes nevyužitých céček"; } ?>.</p>
 
 <p id="flash"><?php if (isset($flash)) echo $flash; ?></p>
 

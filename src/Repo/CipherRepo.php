@@ -6,7 +6,7 @@ use Sova\DBException;
 class CipherRepo extends PointRepo {
 
 	protected const SQL = "
-		    SELECT cipher.*, name, code, points, points_by_rank,
+			SELECT cipher.*, name, code, points, points_by_rank,
 			  GROUP_CONCAT(DISTINCT prev.from_point_id ORDER BY prev.from_point_id SEPARATOR ',') AS prev,
 			  GROUP_CONCAT(DISTINCT next.to_point_id ORDER BY next.to_point_id SEPARATOR ',') AS next
 			FROM cipher 
@@ -59,14 +59,14 @@ class CipherRepo extends PointRepo {
 
 	function listAsArray(int $gameId, $activity = null) {
 		return $this->db->dquery("
-            SELECT point.point_id, CONCAT(point.name, ' / ', cipher.name_int) AS name
+			SELECT point.point_id, CONCAT(point.name, ' / ', cipher.name_int) AS name
 			FROM cipher
 			NATURAL JOIN point
-            LEFT JOIN step ON step.to_point_id = cipher.point_id
+			LEFT JOIN step ON step.to_point_id = cipher.point_id
 			LEFT JOIN loc ON loc.point_id = step.from_point_id
 			WHERE point.game_id = ?" . (isset($activity) ? " AND cipher.activity = ?" : "") . "
-            GROUP BY cipher.point_id
-            ORDER BY MIN(loc.order_id), point.name
+			GROUP BY cipher.point_id
+			ORDER BY MIN(loc.order_id), point.name
 		", isset($activity) ? [$gameId, $activity] : [$gameId]);
 	}
 
@@ -87,7 +87,7 @@ class CipherRepo extends PointRepo {
 
 	function create(array &$cipher) {
 		try {
-			$this->db->execute("INSERT INTO point (game_id, name, points) VALUES (:game_id, :name, :points)", $cipher, true);
+			$this->db->execute("INSERT INTO point (game_id, name, points, points_by_rank) VALUES (:game_id, :name, :points, :points_by_rank)", $cipher, true);
 			$cipher["point_id"] = $this->db->lastInsertId();
 			$this->db->execute("INSERT INTO cipher (point_id, name_int, activity, hint, howto) VALUES (:point_id, :name_int, :activity, :hint, :howto)", $cipher, true);
 			$this->db->execute("INSERT INTO code (game_id, point_id, code) VALUES (:game_id, :point_id, :code)", $cipher, true);
@@ -99,7 +99,7 @@ class CipherRepo extends PointRepo {
 	}
 
 	function update(array &$cipher) {
-		$this->db->execute("UPDATE point SET name = :name, points = :points WHERE point_id = :point_id", $cipher);
+		$this->db->execute("UPDATE point SET name = :name, points = :points, points_by_rank = :points_by_rank WHERE point_id = :point_id", $cipher);
 		$this->db->execute("UPDATE cipher SET name_int = :name_int, activity = :activity, hint = :hint, howto = :howto WHERE point_id = :point_id", $cipher);
 		$this->db->execute("UPDATE code SET code = :code WHERE point_id = :point_id", $cipher);
 		$this->addPrevNextLocs($cipher);
