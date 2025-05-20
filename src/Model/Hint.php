@@ -112,19 +112,20 @@ class Hint extends ModelBase {
 		} 
 		
 		list($cipher, $appliedHintType) = $ret;
-		$type = $appliedHintType + 1;
-		list($price, $unit) = $this->price($type);
+		
+		$nextHintType = $this->nextHint($appliedHintType);
+		list($price, $unit) = $this->price($nextHintType);
 		$teamId = Team::current();
 
 		$timeOffset = (new Progress())->getFakeTimeOffset();
 		if ($unit == "ccodes") {
-			$this->repo->applyByCCodes($teamId, $cipher["point_id"], $type, $price, $timeOffset);
+			$this->repo->applyByCCodes($teamId, $cipher["point_id"], $nextHintType, $price, $timeOffset);
 		} else {
 			(new TeamRepo())->addPoints($teamId, -$price);
-			$this->repo->applyByPoints($teamId, $cipher["point_id"], $type, $timeOffset);
+			$this->repo->applyByPoints($teamId, $cipher["point_id"], $nextHintType, $timeOffset);
 		}
 
-		switch ($type) {
+		switch ($nextHintType) {
 			case HintRepo::HINT: return new Text("hint.text.hint", $cipher["name"], $cipher["hint"]);
 			case HintRepo::HOWTO: return new Text("hint.text.howto", $cipher["name"], $cipher["howto"]);
 			case HintRepo::SOLUTION: return new Text("hint.text.solution", $cipher["name"], $cipher["code"]);

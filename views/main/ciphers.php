@@ -10,13 +10,13 @@ for ($i = 0; $i < count($ciphers); $i++) {
 	}
 	echo "</b><br>\n";
 
-	if ($ciphers[$i]["hint"] != "-") {
+	if ($ciphers[$i]["hint"] != "" && $ciphers[$i]["hint"] != "-") {
 		echo "Nápověda: {$ciphers[$i]["hint"]}<br>\n";
 	}
-	if ($ciphers[$i]["howto"] != "-") {
+	if ($ciphers[$i]["howto"] != "" && $ciphers[$i]["howto"] != "-") {
 		echo "Postup: {$ciphers[$i]["howto"]}<br>\n";
 	}
-	if ($ciphers[$i]["solution"] != "-") {
+	if ($ciphers[$i]["solution"] != "" && $ciphers[$i]["solution"] != "-") {
 		echo "Řešení: {$ciphers[$i]["solution"]}<br>\n";
 	}
 

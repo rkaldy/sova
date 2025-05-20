@@ -169,6 +169,23 @@ class HintTest extends GameTestBase {
 		$this->assertEquals(new Text("hint.apply.already", "S1"), $resp);
 	}
 
+	function testApplyPointsDisabledHowto() {
+		Settings::set("howtoCCodes", 0);
+		Settings::set("howtoPoints", 0);
+		$team = new Team();
+
+		$resp = $this->hint->apply("S1");
+		$this->assertEquals(new Text("hint.text.hint", "S1", "Čárka tečka čárka, tak začíná Klárka"), $resp);
+		$this->assertEquals(-10, $team->points());
+		
+		$resp = $this->hint->apply("S1");
+		$this->assertEquals(new Text("hint.text.solution", "S1", "ABERACE"), $resp);
+		$this->assertEquals(-40, $team->points());
+		
+		$resp = $this->hint->apply("S1");
+		$this->assertEquals(new Text("hint.apply.already", "S1"), $resp);
+	}
+
 	function testImunityStatus() {
 		$this->assertEquals([false, new Text("imunity.insufficient")], $this->hint->imunityStatus(0));
 		$this->assertEquals([true, new Text("imunity.available", 2)], $this->hint->imunityStatus(5));
