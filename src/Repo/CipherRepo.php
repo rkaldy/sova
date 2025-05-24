@@ -17,7 +17,7 @@ class CipherRepo extends PointRepo {
 
 	
 	protected static function convert(array &$cipher) {
-		self::convertBooleans($cipher, ["activity"]);
+		self::convertBooleans($cipher, ["activity", "all_locs_mandatory"]);
 		self::flattenPrevNext($cipher);
 	}
 
@@ -89,7 +89,7 @@ class CipherRepo extends PointRepo {
 		try {
 			$this->db->execute("INSERT INTO point (game_id, name, points, points_by_rank) VALUES (:game_id, :name, :points, :points_by_rank)", $cipher, true);
 			$cipher["point_id"] = $this->db->lastInsertId();
-			$this->db->execute("INSERT INTO cipher (point_id, name_int, activity, hint, howto) VALUES (:point_id, :name_int, :activity, :hint, :howto)", $cipher, true);
+			$this->db->execute("INSERT INTO cipher (point_id, name_int, activity, hint, howto, all_locs_mandatory) VALUES (:point_id, :name_int, :activity, :hint, :howto, :all_locs_mandatory)", $cipher, true);
 			$this->db->execute("INSERT INTO code (game_id, point_id, code) VALUES (:game_id, :point_id, :code)", $cipher, true);
 			$this->addPrevNextLocs($cipher);
 		} catch (DBException $ex) {
@@ -100,7 +100,7 @@ class CipherRepo extends PointRepo {
 
 	function update(array &$cipher) {
 		$this->db->execute("UPDATE point SET name = :name, points = :points, points_by_rank = :points_by_rank WHERE point_id = :point_id", $cipher);
-		$this->db->execute("UPDATE cipher SET name_int = :name_int, activity = :activity, hint = :hint, howto = :howto WHERE point_id = :point_id", $cipher);
+		$this->db->execute("UPDATE cipher SET name_int = :name_int, activity = :activity, hint = :hint, howto = :howto, all_locs_mandatory = :all_locs_mandatory WHERE point_id = :point_id", $cipher);
 		$this->db->execute("UPDATE code SET code = :code WHERE point_id = :point_id", $cipher);
 		$this->addPrevNextLocs($cipher);
 	}
@@ -132,11 +132,19 @@ class CipherRepo extends PointRepo {
 	}
 
 	public function previousLocsVisited(int $teamId, array $cipher) {
-		return $this->db->equery("
-			SELECT COUNT(*) FROM step
-			LEFT JOIN progress ON point_id = step.from_point_id AND team_id = ?
-			WHERE step.to_point_id = ? AND progress.point_id IS NULL
-		", $teamId, $cipher["point_id"]) == 0;
+		if ($cipher["all_locs_mandatory"]) {
+			return $this->db->equery("
+				SELECT COUNT(*) FROM step
+				LEFT JOIN progress ON point_id = step.from_point_id AND team_id = ?
+				WHERE step.to_point_id = ? AND progress.point_id IS NULL
+			", $teamId, $cipher["point_id"]) == 0;
+		} else {
+			return $this->db->equery("
+				SELECT count(*) FROM step
+				JOIN progress ON point_id = step.from_point_id AND team_id = ?
+				WHERE step.to_point_id = ?
+			", $teamId, $cipher["point_id"]) != 0;
+		}
 	}
 
 	public function getNextLocs(array $cipher) {

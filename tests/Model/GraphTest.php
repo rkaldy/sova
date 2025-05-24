@@ -36,7 +36,7 @@ class GraphTest extends TestBase {
 					$step = $nameToId[$step];
 				}
 			}
-			$cipher = ["name" => $name, "name_int" => $nameInt, "activity" => false, "points_by_rank" => 0, "prev" => $steps[0], "next" => $steps[1]];
+			$cipher = ["name" => $name, "name_int" => $nameInt, "activity" => false, "points_by_rank" => 0, "prev" => $steps[0], "next" => $steps[1], "all_locs_mandatory" => false];
 			$cipherModel->prepare($cipher);
 			$cipherRepo->create($cipher);
 		}

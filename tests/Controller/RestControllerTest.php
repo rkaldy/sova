@@ -134,7 +134,7 @@ class RestControllerTest extends TestBase {
 		$_SESSION["game_id"] = 1;
 		list($status, $data) = $this->rest("POST", "loc", ["name" => "Černá hora", "code" => "HOUBA"]);
 		$this->assertEquals(200, $status);
-		list($status, $data) = $this->rest("POST", "cipher", ["name" => "S2", "code" => "HOUBA", "activity" => false, "points_by_rank" => 0]);
+		list($status, $data) = $this->rest("POST", "cipher", ["name" => "S2", "code" => "HOUBA", "activity" => false, "points_by_rank" => 0, "all_locs_mandatory" => false]);
 		$this->assertEquals(422, $status);
 		$this->assertEquals(1062, $data["code"]);
 		

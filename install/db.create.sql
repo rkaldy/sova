@@ -30,7 +30,8 @@ CREATE TABLE `cipher` (
   name_int varchar(50) COLLATE utf8mb4_czech_ci DEFAULT NULL,
   activity tinyint(4) NOT NULL DEFAULT 0,
   hint varchar(200) COLLATE utf8mb4_czech_ci DEFAULT NULL,
-  howto varchar(500) COLLATE utf8mb4_czech_ci DEFAULT NULL
+  howto varchar(500) COLLATE utf8mb4_czech_ci DEFAULT NULL,
+  all_locs_mandatory TINYINT NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
 
 CREATE TABLE `code` (

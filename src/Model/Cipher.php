@@ -9,7 +9,7 @@ class Cipher extends ModelBase {
 	public function prepare(array &$cipher) {
 		$cipher["game_id"] = Game::current();
 		(new Code())->prepare($cipher["code"]);
-		$this->prepareBooleans($cipher, ["activity"]);
+		$this->prepareBooleans($cipher, ["activity", "all_locs_mandatory"]);
 		if (empty($cipher["points"])) {
 			$cipher["points"] = 0;
 		}

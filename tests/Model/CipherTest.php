@@ -37,6 +37,18 @@ class CipherTest extends GameTestBase {
 		$cipher = $this->cipherRepo->get(13);
 		$this->assertFalse($this->cipher->isReachable($cipher));
 		$this->progressRepo->create(1, 2);
+		$this->assertTrue($this->cipher->isReachable($cipher));
+		$this->progressRepo->create(1, 3);
+		$this->assertTrue($this->cipher->isReachable($cipher));
+		
+	}
+
+	function testCheckPreviouslLocsVisitedAllLocsMandatory() {
+		Settings::set("locVisitMandatory", 1);
+		$cipher = $this->cipherRepo->get(13);
+		$cipher["all_locs_mandatory"] = true;
+		$this->assertFalse($this->cipher->isReachable($cipher));
+		$this->progressRepo->create(1, 2);
 		$this->assertFalse($this->cipher->isReachable($cipher));
 		$this->progressRepo->create(1, 3);
 		$this->assertTrue($this->cipher->isReachable($cipher));

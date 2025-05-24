@@ -7,6 +7,7 @@ use Sova\View;
 use Sova\Redirect;
 use Sova\Model\Settings;
 use Sova\Model\Team;
+use Sova\Model\Hint;
 
 
 class MainControllerTest extends GameTestBase {
@@ -37,8 +38,8 @@ class MainControllerTest extends GameTestBase {
 		} else if (isset($response)) {
 			$this->assertEquals($response, $view->fields["response"]);
 		}
-		$this->assertEquals($points, $view->fields["points"]);
-		$this->assertEquals($ccodes, $view->fields["ccodes"]);
+		$this->assertEquals($points, (new Team())->points());
+		$this->assertEquals($ccodes, (new Hint())->unusedCCodeCount());
 		if (isset($imunityAvailable) && isset($imunityMsg)) {
 			$this->assertEquals($imunityAvailable, $view->fields["imunityAvailable"]);
 			$this->assertEquals($imunityMsg, $view->fields["imunityMsg"]);

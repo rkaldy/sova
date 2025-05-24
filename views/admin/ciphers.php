@@ -26,6 +26,7 @@ $(function() {
 			{ name: "points_by_rank", title: "Body dle pořadí", type: "text", width: "10ex", validate: integerValidator },
 			{ name: "prev", title: "Umístění", type: "multiselect", width: "15ex", items: locs, valueField: "point_id", textField: "name", longTextField: longText },
 			{ name: "next", title: "Následující stanoviště", type: "multiselect", width: "20ex", items: locs, valueField: "point_id", textField: "name", longTextField: longText },
+			{ name: "all_locs_mandatory", title: "Všechna stanoviště povinná", type: "checkbox", width: "10ex" },
 			{ type: "control", width: "10ex" }
 		]
 	});
@@ -70,5 +71,9 @@ $(function() {
   <tr>
     <th>Následující stanoviště</th>
     <td>Stanoviště, na které šifra ukazuje. Stanovišť může být i více, v takovém případě po vyřešení šifry/aktivity Sova vrátí polohu všech těchto stanovišť.</td>
+  </tr>
+  <tr>
+    <th>Všechna stanoviště povinná</th>
+    <td>Je-li zaškrtnuto, a šifra se nachází na více stanovištích, pak je třeba zadat kódy <i>všech</i> těchto stanovišť, aby týmy mohly vyluštit šifru. Použijte to např. u šifer skládajících se z více částí, které se nacházejí na různých místech. Není-li zaškrtnuto, stačí zadat kód libovolného stanoviště.</td>
   </tr>
 </table>

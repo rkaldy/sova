@@ -80,6 +80,8 @@ nav a {
 	padding-right: 1ex;
 	border-radius: 0;
 	border-bottom-left-radius: 1.5ex;
+	font-size: 100%;
+	font-weight: normal;
 }
 
 @media (max-device-width: 360px) {
