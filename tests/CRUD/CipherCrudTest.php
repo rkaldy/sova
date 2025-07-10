@@ -21,7 +21,7 @@ class CipherCrudTest extends CrudTestBase {
 	}
 
 	function testCreate() {
-		$cipher1 = $this->create(["name" => "S3", "name_int" => "semafor", "activity" => false, "code" => "javor", "points_by_rank" => 0, "prev" => [2], "next" => [4, 3], "all_locs_mandatory" => false]);
+		$cipher1 = $this->create(["name" => "S3", "name_int" => "semafor", "activity" => false, "code" => "javor", "prev" => [2], "next" => [4, 3], "all_locs_mandatory" => false]);
 		$cipher2 = $this->create(["name" => "S4", "name_int" => "nahradni", "activity" => false, "code" => "soliter", "points_by_rank" => 0, "prev" => [], "points" => 1, "all_locs_mandatory" => true]);
 		$this->assertEquals([
 			["point_id" => 5, "name" => "S1", "name_int" => "Morseovka", "activity" => false, "hint" => null, "howto" => null, "code" => "ZABRADLI", "points_by_rank" => 0, "prev" => [1], "next" => [2], "points" => 0, "points_by_rank" => 0, "all_locs_mandatory" => false],

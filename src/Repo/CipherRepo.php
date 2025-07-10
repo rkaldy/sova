@@ -87,7 +87,7 @@ class CipherRepo extends PointRepo {
 
 	function create(array &$cipher) {
 		try {
-			$this->db->execute("INSERT INTO point (game_id, name, points, points_by_rank) VALUES (:game_id, :name, :points, :points_by_rank)", $cipher, true);
+			$this->db->execute("INSERT INTO point (game_id, name, points, points_by_rank) VALUES (:game_id, :name, :points, IFNULL(:points_by_rank, 0))", $cipher, true);
 			$cipher["point_id"] = $this->db->lastInsertId();
 			$this->db->execute("INSERT INTO cipher (point_id, name_int, activity, hint, howto, all_locs_mandatory) VALUES (:point_id, :name_int, :activity, :hint, :howto, :all_locs_mandatory)", $cipher, true);
 			$this->db->execute("INSERT INTO code (game_id, point_id, code) VALUES (:game_id, :point_id, :code)", $cipher, true);
@@ -99,7 +99,7 @@ class CipherRepo extends PointRepo {
 	}
 
 	function update(array &$cipher) {
-		$this->db->execute("UPDATE point SET name = :name, points = :points, points_by_rank = :points_by_rank WHERE point_id = :point_id", $cipher);
+		$this->db->execute("UPDATE point SET name = :name, points = :points, points_by_rank = IFNULL(:points_by_rank, 0) WHERE point_id = :point_id", $cipher);
 		$this->db->execute("UPDATE cipher SET name_int = :name_int, activity = :activity, hint = :hint, howto = :howto, all_locs_mandatory = :all_locs_mandatory WHERE point_id = :point_id", $cipher);
 		$this->db->execute("UPDATE code SET code = :code WHERE point_id = :point_id", $cipher);
 		$this->addPrevNextLocs($cipher);
