@@ -1,3 +1,7 @@
+# For English user
+
+Sova is a web-based team tracking system for Czech outdoor puzzlehunt games. That's why the localization and documentation are in Czech only.
+
 # Instalace
 
 ## Instalace knihoven
