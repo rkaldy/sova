@@ -22,6 +22,8 @@
   <h3>Zpráva</h3>
   <p><textarea rows="4" cols="80" name="message"></textarea></p>
   <p><input type="submit" value="Rozeslat"></p>
+  <h3>Seznam emailů</h3>
+  <p><?php echo implode(", ", array_map(fn($team) => $team["email"], $teams)) ?></p>
   </div>
 </form>
 
