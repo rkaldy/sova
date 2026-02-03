@@ -7,7 +7,7 @@ class Text extends ModelBase {
 	public $code;
 	public $args;
 
-	public function __construct(string $code = null, ...$args) {
+	public function __construct(?string $code = null, ...$args) {
 		parent::__construct();
 		$this->code = $code;
 		$this->args = $args;

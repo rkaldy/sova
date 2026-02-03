@@ -10,7 +10,7 @@ class Team extends ModelBase {
 		$this->prepareBooleans($team, ["accomodation", "paid"]);
 	}
 
-	public function list(int $from = null, $limit = null): array {
+	public function list(?int $from = null, $limit = null): array {
 		$teams = $this->repo->list(Game::current());
 		foreach ($teams as &$team) {
 			$this->computeFee($team);

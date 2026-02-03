@@ -31,7 +31,7 @@ class MainControllerTest extends GameTestBase {
 		parent::tearDown();
 	}
 
-	function checkView($view, ?string $response, int $points, int $ccodes, bool $imunityAvailable = null, string $imunityMsg = null) {
+	function checkView($view, ?string $response, int $points, int $ccodes, ?bool $imunityAvailable = null, ?string $imunityMsg = null) {
 		if ($view instanceof Redirect) {
 			$view = $this->controller->hints([], []);
 			$this->assertEquals($response, $_SESSION["flash"]);
