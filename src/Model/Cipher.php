@@ -43,15 +43,28 @@ class Cipher extends ModelBase {
 			}
 		}
 
-                $team = new Team();
-		$points = $cipher["points"];
+		(new Team())->addPoints($this->computePoints($cipher));
+
+        return $this->generateMessages($cipher);
+	}
+
+    protected function computePoints(array $cipher) {
+   		$points = $cipher["points"];
 		if ($cipher["points_by_rank"]) {
 			$rank = (new ProgressRepo())->rankAtPoint(Team::current(), $cipher["point_id"]);
 			$points -= ($rank - 1) * $cipher["points_by_rank"];
 		}
-		$team->addPoints($points);
+        return $points;
+    }
 
-		$ret = [new Text("$type.solved", $cipher["name"], $team->points())];
+
+    protected function generateMessages(array $cipher) {
+        $team = new Team();
+        $progress = new Progress();
+        $points = $team->points();
+		$type = $cipher["activity"] ? "activity" : "cipher";
+
+		$ret = [new Text("$type.solved", $cipher["name"], $points)];
 		if (Settings::get("showRank")) {
 			list($rank, $firstTeam, $firstTime) = $progress->getRank($cipher);
 			$ret[] = new Text("$type.rank", $rank, $firstTeam, $firstTime);
@@ -59,9 +72,16 @@ class Cipher extends ModelBase {
 		foreach ($this->repo->getNextLocs($cipher) as $loc) {
 			$ret[] = new Text("loc.next", $loc["name"], Loc::getDescription($loc));
 		}
-		
-		return $ret;
-	}
+        
+        if (Settings::get("locFinish") && Settings::get("finishPointThreshold")) {
+            if ($team->points() >= Settings::get("finishPointThreshold")) {
+                $loc = (new LocRepo())->get(Settings::get("locFinish"));
+                $ret[] = new Text("loc.finish", Loc::getDescription($loc));
+            }
+        }
+        return $ret;
+    }
+ 
 
 	public function teamCipherStatus() {
 		return $this->repo->teamCipherStatus(Team::current());

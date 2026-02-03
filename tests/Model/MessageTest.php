@@ -40,7 +40,7 @@ class MessageTest extends TestBase {
 	function testBroadcast() {
 		$this->message->broadcast([1, 2], "Konec hry");
 		$messages = $this->message->list();
-		$this->assertEquals([
+		$this->assertEqualsCanonicalizing([
 			["name" => "Redwool", "direction" => Message::TO_TEAM, "direction_str" => "out", "text" => "Konec hry"],
 			["name" => "Parta Nic", "direction" => Message::TO_TEAM, "direction_str" => "out", "text" => "Konec hry"]
 		], self::stripTimes($messages));

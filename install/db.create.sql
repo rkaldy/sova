@@ -95,6 +95,7 @@ CREATE TABLE settings (
   gameEnd timestamp NULL DEFAULT NULL,
   locVisitMandatory tinyint(4) NOT NULL DEFAULT 0,
   locFinish int(11) DEFAULT NULL,
+  finishPointThreshold int(11) DEFAULT NULL,
   showRank tinyint(4) NOT NULL DEFAULT 0,
   linkMapyCz VARCHAR(20) NULL DEFAULT NULL,
   gamePrice int(11) DEFAULT 0,

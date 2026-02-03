@@ -1,6 +1,7 @@
 code.unknown;Neznámý kód: %s
 code.invalid;Kód musí být jednoslovné podstatné jméno.
 loc.visited;Vítejte na stanovišti %s. Máte %s bodů.
+loc.finish;Dosáhli jste bodové hranice pro získání vázy. Váza se nechází %s.
 loc.finish.visited;Gratulujeme, jste v cíli! Celkem jste dosáhli %s bodů.
 loc.rank;Jste tu %s. První tu byl tým %s v %s.
 loc.already;Tento kód stanoviště jste již zadali.

@@ -15,8 +15,12 @@ class CipherTest extends GameTestBase {
 		$this->cipher = new Cipher();
 		$this->cipherRepo = new CipherRepo();
 
-		$this->db->execute("INSERT INTO point (point_id, game_id, name) VALUES (20, 1, 'Váza')");
+		$this->db->execute("INSERT INTO point (point_id, game_id, name) VALUES (20, 1, 'S1')");
 		$this->db->execute("INSERT INTO loc (point_id, description, solved_cipher_count) VALUES (20, 'na vrcholu Sněžky', 2)");
+		$this->db->execute("INSERT INTO point (point_id, game_id, name) VALUES (21, 1, 'Váza')");
+		$this->db->execute("INSERT INTO loc (point_id, description) VALUES (21, 'na uvedených souřadnicích')");
+        Settings::set("locFinish", 21);
+        Settings::set("finishPointThreshold", 40);
 	}
 
 	function testCheckSomePreviousCipherSolved() {
@@ -116,4 +120,15 @@ class CipherTest extends GameTestBase {
 			new Text("loc.next", "1a", "na vrcholu Bílé hory")
 		], $this->cipher->solve($cipher, "ABERACE"));
 	}
+
+    function testFinishPointThreshold() {
+		$cipher = $this->cipherRepo->get(11);
+        $team = new Team();
+        $team->addPoints(10);
+		$this->assertEquals([
+			new Text("cipher.solved", "S1", 40), 
+			new Text("loc.next", "1a", "na vrcholu Bílé hory"),
+			new Text("loc.finish", "na uvedených souřadnicích")
+		], $this->cipher->solve($cipher, "ABERACE"));
+    }
 }

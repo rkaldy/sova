@@ -114,6 +114,20 @@ class CodeControllerTest extends GameTestBase {
 		], CodeController::process("aberace"));
 	}
 
+    function testSolveCipherFinishPointThreshold() {
+        Settings::set("locFinish", 7);
+        Settings::set("finishPointThreshold", 40);
+		$this->assertEquals([
+			"Úspěšně jste vyluštili šifru S1. Máte 30 bodů.",
+			"Další stanoviště 1a se nachází na vrcholu Bílé hory."
+		], CodeController::process("aberace"));
+   		$this->assertEquals([
+			"Úspěšně jste zvládli aktivitu A1. Máte 50 bodů.",
+			"Další stanoviště 1b se nachází na vrcholu Černé hory.",
+            "Dosáhli jste bodové hranice pro získání vázy. Váza se nechází na kótě 1019 nad Pražskou boudou."
+		], CodeController::process("zabradli"));
+    }
+
 	private function sendCode(int $teamId, string $code) {
 		$_SESSION["team_id"] = $teamId;
 		Progress::addFakeTime(1);
