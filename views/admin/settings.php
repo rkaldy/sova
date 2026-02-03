@@ -39,6 +39,12 @@ $settings = [
 		"enumValues" => $locs
 	],
 	[
+		"var"	=> "finishPointThreshold",
+		"type"	=> TEXT,
+		"label"	=> "Počet bodů nutných k nalezení cíle",
+		"desc"  => "Použijte v případě, že polohu cílového stanoviště (typicky váza na Lavině) nezískáte vyluštěním konkrétní šifry, ale dosažením daného množství bodů.<br>Tuto hranici můžete během hry měnit, informaci o snížení ale rozešlete ručně v sekci Zpráva týmům."
+	],
+	[
 		"var"	=> "linkMapyCz",
 		"type"	=> ENUM,
 		"label"	=> "Odkaz na mapy.cz",

@@ -57,8 +57,6 @@ class Hint extends ModelBase {
 			} else {
 				return new Text("cipher.no-previous-cipher", $cipher["name"]);
 			}
-		} else if (empty($cipher["hint"])) {
-			return new Text("hint.apply.no-hint");
 		}
 
 		$appliedHintType = $this->repo->getAppliedHintType($teamId, $cipher["point_id"]);
