@@ -70,12 +70,18 @@ class Hint extends ModelBase {
 	}
 
 
-	protected function nextHint(int $hintType) {
-		while ($hintType <= HintRepo::IMUNITY) {
+	protected function nextHint(array $cipher, int $hintType) {
+		while ($hintType < HintRepo::SOLUTION) {
 			$hintType += 1;
-			if ($this->price($hintType)[0] != 0) {
-				return $hintType;
-			}
+            if ($hintType == HintRepo::HINT) {
+                if (!empty($cipher["hint"])) return $hintType;
+            }
+            else if ($hintType == HintRepo::HOWTO) {
+                if (!empty($cipher["howto"])) return $hintType;
+            }
+            else if ($hintType == HintRepo::SOLUTION) {
+                return $hintType;
+            }
 		}
 		return null;
 	}
@@ -95,7 +101,7 @@ class Hint extends ModelBase {
 		} 
 		list($cipher, $appliedHintType) = $ret;
 
-		$nextHintType = $this->nextHint($appliedHintType);
+		$nextHintType = $this->nextHint($cipher, $appliedHintType);
 		list($price, $unit) = $this->price($nextHintType);
 		if ($appliedHintType == HintRepo::NONE) {
 			return [true, [new Text("hint.apply.no-history", $cipherName), new Text("hint.apply.$unit", self::HINT_WORD[$nextHintType], $price)]];
@@ -113,7 +119,7 @@ class Hint extends ModelBase {
 		
 		list($cipher, $appliedHintType) = $ret;
 		
-		$nextHintType = $this->nextHint($appliedHintType);
+		$nextHintType = $this->nextHint($cipher, $appliedHintType);
 		list($price, $unit) = $this->price($nextHintType);
 		$teamId = Team::current();
 

@@ -107,15 +107,14 @@ class HintTest extends GameTestBase {
 	}
 
 	function testCheckDisabledHowto() {
-		Settings::set("howtoCCodes", 0);
-		Settings::set("howtoPoints", 0);
-		$this->db->execute("INSERT INTO hint (team_id, cipher_id, time, type) VALUES (1, 11, NOW(), 1)");
+		$this->progressRepo->create(1, 11);
+		$this->db->execute("INSERT INTO hint (team_id, cipher_id, time, type) VALUES (1, 13, NOW(), 1)");
 		
 		$this->hint->addCCode(1);
 		$this->hint->addCCode(2);
 		$this->hint->addCCode(3);
-		$ret = $this->hint->check("S1");
-		$this->assertEquals([true, [new Text("hint.apply.history", "S1", "nápovědu"), new Text("hint.apply.points", "řešení", 30)]], $ret);
+		$ret = $this->hint->check("S2");
+		$this->assertEquals([true, [new Text("hint.apply.history", "S2", "nápovědu"), new Text("hint.apply.points", "řešení", 30)]], $ret);
 	}
 
 	function testCheckAlready() {
@@ -170,20 +169,19 @@ class HintTest extends GameTestBase {
 	}
 
 	function testApplyPointsDisabledHowto() {
-		Settings::set("howtoCCodes", 0);
-		Settings::set("howtoPoints", 0);
 		$team = new Team();
+		$this->progressRepo->create(1, 11);
 
-		$resp = $this->hint->apply("S1");
-		$this->assertEquals(new Text("hint.text.hint", "S1", "Čárka tečka čárka, tak začíná Klárka"), $resp);
+		$resp = $this->hint->apply("S2");
+		$this->assertEquals(new Text("hint.text.hint", "S2", "Krzyz"), $resp);
 		$this->assertEquals(-10, $team->points());
 		
-		$resp = $this->hint->apply("S1");
-		$this->assertEquals(new Text("hint.text.solution", "S1", "ABERACE"), $resp);
+		$resp = $this->hint->apply("S2");
+		$this->assertEquals(new Text("hint.text.solution", "S2", "KOBLIHA"), $resp);
 		$this->assertEquals(-40, $team->points());
 		
-		$resp = $this->hint->apply("S1");
-		$this->assertEquals(new Text("hint.apply.already", "S1"), $resp);
+		$resp = $this->hint->apply("S2");
+		$this->assertEquals(new Text("hint.apply.already", "S2"), $resp);
 	}
 
 	function testImunityStatus() {

@@ -10,8 +10,8 @@ class GameTestBase extends TestBase {
 	protected $progressRepo;
 
 /* 
- * (Start)--> S1a -> (1a) --> S2 -> (Turniket) -> (3) -> S3 -> (4) --> S4a --> (Cíl)
- *		\-> A1  -> (1b) -/									   \-> S4b -/
+ * (Start)--> S1 -> (1a) --> S2 -> (Turniket) -> (3) -> S3 -> (4) --> S4a --> (Cíl)
+ *		  \-> A1 -> (1b) -/									      \-> S4b -/
  */
 
 	function setUp(): void {
@@ -51,8 +51,8 @@ class GameTestBase extends TestBase {
 		$this->db->execute("INSERT INTO point (point_id, game_id, name, points) VALUES (16, 1, 'S4b', 30)");
 		$this->db->execute("INSERT INTO cipher (point_id, name_int, hint, howto) VALUES (11, 'Morseovka', 'Čárka tečka čárka, tak začíná Klárka', 'Použij morseovku')");
 		$this->db->execute("INSERT INTO cipher (point_id, name_int, activity) VALUES (12, 'Slaňování', 1)");
-		$this->db->execute("INSERT INTO cipher (point_id, name_int, hint) VALUES (13, 'Polský kříž', 'Krzyz')");
-		$this->db->execute("INSERT INTO cipher (point_id, name_int, hint) VALUES (14, 'Vlajková abeceda', NULL)");
+		$this->db->execute("INSERT INTO cipher (point_id, name_int, hint, howto) VALUES (13, 'Polský kříž', 'Krzyz', NULL)");
+		$this->db->execute("INSERT INTO cipher (point_id, name_int, hint, howto) VALUES (14, 'Vlajková abeceda', NULL, 'Použij vlajkovou abecedu')");
 		$this->db->execute("INSERT INTO cipher (point_id, name_int, hint) VALUES (15, 'Semafor', 'Křižovatka, železnice, Suchý')");
 		$this->db->execute("INSERT INTO cipher (point_id, name_int, hint) VALUES (16, 'Binárka', 'Jedničky a nuly')");
 		$this->db->execute("INSERT INTO code (game_id, point_id, code) VALUES (1, 11, 'ABERACE')");
