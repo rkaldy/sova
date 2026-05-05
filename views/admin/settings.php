@@ -5,6 +5,7 @@ const TEXT = 1;
 const BOOL = 2;
 const ENUM = 3;
 const DATETIME = 4;
+const PASSWORD = 5;
 
 
 $settings = [
@@ -113,6 +114,13 @@ $settings = [
 		"var"	=> "deductPoints",
 		"type"	=> BOOL,
 		"label"	=> "Mají týmy možnost si samy odečíst body?"
+	],
+	SEPARATOR,
+	[
+		"var"	=> "pswd",
+		"type"	=> PASSWORD,
+		"label"	=> "Nové heslo",
+		"desc"  => "Ponechte prázdné, pokud heslo nechcete měnit."
 	]
 ];
 
@@ -143,6 +151,9 @@ foreach ($settings as $item) {
 		case TEXT:
 		case DATETIME:
 			echo "<input type=\"text\" id=\"$var\" name=\"$var\" value=\"{$fields[$var]}\">";
+		   	break;
+		case PASSWORD:
+			echo "<input type=\"password\" id=\"$var\" name=\"$var\" maxlength=\"50\">";
 		   	break;
 		case BOOL: 
 			echo "<input type=\"checkbox\" id=\"$var\" name=\"$var\"";

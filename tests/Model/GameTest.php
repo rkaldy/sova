@@ -40,6 +40,23 @@ class GameTest extends TestBase {
 		$this->assertFalse(Game::selected());
 	}
 
+	function testChangeCurrentPassword() {
+		$_SESSION["game_id"] = 1;
+		$this->game->changeCurrentPassword("newsecret");
+		$_SESSION = [];
+
+		$this->assertFalse($this->game->login("game1", "samara"));
+		$this->assertTrue($this->game->login("game1", "newsecret"));
+	}
+
+	function testChangeCurrentPasswordEmptyKeepsOriginal() {
+		$_SESSION["game_id"] = 1;
+		$this->game->changeCurrentPassword("");
+		$_SESSION = [];
+
+		$this->assertTrue($this->game->login("game1", "samara"));
+	}
+
 	function testState() {
 		$_SESSION["game_id"] = 1;
 		$this->db->execute("UPDATE settings SET gameStart = DATE_SUB(NOW(), INTERVAL 1 HOUR), gameEnd = DATE_ADD(NOW(), INTERVAL 1 HOUR) WHERE game_id = 1");

@@ -40,6 +40,13 @@ class Game extends ModelBase {
 	}
 
 
+	public function changeCurrentPassword(string $pswd) {
+		if (!empty($pswd)) {
+			$this->repo->updatePassword(self::current(), password_hash($pswd, PASSWORD_BCRYPT));
+		}
+	}
+
+
 	public static function logout() {
 		$_SESSION = [];
 		session_destroy();

@@ -98,7 +98,10 @@ class AdminController {
 		$settings = new Settings();
 		$flash = null;
 		if (!empty($args)) {
+			$pswd = $args["pswd"] ?? "";
+			unset($args["pswd"]);
 			$flash = $settings->save($args);
+			(new Game())->changeCurrentPassword($pswd);
 		}
 		return new View("admin/settings", ["fields" => $_SESSION["settings"], "locs" => (new Loc())->locs(), "flash" => $flash]);
 	}

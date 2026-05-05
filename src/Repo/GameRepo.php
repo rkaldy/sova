@@ -38,4 +38,8 @@ class GameRepo extends RepoBase {
 	public function superuserPassword() {
 		return $this->db->equery("SELECT pswd FROM superuser");
 	}
+
+	public function updatePassword(int $gameId, string $pswd) {
+		$this->db->execute("UPDATE game SET pswd = ? WHERE game_id = ?", [$pswd, $gameId]);
+	}
 }
