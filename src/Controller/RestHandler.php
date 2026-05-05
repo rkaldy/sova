@@ -2,8 +2,10 @@
 namespace Sova\Controller;
 
 use Sova\HttpException;
+use Sova\Model\Code;
 use Sova\Model\Game;
 use Sova\Model\Graph;
+use Sova\Model\Hint;
 use Sova\Model\Message;
 use Sova\Model\Team;
 
@@ -53,5 +55,30 @@ class RestHandler {
 
 	public function team_login(array $args) {
 		return (new Team())->webLogin($args["team_id"], $args["pswd"]);
+	}
+
+
+    public function code(array $args): array {
+        return ["response" => CodeController::process($args["code"])];        
+    }
+
+
+	public function hint_check(array $args): array {
+		list($ok, $texts) = (new Hint())->check($args["cipher"]);
+		return ["success" => $ok, "response" => $this->formatTexts($texts)];
+	}
+
+
+	public function hint_apply(array $args): array {
+		$text = (new Hint())->apply($args["cipher"]);
+		return ["response" => [$text->format()]];
+	}
+	
+    protected function formatTexts(array $texts): array {
+		$response = [];
+		foreach ($texts as $text) {
+			$response[] = $text->format();
+		}
+		return $response;
 	}
 }

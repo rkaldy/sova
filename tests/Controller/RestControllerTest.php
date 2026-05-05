@@ -60,11 +60,13 @@ class RestControllerTest extends TestBase {
 		unset($_SESSION["game_id"]);
 		list($status, $data) = $this->rest("GET", "game", []);
 		$this->assertEquals(401, $status);
+        $this->assertEquals("Unauthenticated", $data["error"]);
 		$this->assertFalse(isset($_SESSION["game_id"]));
 		
         $_SERVER["HTTP_AUTHORIZATION"] = "Basic ".base64_encode("game1:bad");
 		list($status, $data) = $this->rest("GET", "game", []);
 		$this->assertEquals(401, $status);
+        $this->assertEquals("Authentication failed", $data["error"]);
 		$this->assertFalse(isset($_SESSION["game_id"]));
 
         $_SERVER["HTTP_AUTHORIZATION"] = "Basic ".base64_encode("game1:samara");
@@ -123,13 +125,6 @@ class RestControllerTest extends TestBase {
 		], $data);
 	}
 
-	function testFKViolation() {
-		$_SESSION["team_id"] = 99;
-		list($status, $data) = $this->rest("POST", "progress", ["point_id" => 99]);
-		$this->assertEquals(422, $status);
-		$this->assertEquals(1452, $data["code"]);
-	}
-
 	function testPKViolation() {
 		$_SESSION["game_id"] = 1;
 		list($status, $data) = $this->rest("POST", "loc", ["name" => "Černá hora", "code" => "HOUBA"]);
@@ -161,4 +156,42 @@ class RestControllerTest extends TestBase {
 		$this->assertEquals(["Rumcajs", "Manka", "Cipísek"], $team["members"]);
 		$this->assertEquals(1320, $team["fee"]);
     }
+
+
+    function setupHintFixture() {
+		$this->db->execute("INSERT INTO team (team_id, game_id, name) VALUE (1, 1, 'Parta Nic')");
+		$this->db->execute("INSERT INTO point (point_id, game_id, name) VALUES (101, 1, 'Start')");
+		$this->db->execute("INSERT INTO loc (point_id, description) VALUES (101, '')");
+		$this->db->execute("INSERT INTO point (point_id, game_id, name) VALUES (111, 1, 'S1')");
+		$this->db->execute("INSERT INTO cipher (point_id, name_int, hint, howto) VALUES (111, 'Morseovka', 'Čárka tečka čárka, tak začíná Klárka', 'Použij morseovku')");
+		$this->db->execute("INSERT INTO code (game_id, point_id, code) VALUES (1, 111, 'ABERACE')");
+		$this->db->execute("INSERT INTO step (from_point_id, to_point_id) VALUES (101, 111)");
+		$this->db->execute("INSERT INTO progress (team_id, point_id) VALUES (1, 101)");
+		$_SESSION["team_id"] = 1;
+		$_SESSION["team_name"] = "Parta Nic";
+		Settings::set("hintPoints", 10);
+	}
+
+	function testHintCheck() {
+		$this->setupHintFixture();
+
+		list($status, $data) = $this->rest("GET", "hint_check", [], ["cipher" => "S1"]);
+
+		$this->assertEquals(200, $status);
+		$this->assertTrue($data["success"]);
+		$this->assertEquals([
+			"Pro šifru S1 jste ještě žádnou nápovědu nedostali.",
+			"Nyní můžete zažádat o nápovědu za 10 bodů."
+		], $data["response"]);
+	}
+
+	function testHintApply() {
+		$this->setupHintFixture();
+
+		list($status, $data) = $this->rest("GET", "hint_apply", [], ["cipher" => "S1"]);
+
+		$this->assertEquals(200, $status);
+		$this->assertEquals(["Nápověda k šifře S1: Čárka tečka čárka, tak začíná Klárka"], $data["response"]);
+		$this->assertEquals(-10, $this->db->equery("SELECT points FROM team WHERE team_id = 1"));
+	}
 }

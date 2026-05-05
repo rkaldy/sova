@@ -70,9 +70,15 @@ class RestController {
 			if (empty($_SERVER["HTTP_AUTHORIZATION"])) {
 				throw new HttpException(401, "Unauthenticated");
 			}
-			list($user, $password) = explode(":", base64_decode(substr($_SERVER["HTTP_AUTHORIZATION"], 6)));
-			if (!(new Game())->login($user, $password)) {
-				throw new HttpException(401, "Authentication failed");
+			$auth = explode(":", base64_decode(substr($_SERVER["HTTP_AUTHORIZATION"], 6)));
+            if (count($auth) != 2) {
+	    		throw new HttpException(401, "Authentication failed");
+            }
+            list($user, $password) = $auth;
+			if (!(new Team())->login((int)$user, $password)) {
+    			if (!(new Game())->login($user, $password)) {
+	    			throw new HttpException(401, "Authentication failed");
+                }
 			}
 		}
 	}
@@ -80,7 +86,10 @@ class RestController {
 
 	public function authorize(string $resource, string $method) {
 		if ($resource == "game" && $method != "GET" && !Game::superuser()) {
-			throw new HttpException(403);
+			throw new HttpException(403, "Access denied");
 		}
+        if (Team::logged() && !in_array($resource, ["code", "hint_check", "hint_apply"])) {
+			throw new HttpException(403, "Access denied");
+        }
 	}
 }
