@@ -69,12 +69,6 @@ class HintTest extends GameTestBase {
 		$this->assertEquals([false, [new Text("cipher.no-previous-loc", "S2")]], $ret);
 	}
 
-	function testCheckNoHint() {
-		$this->progressRepo->create(1, 5);
-		$ret = $this->hint->check("S3");
-		$this->assertEquals([false, [new Text("hint.apply.no-hint")]], $ret);
-	}
-
 	function testCheckHint() {
 		$ret = $this->hint->check("S1");
 		$this->assertEquals([true, [new Text("hint.apply.no-history", "S1"), new Text("hint.apply.points.no-ccode", "nápovědu", 10)]], $ret);

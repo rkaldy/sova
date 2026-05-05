@@ -21,10 +21,10 @@ activity.rank;Jste %s. První ji dal tým %s v %s.
 hint.check;(Kontrola nápovědy na %s)
 hint.request;(Žádost o nápovědu na %s)
 hint.apply.activity;K aktivitám žádné nápovědy nejsou.
-hint.apply.no-hint;K této šifře žádná nápověda není.
 hint.apply.solved;Šifru %s jste již vyluštili.
 hint.apply.already;Pro šifru %s jste již dostali řešení. Podívejte se do přehledu šifer.
 hint.apply.history;Pro šifru %s jste již dostali %s.
+hint.apply.no-history;Pro šifru %s jste ještě žádnou nápovědu nedostali.
 hint.apply.ccodes;Nyní můžete zažádat o %s za %s céček.
 hint.apply.points;Nyní můžete zažádat o %s za %s bodů.
 hint.apply.points.no-ccode;Nyní můžete zažádat o %s. Protože nemáte dostatek céček, bude vás to stát %s bodů.
@@ -37,4 +37,3 @@ imunity.available;Můžete si zakoupit imunitu za %s céček.
 imunity.already;Imunitu jste již dostali.
 imunity.insufficient;Nemáte dostatek céček pro získání imunity.
 imunity.success;Získali jste imunitu. Kdyby na vás při vyhlášení padlo organizování příštího ročníku, můžete ho odmítnout.
-hint.apply.no-history;Pro šifru %s jste ještě žádnou nápovědu nedostali.
