@@ -55,6 +55,15 @@ class TeamCrudTest extends CrudTestBase {
 		), $this->list());
 	}
 
+	function testUpdatePassword() {
+		$team = $this->list()[0];
+		$team["pswd"] = "zidle";
+		$this->update($team);
+		$this->assertEquals(array(
+			["game_id" => 1, "team_id" => 1, "name" => "Parta Nic", "pswd" => "ZIDLE", "phone" => null, "email" => null, "members" => [], "accomodation" => true, "paid" => false, "tshirt" => 0, "remarks" => null, "additional" => null, "points" => 0, "fee" => 0]
+		), $this->list());
+	}
+
 	function testDelete() {
 		$this->delete($this->list()[0]);
 		$this->assertCount(0, $this->list());

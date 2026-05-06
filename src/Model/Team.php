@@ -25,6 +25,16 @@ class Team extends ModelBase {
 		$this->computeFee($team);
 	}
 
+	public function update(array &$team) {
+		$this->prepare($team);
+		if (empty($team["pswd"])) {
+			unset($team["pswd"]);
+		} else {
+			(new Code())->prepare($team["pswd"]);
+		}
+		$this->repo->update($team);
+	}
+
 	public function login(int $team_id, string $pswd): bool {
 		$team = $this->repo->login($team_id, strtoupper(trim($pswd)));
 		if (isset($team)) {

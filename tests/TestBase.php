@@ -24,6 +24,7 @@ class TestBase extends TestCase {
 
 	function tearDown(): void {
 		$this->db->execute("DELETE FROM game");
+		$this->db->execute("DELETE FROM superuser");
 		$_SESSION = array();
 	}
 

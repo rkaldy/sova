@@ -119,7 +119,7 @@ $settings = [
 	[
 		"var"	=> "pswd",
 		"type"	=> PASSWORD,
-		"label"	=> "Nové heslo",
+		"label"	=> "Nové heslo do admin sekce",
 		"desc"  => "Ponechte prázdné, pokud heslo nechcete měnit."
 	]
 ];

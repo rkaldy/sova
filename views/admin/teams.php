@@ -8,7 +8,7 @@ $(function() {
 		[
 			{ name: "team_id", title: "Číslo", type: "text", width: "10ex", readOnly: true },
 			{ name: "name", title: "Název", type: "text", width: "20ex", validate: "required" },
-			{ name: "pswd", title: "Heslo", type: "text", width: "15ex", readOnly: "true" },
+			{ name: "pswd", title: "Heslo", type: "text", width: "15ex" },
 			{ name: "phone", title: "Telefon", type: "text", width: "15ex" },
 			{ name: "email", title: "Email", type: "text", width: "30ex" },
 			{ name: "members", title: "Členové", type: "array", width: "40ex", validate: "required" },

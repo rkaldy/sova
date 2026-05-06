@@ -39,6 +39,9 @@ class TeamRepo extends RepoBase {
 
 	public function update($team) {
 		$this->db->execute("UPDATE team SET name = :name, phone = :phone, email = :email, members = :members, accomodation = :accomodation, paid = :paid, tshirt = :tshirt, remarks = :remarks, additional = :additional_str WHERE team_id = :team_id", $team);
+		if (isset($team["pswd"])) {
+			$this->db->execute("UPDATE code SET code = :pswd WHERE game_id = :game_id AND team_id = :team_id", $team);
+		}
 	}
 
 	public function delete($team) {
