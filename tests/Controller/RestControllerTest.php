@@ -5,6 +5,7 @@ use Sova\TestBase;
 use Sova\DB;
 use Sova\Request;
 use Sova\Response;
+use Sova\Model\Message;
 use Sova\Model\Settings;
 use Mockery;
 
@@ -19,6 +20,14 @@ class RestControllerTest extends TestBase {
 		$req = new Request($method, "/", $params, $in);
 		$resp = (new RestController())->process($req, $path);
 		return [$resp->status, json_decode($resp->data, true)];
+	}
+
+	function assertMessages(array $expected): void {
+		$this->assertEquals($expected, $this->db->aquery("
+			SELECT team_id, direction, text
+			FROM message
+			ORDER BY message_id
+		"));
 	}
 
 	
@@ -179,10 +188,12 @@ class RestControllerTest extends TestBase {
 
 		$this->assertEquals(200, $status);
 		$this->assertTrue($data["success"]);
-		$this->assertEquals([
-			"Pro šifru S1 jste ještě žádnou nápovědu nedostali.",
-			"Nyní můžete zažádat o nápovědu za 10 bodů."
-		], $data["response"]);
+		$this->assertEquals(["Pro šifru S1 jste ještě žádnou nápovědu nedostali.", "Nyní můžete zažádat o nápovědu za 10 bodů."], $data["response"]);
+		$this->assertMessages([
+			["team_id" => 1, "direction" => Message::FROM_TEAM, "text" => "(Kontrola nápovědy na S1)"],
+			["team_id" => 1, "direction" => Message::TO_TEAM, "text" => "Pro šifru S1 jste ještě žádnou nápovědu nedostali."],
+			["team_id" => 1, "direction" => Message::TO_TEAM, "text" => "Nyní můžete zažádat o nápovědu za 10 bodů."],
+		]);
 	}
 
 	function testHintApply() {
@@ -193,5 +204,9 @@ class RestControllerTest extends TestBase {
 		$this->assertEquals(200, $status);
 		$this->assertEquals(["Nápověda k šifře S1: Čárka tečka čárka, tak začíná Klárka"], $data["response"]);
 		$this->assertEquals(-10, $this->db->equery("SELECT points FROM team WHERE team_id = 1"));
+		$this->assertMessages([
+			["team_id" => 1, "direction" => Message::FROM_TEAM, "text" => "(Žádost o nápovědu na S1)"],
+			["team_id" => 1, "direction" => Message::TO_TEAM, "text" => "Nápověda k šifře S1: Čárka tečka čárka, tak začíná Klárka"],
+		]);
 	}
 }

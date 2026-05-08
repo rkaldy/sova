@@ -8,6 +8,7 @@ use Sova\Model\Graph;
 use Sova\Model\Hint;
 use Sova\Model\Message;
 use Sova\Model\Team;
+use Sova\Model\Text;
 
 
 class RestHandler {
@@ -64,21 +65,33 @@ class RestHandler {
 
 
 	public function hint_check(array $args): array {
-		list($ok, $texts) = (new Hint())->check($args["cipher"]);
-		return ["success" => $ok, "response" => $this->formatTexts($texts)];
+        $hint = new Hint();
+		$message = new Message();
+        $cipherName = $args["cipher"];
+
+		$message->sendToSova((new Text("hint.check", $cipherName))->format());
+		list($ok, $texts) = $hint->check($cipherName);
+        $response = [];
+        foreach ($texts as $text) {
+            $response[] = $text->format();
+            $message->sendToTeam($text->format());
+        }
+		return ["success" => $ok, "response" => $response];
 	}
 
 
 	public function hint_apply(array $args): array {
-		$text = (new Hint())->apply($args["cipher"]);
-		return ["response" => [$text->format()]];
+        $hint = new Hint();
+		$message = new Message();
+        $cipherName = $args["cipher"];
+
+		$message->sendToSova((new Text("hint.request", $cipherName))->format());
+		$response = $hint->apply($cipherName)->format();
+   		$message->sendToTeam($response);
+		return ["response" => [$response]];
 	}
 	
     protected function formatTexts(array $texts): array {
-		$response = [];
-		foreach ($texts as $text) {
-			$response[] = $text->format();
-		}
 		return $response;
 	}
 }
