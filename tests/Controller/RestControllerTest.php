@@ -181,6 +181,40 @@ class RestControllerTest extends TestBase {
 		Settings::set("hintPoints", 10);
 	}
 
+	function setupCodeFixture() {
+		$this->db->execute("INSERT INTO team (team_id, game_id, name) VALUE (1, 1, 'Parta Nic')");
+		$this->db->execute("INSERT INTO point (point_id, game_id, name, points) VALUES (101, 1, 'Start', 15)");
+		$this->db->execute("INSERT INTO loc (point_id, description) VALUES (101, '')");
+		$this->db->execute("INSERT INTO code (game_id, point_id, code) VALUES (1, 101, 'PRALINKA')");
+		$_SESSION["team_id"] = 1;
+		$_SESSION["team_name"] = "Parta Nic";
+	}
+
+	function testCode() {
+		$this->setupCodeFixture();
+
+		list($status, $data) = $this->rest("GET", "code", [], ["code" => "pralinka"]);
+
+		$this->assertEquals(200, $status);
+		$this->assertEquals(["Vítejte na stanovišti Start. Máte 15 bodů."], $data["response"]);
+		$this->assertEquals(15, $this->db->equery("SELECT points FROM team WHERE team_id = 1"));
+		$this->assertMessages([
+			["team_id" => 1, "direction" => Message::FROM_TEAM, "text" => "PRALINKA"],
+			["team_id" => 1, "direction" => Message::TO_TEAM, "text" => "Vítejte na stanovišti Start. Máte 15 bodů."],
+		]);
+	}
+
+	function testCodeAfterGameEnd() {
+		$this->setupCodeFixture();
+		Settings::set("gameEndTimestamp", time() - 1);
+
+		list($status, $data) = $this->rest("GET", "code", [], ["code" => "pralinka"]);
+
+		$this->assertEquals(403, $status);
+		$this->assertEquals("Hra již skončila", $data["error"]);
+		$this->assertMessages([]);
+	}
+
 	function testHintCheck() {
 		$this->setupHintFixture();
 
