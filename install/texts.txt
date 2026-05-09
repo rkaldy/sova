@@ -1,5 +1,7 @@
 code.unknown;Neznámý kód: %s
 code.invalid;Kód musí být jednoslovné podstatné jméno.
+code.error.end;Hra již skončila.
+code.error.finish;Již jste došli k pokladu.
 loc.visited;Vítejte na stanovišti %s. Máte %s bodů.
 loc.finish;Dosáhli jste bodové hranice pro získání vázy. Váza se nechází %s.
 loc.finish.visited;Gratulujeme, jste v cíli! Celkem jste dosáhli %s bodů.

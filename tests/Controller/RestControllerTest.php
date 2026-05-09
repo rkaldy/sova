@@ -210,9 +210,21 @@ class RestControllerTest extends TestBase {
 
 		list($status, $data) = $this->rest("GET", "code", [], ["code" => "pralinka"]);
 
-		$this->assertEquals(403, $status);
-		$this->assertEquals("Hra již skončila", $data["error"]);
-		$this->assertMessages([]);
+		$this->assertEquals(200, $status);
+		$this->assertEquals(["Hra již skončila."], $data["response"]);
+	}
+
+	function testCodeAfterFinish() {
+		$this->setupCodeFixture();
+		$this->db->execute("INSERT INTO point (point_id, game_id, name, points) VALUES (102, 1, 'Cíl', 30)");
+		$this->db->execute("INSERT INTO loc (point_id, description) VALUES (102, '')");
+		$this->db->execute("INSERT INTO code (game_id, point_id, code) VALUES (1, 102, 'POKLAD')");
+		$this->db->execute("INSERT INTO progress (team_id, point_id) VALUES (1, 102)");
+		Settings::set("locFinish", 102);
+
+		list($status, $data) = $this->rest("GET", "code", [], ["code" => "pralinka"]);
+		$this->assertEquals(200, $status);
+		$this->assertEquals(["Již jste došli k pokladu."], $data["response"]);
 	}
 
 	function testHintCheck() {

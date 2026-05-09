@@ -6,6 +6,7 @@ use Sova\Model\Team;
 use Sova\Model\Message;
 use Sova\Model\Settings;
 use Sova\Model\Progress;
+use Sova\HttpException;
 use Sova\Repo\ProgressRepo;
 
 class CodeControllerTest extends GameTestBase {
@@ -68,6 +69,12 @@ class CodeControllerTest extends GameTestBase {
 		Settings::set("locFinish", 3);
 		CodeController::process("zabradli");
 		$this->assertEquals(["Gratulujeme, jste v cíli! Celkem jste dosáhli 20 bodů."], CodeController::process("podnos"));
+	}
+
+	function testCodeAfterFinish() {
+		Settings::set("locFinish", 3);
+		$this->progressRepo->create(1, 3);
+		$this->assertEquals(["Již jste došli k pokladu."], CodeController::process("zabradli"));
 	}
 
 	function testUnavailableCipher() {

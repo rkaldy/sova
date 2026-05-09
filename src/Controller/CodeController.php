@@ -7,7 +7,10 @@ use Sova\Model\Cipher;
 use Sova\Model\Hint;
 use Sova\Model\Game;
 use Sova\Model\Message;
+use Sova\Model\Settings;
 use Sova\Model\Text;
+use Sova\Model\Team;
+use Sova\Repo\ProgressRepo;
 use Sova\HttpException;
 
 
@@ -15,7 +18,10 @@ class CodeController {
 
 	public static function process($request) {
 		if (Game::state() == Game::PAST) {
-			throw new HttpException(403, "Hra již skončila");
+			return [new Text("code.error.end")->format()];
+		}
+		if (Settings::isset("locFinish") && (new ProgressRepo())->isDone(Team::current(), Settings::get("locFinish"))) {
+			return [new Text("code.error.finish")->format()];
 		}
 
 		$code = Code::polish($request);
