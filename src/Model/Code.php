@@ -17,7 +17,7 @@ class Code {
 	}
 
 	public static function valid($code) {
-		return preg_match("/^[A-Z]+$/", $code);
+		return preg_match("/^[A-Z0-9]+$/", $code);
 	}
 
 	public function prepare(?string &$code) {

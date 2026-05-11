@@ -38,6 +38,7 @@ class CodeControllerTest extends GameTestBase {
 	function testBadCode() {
 		$this->assertEquals(["Neznámý kód: BAD"], CodeController::process("bad"));
 		$this->assertEquals(["Neznámý kód: BAD"], CodeController::process("báď"));
+		$this->assertEquals(["Neznámý kód: BAD2"], CodeController::process("bad2"));
 	}
 
 	function testAddHint() {

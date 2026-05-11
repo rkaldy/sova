@@ -1,6 +1,6 @@
 codeValidator = {
 	validator: "pattern",
-	param: "[A-Za-z]*",
+	param: "[A-Za-z0-9]*",
 	message: function() {
 		return "Kód smí obsahovat jen písmena bez diakritiky";
 	}
@@ -8,7 +8,7 @@ codeValidator = {
 
 codeValidatorReq = {
 	validator: "pattern",
-	param: "[A-Za-z]+",
+	param: "[A-Za-z0-9]+",
 	message: function() {
 		return "Kód nesmí být prázdný a může obsahovat jen písmena bez diakritiky";
 	}
