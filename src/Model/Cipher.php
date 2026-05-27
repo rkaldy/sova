@@ -36,12 +36,14 @@ class Cipher extends ModelBase {
 		}
 		
 		$progress->create($cipher);
-		foreach ($cipher["prev"] AS $prev) {
-			$loc = ["point_id" => $prev];
-			if (!$progress->isDone($loc)) {
-				$progress->create($loc);
-			}
-		}
+		if (!Settings::get("locVisitMandatory")) {
+            foreach ($cipher["prev"] AS $prev) {
+                $loc = ["point_id" => $prev];
+                if (!$progress->isDone($loc)) {
+                    $progress->create($loc);
+                }
+            }
+        }
 
 		(new Team())->addPoints($this->computePoints($cipher));
 
