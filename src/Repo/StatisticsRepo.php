@@ -63,6 +63,66 @@ class StatisticsRepo extends RepoBase {
 		", $gameId);
 	}
 
+	public function points(int $gameId) {
+		return $this->query("
+			SELECT
+				team.name,
+				IFNULL(earned.cipher_other_points, 0) AS cipher_other_points,
+				IFNULL(earned.loc_other_points, 0) AS loc_other_points,
+				IFNULL(earned.loc_treasure_points, 0) AS loc_treasure_points,
+				IFNULL(earned.activity_points, 0) AS activity_points,
+				IFNULL(earned.cipher_mandatory_points, 0) AS cipher_mandatory_points,
+				IFNULL(-spent.hint_points, 0) AS hint_points,
+				IFNULL(-spent.howto_points, 0) AS howto_points,
+				IFNULL(-spent.solution_points, 0) AS solution_points,
+				IFNULL(poklad_hints.hint, 0) AS poklad_hint,
+				IFNULL(poklad_hints.howto, 0) AS poklad_howto,
+				IFNULL(poklad_hints.solution, 0) AS poklad_solution
+			FROM team
+			LEFT JOIN (
+				SELECT
+					team_id,
+					SUM(IF(activity = 0 AND all_locs_mandatory = 1, point.points, 0)) AS cipher_mandatory_points,
+					SUM(IF(activity = 0 AND all_locs_mandatory = 0, point.points, 0)) AS cipher_other_points,
+					SUM(IF(activity = 1, point.points, 0)) AS activity_points,
+					SUM(IF(cipher.point_id IS NULL AND point.name = 'POKLAD', point.points, 0)) AS loc_treasure_points,
+					SUM(IF(cipher.point_id IS NULL AND point.name <> 'POKLAD', point.points, 0)) AS loc_other_points
+    			FROM progress
+				JOIN point ON point.point_id = progress.point_id
+				LEFT JOIN cipher ON cipher.point_id = progress.point_id
+				WHERE point.game_id = ?
+				GROUP BY team_id
+			) earned ON earned.team_id = team.team_id
+			LEFT JOIN (
+				SELECT
+					hint.team_id,
+					SUM(IF(hint.type = 1, settings.hintPoints, 0)) AS hint_points,
+					SUM(IF(hint.type = 2, settings.howtoPoints, 0)) AS howto_points,
+					SUM(IF(hint.type = 3, settings.solutionPoints, 0)) AS solution_points
+				FROM hint
+				JOIN team hint_team ON hint_team.team_id = hint.team_id
+				JOIN settings ON settings.game_id = hint_team.game_id
+				WHERE hint_team.game_id = ? AND hint.ccode_id IS NULL
+				GROUP BY hint.team_id
+			) spent ON spent.team_id = team.team_id
+			LEFT JOIN (
+				SELECT
+					hint.team_id,
+					MAX(IF(hint.type = 1, 1, 0)) AS hint,
+					MAX(IF(hint.type = 2, 1, 0)) AS howto,
+					MAX(IF(hint.type = 3, 1, 0)) AS solution
+				FROM hint
+				JOIN team hint_team ON hint_team.team_id = hint.team_id
+				JOIN point ON point.point_id = hint.cipher_id
+				JOIN cipher ON cipher.point_id = hint.cipher_id
+				WHERE hint_team.game_id = ? AND point.name = 'S10'
+				GROUP BY hint.team_id
+			) poklad_hints ON poklad_hints.team_id = team.team_id
+			WHERE team.game_id = ?
+			ORDER BY team.name
+		", $gameId, $gameId, $gameId, $gameId);
+	}
+
 	public function barchartRace(int $gameId) {
 		return $this->db->query("
 				SELECT team_id, UNIX_TIMESTAMP(time) AS time, point.points

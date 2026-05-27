@@ -81,6 +81,13 @@ class Statistics {
 		);
 	}
 
+	public function points() {
+		return array_merge(
+			[["Tým", "Šifry", "Stanoviště", "Poklad", "B-kódy", "C-kódy", "Nápovědy", "Postupy", "Řešení", "Nápověda S10", "Postup S10", "Řešení S10"]],
+			$this->repo->points(Game::current())
+		);
+	}
+
 	public function barchart() {
 		$points = [];
 		$ret = [];
