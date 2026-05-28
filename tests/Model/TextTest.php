@@ -17,4 +17,9 @@ class TextTest extends TestBase {
 		$_SESSION["game_id"] = 2;
 		$this->assertEquals("Další stanoviště 3 se nachází na vrcholu Černé hory.", $text->format());
 	}
+
+    function testUnknownCode() {
+        $text = new Text("Unknown code %d", 42);
+        $this->assertEquals("Unknown code 42", $text->format());
+    }
 }

@@ -21,6 +21,10 @@ class Text extends ModelBase {
 		if (empty($this->code)) {
 			return "";
 		}
-		return vsprintf($this->repo->get(Game::current(), $this->code), $this->args);
+        $msg = $this->repo->get(Game::current(), $this->code);
+        if (!isset($msg)) {
+            $msg = $this->code;
+        }
+		return vsprintf($msg, $this->args);
 	}
 }
