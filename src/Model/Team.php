@@ -67,12 +67,12 @@ class Team extends ModelBase {
 	}
 
 
-	public function points(): int {
-		return $this->repo->points(self::current());
+	public function points(?int $teamId = null): int {
+		return $this->repo->points($teamId ?? self::current());
 	}
 
-	public function addPoints(int $add) {
-		$this->repo->addPoints(self::current(), $add);
+	public function addPoints(int $add, ?int $teamId = null) {
+		$this->repo->addPoints($teamId ?? self::current(), $add);
 	}
 
 

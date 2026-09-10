@@ -8,6 +8,7 @@ use Sova\Redirect;
 use Sova\Model\Game;
 use Sova\Model\Team;
 use Sova\Model\Loc;
+use Sova\Model\Cipher;
 use Sova\Model\Message;
 use Sova\Model\Progress;
 use Sova\Model\Settings;
@@ -64,13 +65,13 @@ class AdminController {
 	}
 
 
-	public function logout($args) {
+	public function logout() {
 		Game::logout();
 		return new Redirect("login");
 	}
 
 
-	public function broadcast($args) {
+	public function broadcast() {
 		$teams = (new Team())->list();
 		return new View("admin/broadcast", array("teams" => $teams));
 	}
@@ -82,7 +83,7 @@ class AdminController {
 		return new Redirect("messages");
 	}
 
-	public function rank($args) {
+	public function rank() {
 		return new View("main/rank", ["teams" => (new Progress())->rankTotal()]);
 	}
 
@@ -93,6 +94,18 @@ class AdminController {
 	public function cipherStatus() {
 		return new View("admin/cipherstatus", ["progress" => (new Progress())->cipherStatus()]);
 	}
+
+    public function solve($args) {
+        if (isset($args["teamId"]) && isset($args["cipherId"])) {
+            $ret = (new Cipher())->solveForce($args["teamId"], $args["cipherId"]);
+            $msg = $ret->format();
+            $lastCipherSelected = $args["cipherId"];
+        } else {
+            $msg = null;
+            $lastCipherSelected = null;
+        }
+        return new View("admin/solve", ["teams" => (new Team())->list(), "ciphers" => (new Cipher())->list(), "msg" => $msg, "lastCipherSelected" => $lastCipherSelected]);
+    }
 
 	public function settings($args) {
 		$settings = new Settings();

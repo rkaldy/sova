@@ -98,6 +98,28 @@ class CipherTest extends GameTestBase {
 		], $this->cipher->solve($cipher, "ABERACE"));
 	}
 
+	function testSolveForce() {
+		$this->db->execute("UPDATE point SET points_by_rank = 5 WHERE point_id = 11");
+
+		$this->assertEquals($this->cipher->solveForce(1, 11), new Text("cipher.solved", "S1", 30));
+		$this->assertTrue($this->progressRepo->isDone(1, 11));
+		$this->assertEquals(30, (new Team())->points(1));
+		$this->assertEquals(0, (new Team())->points(2));
+		
+        $this->assertEquals($this->cipher->solveForce(2, 11), new Text("cipher.solved", "S1", 25));
+		$this->assertTrue($this->progressRepo->isDone(2, 11));
+		$this->assertEquals(30, (new Team())->points(1));
+		$this->assertEquals(25, (new Team())->points(2));
+		$this->assertEquals(
+			"Úspěšně jste vyluštili šifru S1. Máte 30 bodů.",
+			$this->db->equery("SELECT text FROM message WHERE team_id = 1 AND direction = ?", Message::TO_TEAM)
+		);
+		$this->assertEquals(
+			"Úspěšně jste vyluštili šifru S1. Máte 25 bodů.",
+			$this->db->equery("SELECT text FROM message WHERE team_id = 2 AND direction = ?", Message::TO_TEAM)
+		);
+	}
+
 	function testSolvedNextLoc() {
 		$this->progressRepo->create(1, 2);
 		$cipher = $this->cipherRepo->get(11);

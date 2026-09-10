@@ -46,8 +46,8 @@ class Message extends ModelBase {
 		$this->repo->create(["team_id" => Team::current(), "direction" => self::FROM_TEAM, "text" => $message]);
 	}
 
-	public function sendToTeam(string $message) {
-		$this->repo->create(["team_id" => Team::current(), "direction" => self::TO_TEAM, "text" => $message]);
+	public function sendToTeam(string $message, ?int $teamId = null) {
+		$this->repo->create(["team_id" => $teamId ?? Team::current(), "direction" => self::TO_TEAM, "text" => $message]);
 	}
 
 	public function broadcast(array $teams, string $message) {

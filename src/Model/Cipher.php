@@ -50,10 +50,31 @@ class Cipher extends ModelBase {
         return $this->generateMessages($cipher);
 	}
 
-    protected function computePoints(array $cipher) {
+	public function solveForce(int $teamId, int $cipherId) {
+		$cipher = $this->repo->get($cipherId);
+		if (!isset($cipher)) {
+			return new Text("Neznámá šifra/aktivita");
+		}
+		$type = $cipher["activity"] ? "activity" : "cipher";
+		
+        $team = new Team();
+        $progress = new Progress();
+		if ($progress->isDone($cipher, $teamId)) {
+			return new Text("$type.already");
+		}
+
+		$progress->create($cipher, $teamId);
+		$team->addPoints($this->computePoints($cipher, $teamId), $teamId);
+
+		$message = new Text("$type.solved", $cipher["name"], $team->points($teamId));
+		(new Message())->sendToTeam($message->format(), $teamId);
+        return $message;
+	}
+
+    protected function computePoints(array $cipher, ?int $teamId = null) {
    		$points = $cipher["points"];
 		if ($cipher["points_by_rank"]) {
-			$rank = (new ProgressRepo())->rankAtPoint(Team::current(), $cipher["point_id"]);
+			$rank = (new ProgressRepo())->rankAtPoint($teamId ?? Team::current(), $cipher["point_id"]);
 			$points -= ($rank - 1) * $cipher["points_by_rank"];
 		}
         return $points;

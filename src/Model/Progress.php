@@ -8,13 +8,13 @@ class Progress extends ModelBase {
 
 	protected static $fakeTimeOffset = 0;
 
-	public function create(array &$obj) {
-		return $this->repo->create(Team::current(), $obj["point_id"], self::$fakeTimeOffset);
+	public function create(array &$obj, ?int $teamId = null) {
+		return $this->repo->create($teamId ?? Team::current(), $obj["point_id"], self::$fakeTimeOffset);
 	}
 
 
-	public function isDone(array $point) {
-		return $this->repo->isDone(Team::current(), $point["point_id"]);
+	public function isDone(array $point, ?int $teamId = null) {
+		return $this->repo->isDone($teamId ?? Team::current(), $point["point_id"]);
 	}
 
 	
