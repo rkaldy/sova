@@ -5,7 +5,7 @@ use Sova\Repo\LocRepo;
 
 class Settings extends ModelBase {
 
-	const BOOLEANS = ["locVisitMandatory", "showRank", "deductPoints"];
+	const BOOLEANS = ["locVisitMandatory", "showRank", "finishEndsGame", "deductPoints"];
 	var $locRepo;
 
 	public function __construct() {

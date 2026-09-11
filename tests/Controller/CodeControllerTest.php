@@ -72,10 +72,21 @@ class CodeControllerTest extends GameTestBase {
 		$this->assertEquals(["Gratulujeme, jste v cíli! Celkem jste dosáhli 20 bodů."], CodeController::process("podnos"));
 	}
 
-	function testCodeAfterFinish() {
+	function testCodeAfterFinishWhenFinishEndsGameIsEnabled() {
 		Settings::set("locFinish", 3);
+		Settings::set("finishEndsGame", true);
 		$this->progressRepo->create(1, 3);
 		$this->assertEquals(["Již jste došli k pokladu."], CodeController::process("zabradli"));
+	}
+
+	function testCodeAfterFinishWhenFinishEndsGameIsDisabled() {
+		Settings::set("locFinish", 3);
+		Settings::set("finishEndsGame", false);
+		$this->progressRepo->create(1, 3);
+		$this->assertEquals([
+			"Úspěšně jste zvládli aktivitu A1. Máte 20 bodů.",
+			"Další stanoviště 1b se nachází na vrcholu Černé hory."
+		], CodeController::process("zabradli"));
 	}
 
 	function testUnavailableCipher() {

@@ -40,6 +40,12 @@ $settings = [
 		"enumValues" => $locs
 	],
 	[
+		"var"	=> "finishEndsGame",
+		"type"	=> BOOL,
+		"label"	=> "Ukončit hru po dosažení cíle",
+		"desc"	=> "Je-li zaškrtnuto, Sova po odeslání kódu cílového stanoviště nepřijme od týmu žádné další kódy."
+	],
+	[
 		"var"	=> "finishPointThreshold",
 		"type"	=> TEXT,
 		"label"	=> "Počet bodů nutných k nalezení cíle",

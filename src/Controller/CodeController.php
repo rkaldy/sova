@@ -20,7 +20,7 @@ class CodeController {
 		if (Game::state() == Game::PAST) {
 			return [(new Text("code.error.end"))->format()];
 		}
-		if (Settings::isset("locFinish") && (new ProgressRepo())->isDone(Team::current(), Settings::get("locFinish"))) {
+		if (Settings::get("finishEndsGame") && Settings::isset("locFinish") && (new ProgressRepo())->isDone(Team::current(), Settings::get("locFinish"))) {
 			return [(new Text("code.error.finish"))->format()];
 		}
 

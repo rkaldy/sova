@@ -221,6 +221,7 @@ class RestControllerTest extends TestBase {
 		$this->db->execute("INSERT INTO code (game_id, point_id, code) VALUES (1, 102, 'POKLAD')");
 		$this->db->execute("INSERT INTO progress (team_id, point_id) VALUES (1, 102)");
 		Settings::set("locFinish", 102);
+		Settings::set("finishEndsGame", true);
 
 		list($status, $data) = $this->rest("GET", "code", [], ["code" => "pralinka"]);
 		$this->assertEquals(200, $status);
