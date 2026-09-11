@@ -61,28 +61,22 @@ class StatisticsTest extends GameTestBase {
 		Settings::set("howtoPoints", 20);
 		Settings::set("solutionPoints", 30);
 		$this->db->execute("UPDATE settings SET hintPoints = 10, howtoPoints = 20, solutionPoints = 30 WHERE game_id = 1");
-		$this->db->execute("UPDATE cipher SET all_locs_mandatory = 1 WHERE point_id = 13");
-		$this->db->execute("INSERT INTO point (point_id, game_id, name, points) VALUES (8, 1, 'POKLAD', 50)");
-		$this->db->execute("INSERT INTO loc (point_id, description) VALUES (8, 'pod kamenem')");
-		$this->db->execute("INSERT INTO point (point_id, game_id, name, points) VALUES (17, 1, 'S10', 40)");
-		$this->db->execute("INSERT INTO cipher (point_id, name_int, hint, howto) VALUES (17, 'Pokladová šifra', 'Nápověda', 'Postup')");
 		$this->progressRepo->create(1, 11, 1);
 		$this->progressRepo->create(1, 12, 2);
 		$this->progressRepo->create(1, 13, 3);
 		$this->progressRepo->create(1, 1, 4);
-		$this->progressRepo->create(1, 8, 5);
 		$this->progressRepo->create(2, 11, 4);
 		$this->progressRepo->create(2, 7, 5);
 		$this->db->execute("INSERT INTO hint (team_id, cipher_id, time, type) VALUES (1, 11, NOW(), 1)");
 		$this->db->execute("INSERT INTO hint (team_id, cipher_id, time, type) VALUES (1, 13, NOW(), 2)");
-		$this->db->execute("INSERT INTO hint (team_id, cipher_id, time, type) VALUES (1, 17, NOW(), 1)");
-		$this->db->execute("INSERT INTO hint (team_id, cipher_id, time, type) VALUES (1, 17, NOW(), 2)");
-		$this->db->execute("INSERT INTO hint (team_id, cipher_id, time, type) VALUES (2, 17, NOW(), 3)");
+		$this->db->execute("INSERT INTO hint (team_id, cipher_id, time, type) VALUES (1, 14, NOW(), 1)");
+		$this->db->execute("INSERT INTO hint (team_id, cipher_id, time, type) VALUES (1, 14, NOW(), 2)");
+		$this->db->execute("INSERT INTO hint (team_id, cipher_id, time, type) VALUES (2, 14, NOW(), 3)");
 		$this->db->execute("INSERT INTO hint (team_id, ccode_id, cipher_id, time, type) VALUES (2, 1, 11, NOW(), 3)");
 
 		$stat = $this->statistics->points();
-		$this->assertEquals(["Tým", "Šifry", "Stanoviště", "Poklad", "B-kódy", "C-kódy", "Nápovědy", "Postupy", "Řešení", "Nápověda S10", "Postup S10", "Řešení S10"], $stat[0]);
-		$this->assertEquals(["Parta Nic", "30", "15", "50", "20", "30", "-20", "-40", "0", "1", "1", "0"], $stat[1]);
-		$this->assertEquals(["Redwool", "30", "30", "0", "0", "0", "0", "0", "-30", "0", "0", "1"], $stat[2]);
+		$this->assertEquals(["Tým", "Šifry", "Aktivity (B-kódy)", "Stanoviště", "Nápovědy", "Postupy", "Řešení"], $stat[0]);
+		$this->assertEquals(["Parta Nic", "60", "20", "15", "-20", "-40", "0"], $stat[1]);
+		$this->assertEquals(["Redwool", "30", "0", "30", "0", "0", "-30"], $stat[2]);
 	}
 }

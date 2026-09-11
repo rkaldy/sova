@@ -38,7 +38,15 @@ class StatController {
 	public function toCSV(array $data) {
 		$output = "";
 		foreach (array_values($data) as $row) {
-			$output .= join(",", $row) . "\n";
+            foreach ($row as $field) {
+                if (is_numeric($field)) {
+        			$output .= $field;
+                } else {
+                    $output .= "\"$field\"";
+                }
+                $output .= ",";
+            }
+            $output .= "\n";
 		}
 		return $output;
 	}
