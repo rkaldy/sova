@@ -57,7 +57,7 @@ class Loc extends ModelBase {
 		if ($progress->isDone($loc)) {
 			return new Text("loc.already");
 		}
-		$progress->create($loc);
+		$progress->create($loc, $loc["points"]);
 		
 	        $team = new Team();
 		$team->addPoints($loc["points"]);

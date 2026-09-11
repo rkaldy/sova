@@ -8,8 +8,8 @@ class Progress extends ModelBase {
 
 	protected static $fakeTimeOffset = 0;
 
-	public function create(array &$obj, ?int $teamId = null) {
-		return $this->repo->create($teamId ?? Team::current(), $obj["point_id"], self::$fakeTimeOffset);
+	public function create(array &$obj, int $points = 0, ?int $teamId = null) {
+		return $this->repo->create($teamId ?? Team::current(), $obj["point_id"], $points, self::$fakeTimeOffset);
 	}
 
 

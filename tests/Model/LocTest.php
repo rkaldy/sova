@@ -51,6 +51,7 @@ class LocTest extends GameTestBase {
 		$this->assertEquals([
             new Text("loc.visited", "Start", 15)
         ], $this->loc->visit($loc, "PRALINKA"));
+		$this->assertEquals(15, $this->db->equery("SELECT points FROM progress WHERE team_id = 1 AND point_id = 1"));
 	}
 
 	function testVisitRank() {

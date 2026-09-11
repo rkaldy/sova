@@ -77,9 +77,9 @@ class StatisticsRepo extends RepoBase {
 			LEFT JOIN (
 				SELECT
 					team_id,
-					SUM(IF(activity = 0, point.points, 0)) AS cipher_points,
-					SUM(IF(activity = 1, point.points, 0)) AS activity_points,
-					SUM(IF(cipher.point_id IS NULL, point.points, 0)) AS loc_points
+					SUM(IF(activity = 0, progress.points, 0)) AS cipher_points,
+					SUM(IF(activity = 1, progress.points, 0)) AS activity_points,
+					SUM(IF(cipher.point_id IS NULL, progress.points, 0)) AS loc_points
     			FROM progress
 				JOIN point ON point.point_id = progress.point_id
 				LEFT JOIN cipher ON cipher.point_id = progress.point_id
@@ -105,10 +105,10 @@ class StatisticsRepo extends RepoBase {
 
 	public function barchartRace(int $gameId) {
 		return $this->db->query("
-				SELECT team_id, UNIX_TIMESTAMP(time) AS time, point.points
+				SELECT team_id, UNIX_TIMESTAMP(time) AS time, progress.points
 				FROM progress
-				NATURAL JOIN point
-				WHERE game_id = :gameId AND points != 0
+				JOIN point ON point.point_id = progress.point_id
+				WHERE point.game_id = :gameId AND progress.points != 0
 			UNION ALL
 				SELECT team_id, UNIX_TIMESTAMP(time) AS time,
 					CASE

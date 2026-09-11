@@ -86,6 +86,7 @@ CREATE TABLE `point` (
 CREATE TABLE progress (
   team_id int(11) NOT NULL,
   point_id int(11) NOT NULL,
+  points int(11) NOT NULL DEFAULT 0,
   time datetime NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
 

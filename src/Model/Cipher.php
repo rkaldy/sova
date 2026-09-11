@@ -35,17 +35,18 @@ class Cipher extends ModelBase {
 			return new Text("$type.already");
 		}
 		
-		$progress->create($cipher);
+		$points = $this->computePoints($cipher);
+		(new Team())->addPoints($points);
+
+		$progress->create($cipher, $points);
 		if (!Settings::get("locVisitMandatory")) {
             foreach ($cipher["prev"] AS $prev) {
                 $loc = ["point_id" => $prev];
                 if (!$progress->isDone($loc)) {
-                    $progress->create($loc);
+					$progress->create($loc, 0);
                 }
             }
         }
-
-		(new Team())->addPoints($this->computePoints($cipher));
 
         return $this->generateMessages($cipher);
 	}
@@ -63,18 +64,19 @@ class Cipher extends ModelBase {
 			return new Text("$type.already");
 		}
 
-		$progress->create($cipher, $teamId);
-		$team->addPoints($this->computePoints($cipher, $teamId), $teamId);
+		$points = $this->computePoints($cipher);
+		$team->addPoints($points, $teamId);
+		$progress->create($cipher, $points, $teamId);
 
 		$message = new Text("$type.solved", $cipher["name"], $team->points($teamId));
 		(new Message())->sendToTeam($message->format(), $teamId);
         return $message;
 	}
 
-    protected function computePoints(array $cipher, ?int $teamId = null) {
+    protected function computePoints(array $cipher) {
    		$points = $cipher["points"];
 		if ($cipher["points_by_rank"]) {
-			$rank = (new ProgressRepo())->rankAtPoint($teamId ?? Team::current(), $cipher["point_id"]);
+			$rank = (new ProgressRepo())->nextRankAtPoint($cipher["point_id"], Progress::getFakeTimeOffset());
 			$points -= ($rank - 1) * $cipher["points_by_rank"];
 		}
         return $points;

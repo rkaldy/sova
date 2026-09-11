@@ -76,6 +76,8 @@ class CipherTest extends GameTestBase {
 			new Text("cipher.solved", "S1", 30), 
 			new Text("loc.next", "1a", "na vrcholu Bílé hory")
 		], $this->cipher->solve($cipher, "ABERACE"));
+		$this->assertEquals(30, $this->db->equery("SELECT points FROM progress WHERE team_id = 1 AND point_id = 11"));
+		$this->assertEquals(0, $this->db->equery("SELECT points FROM progress WHERE team_id = 1 AND point_id = 1"));
 	}
 
 	function testSolveRank() {
@@ -104,12 +106,14 @@ class CipherTest extends GameTestBase {
 		$this->assertEquals($this->cipher->solveForce(1, 11), new Text("cipher.solved", "S1", 30));
 		$this->assertTrue($this->progressRepo->isDone(1, 11));
 		$this->assertEquals(30, (new Team())->points(1));
+		$this->assertEquals(30, $this->db->equery("SELECT points FROM progress WHERE team_id = 1 AND point_id = 11"));
 		$this->assertEquals(0, (new Team())->points(2));
 		
         $this->assertEquals($this->cipher->solveForce(2, 11), new Text("cipher.solved", "S1", 25));
 		$this->assertTrue($this->progressRepo->isDone(2, 11));
 		$this->assertEquals(30, (new Team())->points(1));
 		$this->assertEquals(25, (new Team())->points(2));
+		$this->assertEquals(25, $this->db->equery("SELECT points FROM progress WHERE team_id = 2 AND point_id = 11"));
 		$this->assertEquals(
 			"Úspěšně jste vyluštili šifru S1. Máte 30 bodů.",
 			$this->db->equery("SELECT text FROM message WHERE team_id = 1 AND direction = ?", Message::TO_TEAM)
@@ -141,6 +145,8 @@ class CipherTest extends GameTestBase {
 			new Text("cipher.solved", "S1", 25), 
 			new Text("loc.next", "1a", "na vrcholu Bílé hory")
 		], $this->cipher->solve($cipher, "ABERACE"));
+		$this->assertEquals(30, $this->db->equery("SELECT points FROM progress WHERE team_id = 1 AND point_id = 11"));
+		$this->assertEquals(25, $this->db->equery("SELECT points FROM progress WHERE team_id = 2 AND point_id = 11"));
 	}
 
     function testFinishPointThreshold() {
