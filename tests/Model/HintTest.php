@@ -131,6 +131,7 @@ class HintTest extends GameTestBase {
 		$resp = $this->hint->apply("S1");
 		$this->assertEquals(new Text("hint.text.solution", "S1", "ABERACE"), $resp);
 		$this->assertEquals(-60, $team->points());
+		$this->assertEquals([10, 20, 30], $this->db->query("SELECT points FROM hint WHERE team_id = 1 ORDER BY type")->fetchAll(\PDO::FETCH_COLUMN));
 		$this->assertEquals(0, $this->hint->unusedCCodeCount());
 		
 		$resp = $this->hint->apply("S1");
@@ -146,6 +147,7 @@ class HintTest extends GameTestBase {
 		$this->assertEquals(new Text("hint.text.hint", "S1", "Čárka tečka čárka, tak začíná Klárka"), $resp);
 		$this->assertEquals(1, $this->hint->unusedCCodeCount());
 		$this->assertEquals(0, $team->points());
+		$this->assertEquals(0, $this->db->equery("SELECT points FROM hint WHERE team_id = 1 AND type = 1"));
 
 		$resp = $this->hint->apply("S1");
 		$this->assertEquals(new Text("hint.text.howto", "S1", "Použij morseovku"), $resp);

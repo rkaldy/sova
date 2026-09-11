@@ -54,7 +54,8 @@ CREATE TABLE hint (
   ccode_id int(11) DEFAULT NULL,
   cipher_id int(11) DEFAULT NULL,
   time datetime DEFAULT NULL,
-  type int(11) DEFAULT NULL
+  type int(11) DEFAULT NULL,
+  points int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_czech_ci;
 
 CREATE TABLE loc (

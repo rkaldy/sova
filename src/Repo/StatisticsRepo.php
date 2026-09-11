@@ -89,13 +89,12 @@ class StatisticsRepo extends RepoBase {
 			LEFT JOIN (
 				SELECT
 					hint.team_id,
-					SUM(IF(hint.type = 1, settings.hintPoints, 0)) AS hint_points,
-					SUM(IF(hint.type = 2, settings.howtoPoints, 0)) AS howto_points,
-					SUM(IF(hint.type = 3, settings.solutionPoints, 0)) AS solution_points
+					SUM(IF(hint.type = 1, hint.points, 0)) AS hint_points,
+					SUM(IF(hint.type = 2, hint.points, 0)) AS howto_points,
+					SUM(IF(hint.type = 3, hint.points, 0)) AS solution_points
 				FROM hint
 				JOIN team hint_team ON hint_team.team_id = hint.team_id
-				JOIN settings ON settings.game_id = hint_team.game_id
-				WHERE hint_team.game_id = ? AND hint.ccode_id IS NULL
+				WHERE hint_team.game_id = ?
 				GROUP BY hint.team_id
 			) spent ON spent.team_id = team.team_id
 			WHERE team.game_id = ?
@@ -110,16 +109,10 @@ class StatisticsRepo extends RepoBase {
 				JOIN point ON point.point_id = progress.point_id
 				WHERE point.game_id = :gameId AND progress.points != 0
 			UNION ALL
-				SELECT team_id, UNIX_TIMESTAMP(time) AS time,
-					CASE
-						WHEN hint.type = 1 THEN -hintPoints
-						WHEN hint.type = 2 THEN -howtoPoints
-						WHEN hint.type = 3 THEN -solutionPoints
-				END AS points
+				SELECT hint.team_id, UNIX_TIMESTAMP(hint.time) AS time, -hint.points AS points
 				FROM hint
-				NATURAL JOIN team
-				JOIN settings ON settings.game_id = :gameId
-				WHERE team.game_id = :gameId AND hint.ccode_id IS NULL
+				JOIN team ON team.team_id = hint.team_id
+				WHERE team.game_id = :gameId AND hint.points != 0
 			ORDER BY time
 		", ["gameId" => $gameId]);
 	}

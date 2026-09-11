@@ -34,14 +34,14 @@ class HintRepo extends RepoBase {
 		return is_null($ret) ? self::NONE : $ret;
 	}
 
-	public function applyByPoints(int $teamId, int $cipherId, int $type, ?int $timeOffset = 0) {
-		$this->db->execute("INSERT INTO hint (team_id, cipher_id, time, type) VALUES (?, ?, DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL ? MINUTE), ?)", [$teamId, $cipherId, $timeOffset, $type]);
+	public function applyByPoints(int $teamId, int $cipherId, int $type, int $points, ?int $timeOffset = 0) {
+		$this->db->execute("INSERT INTO hint (team_id, cipher_id, time, type, points) VALUES (?, ?, DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL ? MINUTE), ?, ?)", [$teamId, $cipherId, $timeOffset, $type, $points]);
 	}
 
 	public function applyByCCodes(int $teamId, ?int $cipherId, int $type, int $price, ?int $timeOffset = 0) {
 		$ccodes = $this->db->aquery("SELECT ccode_id FROM hint WHERE team_id = ? AND type IS NULL LIMIT ?", $teamId, $price);
 		foreach ($ccodes as $ccode) {
-			$this->db->execute("UPDATE hint SET cipher_id = ?, time = DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL ? MINUTE), type = ? WHERE team_id = ? AND ccode_id = ?", [$cipherId, $timeOffset, $type, $teamId, $ccode["ccode_id"]]);
+			$this->db->execute("UPDATE hint SET cipher_id = ?, time = DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL ? MINUTE), type = ?, points = 0 WHERE team_id = ? AND ccode_id = ?", [$cipherId, $timeOffset, $type, $teamId, $ccode["ccode_id"]]);
 		}
 	}
 	

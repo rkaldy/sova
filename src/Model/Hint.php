@@ -126,7 +126,7 @@ class Hint extends ModelBase {
 			$this->repo->applyByCCodes($teamId, $cipher["point_id"], $nextHintType, $price, $timeOffset);
 		} else {
 			(new TeamRepo())->addPoints($teamId, -$price);
-			$this->repo->applyByPoints($teamId, $cipher["point_id"], $nextHintType, $timeOffset);
+			$this->repo->applyByPoints($teamId, $cipher["point_id"], $nextHintType, $price, $timeOffset);
 		}
 
 		switch ($nextHintType) {
