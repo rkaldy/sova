@@ -8,6 +8,7 @@ use Sova\Redirect;
 use Sova\Model\Settings;
 use Sova\Model\Team;
 use Sova\Model\Hint;
+use Sova\Repo\HintRepo;
 
 
 class MainControllerTest extends GameTestBase {
@@ -121,6 +122,10 @@ class MainControllerTest extends GameTestBase {
 		$view = $this->controller->handleAction(new Request("GET", null, [], ["points" => 100]), "deduct");
 		$this->assertInstanceOf(Redirect::class, $view);
 		$this->assertEquals(-100, (new Team)->points());
+		$this->assertEquals(
+			["type" => HintRepo::DEDUCT_POINTS, "points" => 100, "ccode_id" => null, "cipher_id" => null],
+			$this->db->squery("SELECT type, points, ccode_id, cipher_id FROM hint WHERE team_id = 1")
+		);
 		$view = $this->controller->handleAction(new Request("GET", null, [], ["points" => -1]), "deduct");
 		$this->assertEquals("Počet odečtených bodů musí být kladný.", $view->fields["error"]);
 		$view = $this->controller->handleAction(new Request("GET", null, [], ["points" => "a"]), "deduct");

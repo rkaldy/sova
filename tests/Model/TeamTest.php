@@ -2,6 +2,8 @@
 namespace Sova\Model;
 
 use Sova\TestBase;
+use Sova\AppException;
+use Sova\Repo\HintRepo;
 
 class TeamTest extends TestBase {
 
@@ -29,6 +31,25 @@ class TeamTest extends TestBase {
 		$this->assertFalse($this->team->login(1, "bad"));
 		$this->assertFalse(Team::logged());
 		$this->assertFalse(Game::selected());
+	}
+
+	function testDeductPoints() {
+		$this->team->login(1, "prak");
+		Settings::set("deductPoints", true);
+
+		$this->assertEquals(25, $this->team->deductPoints("25"));
+		$this->assertEquals(-25, $this->team->points());
+		$this->assertEquals(
+			["type" => HintRepo::DEDUCT_POINTS, "points" => 25, "ccode_id" => null, "cipher_id" => null],
+			$this->db->squery("SELECT type, points, ccode_id, cipher_id FROM hint WHERE team_id = 1")
+		);
+	}
+
+	function testDeductPointsDisabled() {
+		$this->team->login(1, "prak");
+		$this->expectException(AppException::class);
+		$this->expectExceptionMessage("Odečítání bodů není povoleno.");
+		$this->team->deductPoints(25);
 	}
 
 }

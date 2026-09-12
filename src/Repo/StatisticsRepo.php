@@ -72,7 +72,8 @@ class StatisticsRepo extends RepoBase {
 				IFNULL(earned.loc_points, 0) AS loc_points,
 				IFNULL(-spent.hint_points, 0) AS hint_points,
 				IFNULL(-spent.howto_points, 0) AS howto_points,
-				IFNULL(-spent.solution_points, 0) AS solution_points
+				IFNULL(-spent.solution_points, 0) AS solution_points,
+				IFNULL(-spent.deduct_points, 0) AS deduct_points
 			FROM team
 			LEFT JOIN (
 				SELECT
@@ -91,7 +92,8 @@ class StatisticsRepo extends RepoBase {
 					hint.team_id,
 					SUM(IF(hint.type = 1, hint.points, 0)) AS hint_points,
 					SUM(IF(hint.type = 2, hint.points, 0)) AS howto_points,
-					SUM(IF(hint.type = 3, hint.points, 0)) AS solution_points
+					SUM(IF(hint.type = 3, hint.points, 0)) AS solution_points,
+					SUM(IF(hint.type = 5, hint.points, 0)) AS deduct_points
 				FROM hint
 				JOIN team hint_team ON hint_team.team_id = hint.team_id
 				WHERE hint_team.game_id = ?

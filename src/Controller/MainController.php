@@ -7,6 +7,7 @@ use Sova\Response;
 use Sova\Redirect;
 use Sova\View;
 use Sova\HttpException;
+use Sova\AppException;
 use Sova\Model\Team;
 use Sova\Model\Game;
 use Sova\Model\Code;
@@ -16,11 +17,6 @@ use Sova\Model\Message;
 use Sova\Model\Progress;
 use Sova\Model\Text;
 use Sova\Model\Settings;
-
-
-class AppException extends \Exception {
-}
-
 
 class MainController {
 
@@ -155,15 +151,8 @@ class MainController {
 	}
 
 	public function deduct($params, $data) {
-		if (!Settings::get("deductPoints")) {
-			throw new AppException("Odečítání bodů není povoleno.");
-		}
-		$points = (int)$data["points"];
-		if ($points <= 0) {
-			throw new AppException("Počet odečtených bodů musí být kladný.");
-		}
-		(new Team())->addPoints(-$points);
-		return new Redirect("hints", "Bylo vám odečteno $points bodů.");;
+		$points = (new Team())->deductPoints($data["points"]);
+		return new Redirect("hints", "Bylo vám odečteno $points bodů.");
 	}
 
 

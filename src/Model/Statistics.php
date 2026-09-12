@@ -83,7 +83,7 @@ class Statistics {
 
 	public function points() {
 		return array_merge(
-			[["Tým", "Šifry", "Aktivity (B-kódy)", "Stanoviště", "Nápovědy", "Postupy", "Řešení"]],
+			[["Tým", "Šifry", "Aktivity (B-kódy)", "Stanoviště", "Nápovědy", "Postupy", "Řešení", "Odečtené body"]],
 			$this->repo->points(Game::current())
 		);
 	}

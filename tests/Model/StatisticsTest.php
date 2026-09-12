@@ -73,10 +73,11 @@ class StatisticsTest extends GameTestBase {
 		$this->db->execute("INSERT INTO hint (team_id, cipher_id, time, type, points) VALUES (1, 14, NOW(), 2, 19)");
 		$this->db->execute("INSERT INTO hint (team_id, cipher_id, time, type, points) VALUES (2, 14, NOW(), 3, 29)");
 		$this->db->execute("INSERT INTO hint (team_id, ccode_id, cipher_id, time, type, points) VALUES (2, 1, 11, NOW(), 3, 0)");
+		$this->db->execute("INSERT INTO hint (team_id, time, type, points) VALUES (1, NOW(), 5, 12)");
 
 		$stat = $this->statistics->points();
-		$this->assertEquals(["Tým", "Šifry", "Aktivity (B-kódy)", "Stanoviště", "Nápovědy", "Postupy", "Řešení"], $stat[0]);
-		$this->assertEquals(["Parta Nic", "60", "20", "15", "-17", "-37", "0"], $stat[1]);
-		$this->assertEquals(["Redwool", "25", "0", "30", "0", "0", "-29"], $stat[2]);
+		$this->assertEquals(["Tým", "Šifry", "Aktivity (B-kódy)", "Stanoviště", "Nápovědy", "Postupy", "Řešení", "Odečtené body"], $stat[0]);
+		$this->assertEquals(["Parta Nic", "60", "20", "15", "-17", "-37", "0", "-12"], $stat[1]);
+		$this->assertEquals(["Redwool", "25", "0", "30", "0", "0", "-29", "0"], $stat[2]);
 	}
 }

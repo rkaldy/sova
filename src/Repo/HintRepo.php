@@ -11,6 +11,7 @@ class HintRepo extends RepoBase {
 	public const HOWTO = 2;
 	public const SOLUTION = 3;
 	public const IMUNITY = 4;
+	public const DEDUCT_POINTS = 5;
 
 
 	public function addCCode(array $hint) {
@@ -34,7 +35,7 @@ class HintRepo extends RepoBase {
 		return is_null($ret) ? self::NONE : $ret;
 	}
 
-	public function applyByPoints(int $teamId, int $cipherId, int $type, int $points, ?int $timeOffset = 0) {
+	public function applyByPoints(int $teamId, ?int $cipherId, int $type, int $points, ?int $timeOffset = 0) {
 		$this->db->execute("INSERT INTO hint (team_id, cipher_id, time, type, points) VALUES (?, ?, DATE_ADD(CURRENT_TIMESTAMP(), INTERVAL ? MINUTE), ?, ?)", [$teamId, $cipherId, $timeOffset, $type, $points]);
 	}
 

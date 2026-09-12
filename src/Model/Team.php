@@ -1,6 +1,9 @@
 <?php
 namespace Sova\Model;
 
+use Sova\AppException;
+use Sova\Repo\HintRepo;
+
 class Team extends ModelBase {
 
 	public function prepare(array &$team) {
@@ -73,6 +76,21 @@ class Team extends ModelBase {
 
 	public function addPoints(int $add, ?int $teamId = null) {
 		$this->repo->addPoints($teamId ?? self::current(), $add);
+	}
+
+	public function deductPoints($points): int {
+		if (!Settings::get("deductPoints")) {
+			throw new AppException("Odečítání bodů není povoleno.");
+		}
+		$points = (int)$points;
+		if ($points <= 0) {
+			throw new AppException("Počet odečtených bodů musí být kladný.");
+		}
+
+		$teamId = self::current();
+		$this->repo->addPoints($teamId, -$points);
+		(new HintRepo())->applyByPoints($teamId, null, HintRepo::DEDUCT_POINTS, $points);
+		return $points;
 	}
 
 
