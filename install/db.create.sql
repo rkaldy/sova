@@ -160,7 +160,7 @@ ALTER TABLE `cipher`
 
 ALTER TABLE `code`
   ADD PRIMARY KEY (game_id,code) USING BTREE,
-  ADD UNIQUE KEY point_id (point_id,game_id) USING BTREE,
+  ADD KEY point_id (point_id,game_id) USING BTREE,
   ADD UNIQUE KEY team_id (team_id,game_id) USING BTREE,
   ADD UNIQUE KEY ccode_id (ccode_id,game_id) USING BTREE;
 

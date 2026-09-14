@@ -8,7 +8,17 @@ class Cipher extends ModelBase {
 
 	public function prepare(array &$cipher) {
 		$cipher["game_id"] = Game::current();
-		(new Code())->prepare($cipher["code"]);
+		$codes = $cipher["code"] ?? [];
+		if (!is_array($codes)) {
+			$codes = explode(",", $codes);
+		}
+		$codes = array_filter(array_map("trim", $codes));
+		if (empty($codes)) {
+			$codes = [(new Code())->generate()];
+		} else {
+			$codes = array_map([Code::class, "polish"], $codes);
+		}
+		$cipher["code"] = array_values(array_unique($codes));
 		$this->prepareBooleans($cipher, ["activity", "all_locs_mandatory"]);
 		if (empty($cipher["points"])) {
 			$cipher["points"] = 0;

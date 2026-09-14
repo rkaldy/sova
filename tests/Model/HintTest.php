@@ -138,6 +138,19 @@ class HintTest extends GameTestBase {
 		$this->assertEquals(new Text("hint.apply.already", "S1"), $resp);
 	}
 
+	function testSolutionHintReturnsOneOfMultipleCodes() {
+		$this->db->execute("INSERT INTO code (game_id, point_id, code) VALUES (1, 11, 'ABERRACE')");
+
+		$this->hint->apply("S1");
+		$this->hint->apply("S1");
+		$resp = $this->hint->apply("S1");
+
+		$this->assertEquals("hint.text.solution", $resp->code);
+		$this->assertEquals("S1", $resp->args[0]);
+		$this->assertContains($resp->args[1], ["ABERACE", "ABERRACE"]);
+		$this->assertStringNotContainsString(",", $resp->args[1]);
+	}
+
 	function testApplyCCodes() {
 		$team = new Team();
 		$this->hint->addCCode(1);

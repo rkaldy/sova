@@ -19,7 +19,7 @@ $(function() {
 			{ name: "name", title: "Číslo", type: "text", width: "10ex", validate: "required" },
 			{ name: "name_int", title: "Interní název", type: "text", width: "20ex" },
 			{ name: "activity", title: "Aktivita?", type: "checkbox", width: "10ex" },
-			{ name: "code", title: "Řešení", type: "text", width: "20ex", validate: codeValidator },
+			{ name: "code", title: "Řešení", type: "array", width: "20ex", validate: codeListValidator },
 			{ name: "hint", title: "Nápověda", type: "textarea", width: "30ex" },
 			{ name: "howto", title: "Postup", type: "textarea", width: "40ex" },
 			{ name: "points", title: "Body", type: "text", width: "10ex", validate: integerValidator },
@@ -46,7 +46,7 @@ $(function() {
   </tr>
   <tr>
     <th>Řešení</th>
-    <td>Řešení šifry či kód, který týmy dostanou po zdolání aktivity. Necháte-li prázdné, vygeneruje se náhodné slovo.</td>
+    <td>Řešení šifry či kód, který týmy dostanou po zdolání aktivity. Více rovnocenných řešení oddělte čárkou. Necháte-li pole prázdné, vygeneruje se náhodné slovo.</td>
   </tr>
   <tr>
     <th>Nápověda</th>

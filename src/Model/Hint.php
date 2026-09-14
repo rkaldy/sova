@@ -132,7 +132,7 @@ class Hint extends ModelBase {
 		switch ($nextHintType) {
 			case HintRepo::HINT: return new Text("hint.text.hint", $cipher["name"], $cipher["hint"]);
 			case HintRepo::HOWTO: return new Text("hint.text.howto", $cipher["name"], $cipher["howto"]);
-			case HintRepo::SOLUTION: return new Text("hint.text.solution", $cipher["name"], $cipher["code"]);
+			case HintRepo::SOLUTION: return new Text("hint.text.solution", $cipher["name"], $cipher["code"][0]);
 		}
 	}
 

@@ -14,6 +14,14 @@ codeValidatorReq = {
 	}
 };
 
+codeListValidator = {
+	validator: "pattern",
+	param: "^\\s*(?:[A-Za-z0-9]+(?:\\s*,\\s*[A-Za-z0-9]+)*)?\\s*$",
+	message: function() {
+		return "Řešení musí být oddělená čárkami a smějí obsahovat jen písmena bez diakritiky";
+	}
+};
+
 integerValidator = {
 	validator: "pattern",
 	param: "[0-9]*",

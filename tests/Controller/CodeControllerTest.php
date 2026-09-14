@@ -106,6 +106,15 @@ class CodeControllerTest extends GameTestBase {
 		$this->assertEquals(["Toto řešení šifry jste již zadali."], CodeController::process("aberace"));
 	}
 
+	function testSolveCipherWithAlternativeCode() {
+		$this->db->execute("INSERT INTO code (game_id, point_id, code) VALUES (1, 11, 'ABERRACE')");
+		$this->assertEquals([
+			"Úspěšně jste vyluštili šifru S1. Máte 30 bodů.",
+			"Další stanoviště 1a se nachází na vrcholu Bílé hory."
+		], CodeController::process("aberrace"));
+		$this->assertEquals(["Toto řešení šifry jste již zadali."], CodeController::process("aberace"));
+	}
+
 	function testSolveCipherRank() {
 		Settings::set("showRank", true);
 		$this->assertEquals([

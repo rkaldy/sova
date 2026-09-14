@@ -6,7 +6,9 @@ use Sova\DBException;
 class CipherRepo extends PointRepo {
 
 	protected const SQL = "
-			SELECT cipher.*, name, code, points, points_by_rank,
+			SELECT cipher.*, name,
+			  GROUP_CONCAT(DISTINCT code.code SEPARATOR ', ') AS code,
+			  points, points_by_rank,
 			  GROUP_CONCAT(DISTINCT prev.from_point_id ORDER BY prev.from_point_id SEPARATOR ',') AS prev,
 			  GROUP_CONCAT(DISTINCT next.to_point_id ORDER BY next.to_point_id SEPARATOR ',') AS next
 			FROM cipher 
@@ -19,6 +21,7 @@ class CipherRepo extends PointRepo {
 	protected static function convert(array &$cipher) {
 		self::convertBooleans($cipher, ["activity", "all_locs_mandatory"]);
 		self::flattenPrevNext($cipher);
+		$cipher["code"] = isset($cipher["code"]) ? array_map("trim", explode(",", $cipher["code"])) : [];
 	}
 
 
@@ -85,12 +88,23 @@ class CipherRepo extends PointRepo {
 		}
 	}
 
+
+	protected function addCodes(array $cipher) {
+		foreach ($cipher["code"] as $code) {
+			$this->db->execute(
+				"INSERT INTO code (game_id, point_id, code) VALUES (?, ?, ?)",
+				[$cipher["game_id"], $cipher["point_id"], $code],
+				true
+			);
+		}
+	}
+
 	function create(array &$cipher) {
 		try {
 			$this->db->execute("INSERT INTO point (game_id, name, points, points_by_rank) VALUES (:game_id, :name, :points, IFNULL(:points_by_rank, 0))", $cipher, true);
 			$cipher["point_id"] = $this->db->lastInsertId();
 			$this->db->execute("INSERT INTO cipher (point_id, name_int, activity, hint, howto, all_locs_mandatory) VALUES (:point_id, :name_int, :activity, :hint, :howto, :all_locs_mandatory)", $cipher, true);
-			$this->db->execute("INSERT INTO code (game_id, point_id, code) VALUES (:game_id, :point_id, :code)", $cipher, true);
+			$this->addCodes($cipher);
 			$this->addPrevNextLocs($cipher);
 		} catch (DBException $ex) {
 			$this->db->execute("DELETE FROM point WHERE point_id = :point_id", $cipher);
@@ -99,10 +113,18 @@ class CipherRepo extends PointRepo {
 	}
 
 	function update(array &$cipher) {
-		$this->db->execute("UPDATE point SET name = :name, points = :points, points_by_rank = IFNULL(:points_by_rank, 0) WHERE point_id = :point_id", $cipher);
-		$this->db->execute("UPDATE cipher SET name_int = :name_int, activity = :activity, hint = :hint, howto = :howto, all_locs_mandatory = :all_locs_mandatory WHERE point_id = :point_id", $cipher);
-		$this->db->execute("UPDATE code SET code = :code WHERE point_id = :point_id", $cipher);
-		$this->addPrevNextLocs($cipher);
+		$this->db->beginTransaction();
+		try {
+			$this->db->execute("UPDATE point SET name = :name, points = :points, points_by_rank = IFNULL(:points_by_rank, 0) WHERE point_id = :point_id", $cipher);
+			$this->db->execute("UPDATE cipher SET name_int = :name_int, activity = :activity, hint = :hint, howto = :howto, all_locs_mandatory = :all_locs_mandatory WHERE point_id = :point_id", $cipher);
+			$this->db->execute("DELETE FROM code WHERE point_id = :point_id", $cipher);
+			$this->addCodes($cipher);
+			$this->addPrevNextLocs($cipher);
+			$this->db->commit();
+		} catch (\Throwable $ex) {
+			$this->db->rollBack();
+			throw $ex;
+		}
 	}
 
 	function delete(array $cipher) {
@@ -172,7 +194,7 @@ class CipherRepo extends PointRepo {
 				IFNULL(DATE_FORMAT(solved.time, '%H:%i:%s'), '-') AS time, 
 				IF(MAX(hint.type) >= 1, cipher.hint, '-') AS hint,
 				IF(MAX(hint.type) >= 2, cipher.howto, '-') AS howto,
-				IF(MAX(hint.type) >= 3, code.code, '-') AS solution
+				IF(MAX(hint.type) >= 3, SUBSTRING_INDEX(GROUP_CONCAT(DISTINCT code.code), ',', 1), '-') AS solution
 			FROM progress
 			NATURAL JOIN loc
 			JOIN step ON step.from_point_id = loc.point_id
