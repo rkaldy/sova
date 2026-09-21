@@ -4,6 +4,7 @@ namespace Sova\Model;
 use Sova\TestBase;
 use Sova\AppException;
 use Sova\Repo\HintRepo;
+use Sova\Model\Game;
 
 class TeamTest extends TestBase {
 
@@ -20,6 +21,7 @@ class TeamTest extends TestBase {
 	function testLogin() {
 		$this->assertTrue($this->team->login(1, "prak"));
 		$this->assertTrue(Team::logged());
+		$this->assertEquals(Game::level(), Game::TEAM);
 		$this->assertEquals(1, Team::current());
 		$this->assertEquals("Parta Nic", Team::currentName());
 		$this->assertEquals(2, Game::current());

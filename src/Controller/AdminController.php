@@ -16,17 +16,17 @@ use Sova\Model\Settings;
 
 class AdminController {
 
-	const ACTIONS_SU = ["game", "user"];
+	const ACTIONS_SU = ["game", "games", "user"];
 	const PAGES = ["users", "games", "locs", "ciphers", "ccodes", "teams", "graph", "texts", "messages", "stats"];
 
 	public function process(Request $req, array $path): Response {
 		$action = empty($path) ? "login" : $path[0];
 
-		if ($action != 'login' && !Game::selected() && !Game::superuser()) {
+   		if ($action != 'login' && Game::level() < Game::ADMIN) {
 			$view = new View("admin/login");
-		} else if (in_array($action, self::ACTIONS_SU) && !Game::superuser()) {
-			$view = new View("error", "Nedostatečná práva k akci '$action'");
-		} else if (in_array($action, self::PAGES)) {
+		} else if (in_array($action, self::ACTIONS_SU) && Game::level() != Game::SUPERUSER) {
+			$view = new View("error", ["error" => "Nedostatečná práva k akci '$action'"]);
+        } else if (in_array($action, self::PAGES)) {
 			$view = new View("admin/$action");
 		} else if (method_exists($this, $action)) {
 			$args = array_merge($req->params, $req->data);
@@ -39,7 +39,7 @@ class AdminController {
 		}
 	
 		$view->addField("action", $action);
-		$view->addField("superuser", Game::superuser());
+		$view->addField("level", Game::level());
 		if (Game::selected()) {
 			$view->addField("game", Game::currentName());
 		}
@@ -52,7 +52,7 @@ class AdminController {
 		$game = new Game();
 		if (isset($args["login"])) {
 			if ($game->login($args["login"], $args["pswd"])) {
-				if (Game::superuser()) {
+				if (Game::level() == Game::SUPERUSER) {
 					return new Redirect("games");
 				}
 				return new Redirect("locs");
@@ -69,7 +69,6 @@ class AdminController {
 		Game::logout();
 		return new Redirect("login");
 	}
-
 
 	public function broadcast() {
 		$teams = (new Team())->list();

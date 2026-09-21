@@ -66,7 +66,7 @@ class RestController {
 
 
 	public function authenticate() {
-		if (!Game::selected() && !Team::logged() && !Game::superuser()) {
+		if (Game::level() == Game::NONE) {
 			if (empty($_SERVER["HTTP_AUTHORIZATION"])) {
 				throw new HttpException(401, "Unauthenticated");
 			}
@@ -85,10 +85,10 @@ class RestController {
 
 
 	public function authorize(string $resource, string $method) {
-		if ($resource == "game" && $method != "GET" && !Game::superuser()) {
+		if ($resource == "game" && $method != "GET" && Game::level() != Game::SUPERUSER) {
 			throw new HttpException(403, "Access denied");
 		}
-        if (Team::logged() && !in_array($resource, ["code", "hint_check", "hint_apply"])) {
+        if (Game::level() == Game::TEAM && !in_array($resource, ["code", "hint_check", "hint_apply"])) {
 			throw new HttpException(403, "Access denied");
         }
 	}

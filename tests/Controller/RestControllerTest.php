@@ -5,6 +5,7 @@ use Sova\TestBase;
 use Sova\DB;
 use Sova\Request;
 use Sova\Response;
+use Sova\Model\Game;
 use Sova\Model\Message;
 use Sova\Model\Settings;
 use Mockery;
@@ -32,7 +33,7 @@ class RestControllerTest extends TestBase {
 
 	
 	function testUnauthenticated() {
-		unset($_SESSION["game_id"]);
+		unset($_SESSION["level"]);
 		list($status, $data) = $this->rest("GET", "loc");
 		$this->assertEquals(401, $status);
 	}
@@ -54,7 +55,7 @@ class RestControllerTest extends TestBase {
 	}
 
 	function testGeneralError() {
-		$_SESSION["superuser"] = 1;
+		$_SESSION["level"] = Game::SUPERUSER;
 		list($status, $data) = $this->rest("POST", "game", ["name" => "lavina", "pswd" => ""]);
 		$this->assertEquals(500, $status);
 		$this->assertFalse(isset($data["code"]));
@@ -67,21 +68,25 @@ class RestControllerTest extends TestBase {
 
 	function testBasicAuthentication() {
 		unset($_SESSION["game_id"]);
+		unset($_SESSION["level"]);
 		list($status, $data) = $this->rest("GET", "game", []);
 		$this->assertEquals(401, $status);
         $this->assertEquals("Unauthenticated", $data["error"]);
 		$this->assertFalse(isset($_SESSION["game_id"]));
+        $this->assertEquals(Game::level(), Game::NONE);
 		
         $_SERVER["HTTP_AUTHORIZATION"] = "Basic ".base64_encode("game1:bad");
 		list($status, $data) = $this->rest("GET", "game", []);
 		$this->assertEquals(401, $status);
         $this->assertEquals("Authentication failed", $data["error"]);
 		$this->assertFalse(isset($_SESSION["game_id"]));
+        $this->assertEquals(Game::level(), Game::NONE);
 
         $_SERVER["HTTP_AUTHORIZATION"] = "Basic ".base64_encode("game1:samara");
 		list($status, $data) = $this->rest("GET", "game", []);
 		$this->assertEquals(200, $status);
 		$this->assertEquals(1, $_SESSION["game_id"]);
+        $this->assertEquals(Game::level(), Game::ADMIN);
 		$this->assertEquals([
 			["game_id" => 1, "name" => "game1"],
 			["game_id" => 2, "name" => "game2"]
@@ -98,7 +103,7 @@ class RestControllerTest extends TestBase {
 	}
 
 	function testPUT() {
-		$_SESSION["superuser"] = 1;
+		$_SESSION["level"] = Game::SUPERUSER;
 		list($status, $data) = $this->rest("PUT", "game", ["game_id" => 2, "name" => "lavina"]);
 		$this->assertEquals(200, $status);
 		$this->assertEquals(["game_id" => 2, "name" => "lavina"], $data);
@@ -110,7 +115,7 @@ class RestControllerTest extends TestBase {
 	}
 
 	function testPOST() {
-		$_SESSION["superuser"] = 1;
+		$_SESSION["level"] = Game::SUPERUSER;
 		list($status, $data) = $this->rest("POST", "game", ["name" => "lavina", "pswd" => "secret"]);
 		$this->assertEquals(200, $status);
 		$this->assertEquals("lavina", $data["name"]);
@@ -124,7 +129,7 @@ class RestControllerTest extends TestBase {
 	}
 
 	function testDELETE() {
-		$_SESSION["superuser"] = 1;
+		$_SESSION["level"] = Game::SUPERUSER;
 		list($status, $data) = $this->rest("DELETE", "game", ["game_id" => 1, "name" => "game1"]);
 		$this->assertEquals(200, $status);
 		$this->assertEquals(["game_id" => 1, "name" => "game1"], $data);

@@ -9,6 +9,11 @@ class Game extends ModelBase {
 	const PAST = 2;
 	const FUTURE = 3;
 
+    const NONE = 0;
+    const TEAM = 1;
+    const ADMIN = 2;
+    const SUPERUSER = 3;
+
 
 	public function prepare(array &$game) {
 		if (empty($game["pswd"])) {
@@ -22,7 +27,7 @@ class Game extends ModelBase {
 	public function login(string $login, string $pswd) {
 		if ($login == "superuser") {
 			if (password_verify($pswd, $this->repo->superuserPassword())) {
-				$_SESSION["superuser"] = 1;
+				$_SESSION["level"] = self::SUPERUSER;
 				return true;;
 			} else {
 				return false;
@@ -35,6 +40,7 @@ class Game extends ModelBase {
 		}
 		$_SESSION["game_id"] = $game["game_id"];
 		$_SESSION["game_name"] = $game["name"];
+        $_SESSION["level"] = self::ADMIN;
 		(new Settings())->load();
 		return true;
 	}
@@ -68,5 +74,5 @@ class Game extends ModelBase {
 	public static function selected() 	 { return isset($_SESSION["game_id"]); }
 	public static function current() 	 { return isset($_SESSION["game_id"]) ? $_SESSION["game_id"] : null; }
 	public static function currentName() { return $_SESSION["game_name"]; }
-	public static function superuser()	 { return isset($_SESSION["superuser"]); }
+	public static function level()	     { return $_SESSION["level"] ?? self::NONE; }
 }

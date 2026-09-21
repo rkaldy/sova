@@ -1,5 +1,8 @@
 <?php
-if ($superuser) {
+use Sova\Model\Game;
+
+
+if ($level == Game::SUPERUSER) {
 	$menu = array(
 		"games" => "Hry",
 		"logout" => "Logout"
@@ -71,7 +74,7 @@ if ($superuser) {
         <h1>SOVA <span id="version">2.0</span> <span id="section">admin</span></h1>
       </div>
       <div id="user"><?php 
-	    if ($superuser) {
+	    if ($level == Game::SUPERUSER) {
 			echo "superuser";
 		} else if (isset($game)) {
 			echo $game;
@@ -88,7 +91,7 @@ if ($superuser) {
     </header>
 
 <?php 
-if ($superuser || isset($game)) { 
+if ($level >= Game::ADMIN) { 
 	echo "<nav>";
 	foreach ($menu as $act => $label) {
 		echo "<a";

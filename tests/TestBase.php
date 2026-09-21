@@ -3,6 +3,7 @@ namespace Sova;
 
 use PHPUnit\Framework\TestCase;
 use Sova\Model\Settings;
+use Sova\Model\Game;
 
 class TestBase extends TestCase {
 
@@ -19,6 +20,7 @@ class TestBase extends TestCase {
 		$this->db->execute("INSERT INTO settings (game_id, gameStart, gameEnd) VALUES (2, DATE_SUB(NOW(), INTERVAL 2 HOUR), DATE_SUB(NOW(), INTERVAL 1 HOUR))");
 		$_SESSION["game_id"] = 1;
 		$_SESSION["game_name"] = "test";
+        $_SESSION["level"] = Game::ADMIN;
 		(new Settings())->load();
 	}
 

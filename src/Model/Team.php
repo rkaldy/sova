@@ -45,6 +45,7 @@ class Team extends ModelBase {
 			$_SESSION['game_name'] = $team['game_name'];
 			$_SESSION['team_id'] = $team['team_id'];
 			$_SESSION['team_name'] = $team['name'];
+            $_SESSION['level'] = Game::TEAM;
 			(new Settings())->load();
 			return true;
 		} else {

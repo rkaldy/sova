@@ -4,6 +4,7 @@ namespace Sova;
 use Sova\Repo\ProgressRepo;
 use Sova\Model\Progress;
 use Sova\Model\Settings;
+use Sova\Model\Game;
 
 class GameTestBase extends TestBase {
 
@@ -75,6 +76,7 @@ class GameTestBase extends TestBase {
 		Progress::resetFakeTime();
 		$_SESSION["team_id"] = 1;
 		$_SESSION["team_name"] = "test";
+        $_SESSION["level"] = Game::TEAM;
 		(new Settings())->load();
 	}
 }
