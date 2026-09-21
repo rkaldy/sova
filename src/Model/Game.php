@@ -33,9 +33,13 @@ class Game extends ModelBase {
 				return false;
 			}
 		}
+        return $this->loginAs($login, $pswd, true);
+	}
 
-		$game = $this->repo->get($login);
-		if (!isset($game) || !password_verify($pswd, $game["pswd"])) {
+
+    public function loginAs(string $login, ?string $pswd, ?bool $checkPassword = true) {
+   		$game = $this->repo->get($login);
+		if (!isset($game) || ($checkPassword && !password_verify($pswd, $game["pswd"]))) {
 			return false;
 		}
 		$_SESSION["game_id"] = $game["game_id"];
@@ -43,7 +47,7 @@ class Game extends ModelBase {
         $_SESSION["level"] = self::ADMIN;
 		(new Settings())->load();
 		return true;
-	}
+    }
 
 
 	public function changeCurrentPassword(string $pswd) {

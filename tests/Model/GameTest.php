@@ -25,13 +25,21 @@ class GameTest extends TestBase {
 		$this->assertTrue(Game::selected());
 		$this->assertEquals(2, Game::current());
 		$this->assertEquals("game2", Game::currentName());
-		$this->assertEquals(Game::level(), Game::ADMIN);
+		$this->assertEquals(Game::ADMIN, Game::level());
+	}
+
+	function testLoginAs() {
+		$this->assertTrue($this->game->loginAs("game2", null, false));
+		$this->assertTrue(Game::selected());
+		$this->assertEquals(2, Game::current());
+		$this->assertEquals("game2", Game::currentName());
+		$this->assertEquals(Game::ADMIN, Game::level());
 	}
 
 	function testLoginSuperuser() {
 		$this->assertTrue($this->game->login("superuser", "nimda"));
 		$this->assertFalse(Game::selected());
-		$this->assertEquals(Game::level(), Game::SUPERUSER);
+		$this->assertEquals(Game::SUPERUSER, Game::level());
 	}
 
 	function testBadLogin() {

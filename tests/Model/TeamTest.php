@@ -21,7 +21,7 @@ class TeamTest extends TestBase {
 	function testLogin() {
 		$this->assertTrue($this->team->login(1, "prak"));
 		$this->assertTrue(Team::logged());
-		$this->assertEquals(Game::level(), Game::TEAM);
+		$this->assertEquals(Game::TEAM, Game::level());
 		$this->assertEquals(1, Team::current());
 		$this->assertEquals("Parta Nic", Team::currentName());
 		$this->assertEquals(2, Game::current());

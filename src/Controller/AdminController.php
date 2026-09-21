@@ -16,7 +16,7 @@ use Sova\Model\Settings;
 
 class AdminController {
 
-	const ACTIONS_SU = ["game", "games", "user"];
+	const ACTIONS_SU = ["game", "games", "user", "loginAs"];
 	const PAGES = ["users", "games", "locs", "ciphers", "ccodes", "teams", "graph", "texts", "messages", "stats"];
 
 	public function process(Request $req, array $path): Response {
@@ -63,6 +63,12 @@ class AdminController {
 			return new View("admin/login");
 		}
 	}
+
+
+    public function loginAs($args) {
+        (new Game())->loginAs($args["login"], null, false);
+        return new Redirect("locs");
+    }
 
 
 	public function logout() {

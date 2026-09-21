@@ -23,12 +23,12 @@ class View {
 		}
 
 		ob_start();
-		include("views/$this->template.php");
+		include(dirname(__DIR__) . "/views/$this->template.php");
 		$_contents = ob_get_clean();
 
 		ob_start();
 		$minify = DEVELOPMENT ? "" : ".min";
-		include("views/$layout.php");
+		include(dirname(__DIR__) . "/views/$layout.php");
 		return ob_get_clean();
 	}
 }

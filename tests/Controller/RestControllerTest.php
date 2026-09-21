@@ -73,20 +73,20 @@ class RestControllerTest extends TestBase {
 		$this->assertEquals(401, $status);
         $this->assertEquals("Unauthenticated", $data["error"]);
 		$this->assertFalse(isset($_SESSION["game_id"]));
-        $this->assertEquals(Game::level(), Game::NONE);
+        $this->assertEquals(Game::NONE, Game::level());
 		
         $_SERVER["HTTP_AUTHORIZATION"] = "Basic ".base64_encode("game1:bad");
 		list($status, $data) = $this->rest("GET", "game", []);
 		$this->assertEquals(401, $status);
         $this->assertEquals("Authentication failed", $data["error"]);
 		$this->assertFalse(isset($_SESSION["game_id"]));
-        $this->assertEquals(Game::level(), Game::NONE);
+        $this->assertEquals(Game::NONE, Game::level());
 
         $_SERVER["HTTP_AUTHORIZATION"] = "Basic ".base64_encode("game1:samara");
 		list($status, $data) = $this->rest("GET", "game", []);
 		$this->assertEquals(200, $status);
 		$this->assertEquals(1, $_SESSION["game_id"]);
-        $this->assertEquals(Game::level(), Game::ADMIN);
+        $this->assertEquals(Game::ADMIN, Game::level());
 		$this->assertEquals([
 			["game_id" => 1, "name" => "game1"],
 			["game_id" => 2, "name" => "game2"]
